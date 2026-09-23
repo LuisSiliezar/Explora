@@ -155,9 +155,10 @@ jobs:
           cache: yarn
 
       # No .ruby-version in the repo (locally the Gemfile runs on macOS's system Ruby).
+      # Stay below 3.2: the locked CFPropertyList 3.0.9 (via xcodeproj) requires ruby < 3.2.
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.3'
+          ruby-version: '3.1'
           bundler-cache: true
 
       - run: yarn install --frozen-lockfile
