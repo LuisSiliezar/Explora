@@ -10,6 +10,7 @@
     --field: 250 250 250;
     --raised: 255 255 255;
     --skeleton: 239 239 239;
+    --skeleton-highlight: 248 248 248;
     --text: 26 26 26;
     --text-muted: 107 107 107;
     --text-faint: 154 154 154;
@@ -43,6 +44,7 @@
       --field: 28 32 28;
       --raised: 28 32 28;
       --skeleton: 37 42 37;
+      --skeleton-highlight: 48 54 48;
       --text: 242 244 241;
       --text-muted: 163 168 162;
       --text-faint: 111 117 110;

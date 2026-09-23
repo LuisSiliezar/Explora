@@ -4,6 +4,7 @@ type Palette = Record<
   | 'field'
   | 'raised'
   | 'skeleton'
+  | 'skeletonHighlight'
   | 'text'
   | 'textMuted'
   | 'textFaint'
