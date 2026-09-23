@@ -3,7 +3,7 @@ import type { Activity } from '@domain/entities';
 
 /**
  * Decorator for performance profiling: repeats the wrapped source's items `multiplier` times
- * with unique ids (12 seeds x 100 = 1200 items). Only wired in __DEV__.
+ * with unique ids (12 seeds x 100 = 1200 items). Never wired in production.
  */
 export class DevSeedActivityDataSource implements ActivityDataSource {
   constructor(

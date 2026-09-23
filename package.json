@@ -10,6 +10,7 @@
     "test": "jest",
     "e2e": "maestro test .maestro",
     "e2e:studio": "maestro studio",
+    "perf:android": "bash scripts/perf-android.sh",
     "knip": "knip",
     "pods": "cd ios && LANG=en_US.UTF-8 bundle exec pod install && cd ..",
     "typecheck": "tsc --noEmit",
@@ -21,6 +22,7 @@
     "ios:prod": "react-native run-ios --scheme Explora-Prod --mode Release --simulator \"iPhone 17 Pro\"",
     "android:dev": "react-native run-android --mode devDebug --appId com.explora.dev",
     "android:staging": "react-native run-android --mode stagingDebug --appId com.explora.staging",
+    "android:staging:release": "react-native run-android --mode stagingRelease --appId com.explora.staging",
     "android:prod": "react-native run-android --mode prodRelease --appId com.explora",
     "prepare": "husky"
   },

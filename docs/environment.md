@@ -28,7 +28,7 @@ From Xcode, pick the scheme (Explora-Dev, Explora-Staging or Explora-Prod). From
 | `APP_BUNDLE_ID` | iOS `PRODUCT_BUNDLE_IDENTIFIER` | Bundle ID (Android uses `applicationIdSuffix`) |
 | `API_URL` | JS container | Remote activities API. Leave empty to use the bundled JSON. |
 | `API_TIMEOUT_MS` | `AxiosAdapter` | HTTP timeout |
-| `DEV_SEED_MULTIPLIER` | container, `__DEV__` only | Multiplies the seed data (100 → 1200 items) for perf testing |
+| `DEV_SEED_MULTIPLIER` | container, never in production | Multiplies the seed data (100 → 1200 items) for perf testing |
 
 JS reads values **only** through `env` in `src/config/env/env.ts`, which validates them with zod when the app starts.
 

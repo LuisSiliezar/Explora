@@ -37,7 +37,7 @@ Dependencies point **inward, toward `domain`**. `domain` imports nothing. `infra
 ### Composition root
 `src/config/di/container.ts` is the **only** file that creates concrete classes. It:
 - picks `RemoteActivityDataSource` wrapped in `CachedActivityDataSource` (offline fallback) when `API_URL` is set, otherwise `LocalActivityDataSource`
-- wraps the source in `DevSeedActivityDataSource` in dev when `DEV_SEED_MULTIPLIER > 0`
+- wraps the source in `DevSeedActivityDataSource` outside production when `DEV_SEED_MULTIPLIER > 0`
 - builds the repositories, native services (incl. haptics), the filter store and the app-settings store from one `KeyValueStorage`
 
 `AppProviders` calls `createContainer()` once and passes the result down with `DependenciesProvider`. Tests pass `createFakeContainer()` instead.

@@ -1,0 +1,17 @@
+# Fresh install state on the staging app, onboarding skipped, list loaded. Not measured.
+appId: com.explora.staging
+---
+- launchApp:
+    clearState: true
+    permissions:
+      all: deny
+- extendedWaitUntil:
+    visible:
+      id: onboarding-skip
+    timeout: 30000
+- tapOn:
+    id: onboarding-skip
+- extendedWaitUntil:
+    visible:
+      id: activity-card-act-001-0
+    timeout: 15000
