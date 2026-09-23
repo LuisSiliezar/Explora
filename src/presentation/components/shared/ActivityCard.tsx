@@ -5,7 +5,7 @@ import type { Activity } from '@domain/entities';
 import { useIsFavorite } from '@presentation/hooks/useFavorites';
 import { useT } from '@presentation/i18n/useT';
 import { formatDistance } from '@presentation/utils';
-import { DurationTile } from './DurationTile';
+import { ActivityThumb } from './ActivityThumb';
 import { FavoriteButton } from './FavoriteButton';
 import { Pill } from './Pill';
 import { Text } from './Text';
@@ -46,11 +46,7 @@ export const ActivityCard = memo(
           accessibilityHint={t('opensDetails')}
           className="flex-1 flex-row items-start gap-[13px] active:opacity-70"
         >
-          <DurationTile
-            category={activity.category}
-            minutes={activity.durationMinutes}
-            variant="thumb"
-          />
+          <ActivityThumb activity={activity} variant="thumb" />
           <View className="flex-1 gap-[5px]">
             <View className="flex-row flex-wrap gap-1.5">
               <Pill label={activity.category.toUpperCase()} />
@@ -122,11 +118,7 @@ export const ActivityGridCard = memo(
           accessibilityHint={t('opensDetails')}
           className="gap-2 active:opacity-70"
         >
-          <DurationTile
-            category={activity.category}
-            minutes={activity.durationMinutes}
-            variant="grid"
-          />
+          <ActivityThumb activity={activity} variant="grid" />
         </Pressable>
         <View className="flex-row items-start gap-2">
           <Pressable

@@ -1,4 +1,5 @@
 export * from './ActivityCard';
+export * from './ActivityThumb';
 export * from './Banner';
 export * from './BottomSheet';
 export * from './Button';

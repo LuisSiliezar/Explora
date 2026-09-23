@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { ActivityIndicator, Image, ScrollView, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Image,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { Activity } from '@domain/entities';
@@ -29,7 +35,7 @@ import {
 } from '@presentation/hooks';
 import { useT } from '@presentation/i18n';
 import type { RootStackScreenProps } from '@presentation/routes/types';
-import { categoryTint, useTheme } from '@presentation/theme';
+import { activityImage, categoryTint, useTheme } from '@presentation/theme';
 import { formatDistance } from '@presentation/utils';
 
 const REMINDER_DELAY_MS = 60 * 60 * 1000;
@@ -96,6 +102,7 @@ const ActivityDetail = ({
   const { origin } = useNearMe();
   const [scheduling, setScheduling] = useState(false);
   const [photoPickerOpen, setPhotoPickerOpen] = useState(false);
+  const [headerPhotoFailed, setHeaderPhotoFailed] = useState(false);
   const tint = categoryTint[activity.category];
   const distance =
     origin && activity.coordinates
@@ -145,27 +152,42 @@ const ActivityDetail = ({
         </View>
       )}
       <View
-        className={`justify-between px-5 pb-5 ${tint.bg}`}
-        style={{
-          paddingTop: (online ? insets.top : 0) + 14,
-          height: 228 + (online ? insets.top : 0),
-        }}
+        className={`overflow-hidden ${tint.bg}`}
+        style={{ height: 228 + (online ? insets.top : 0) }}
       >
-        <IconButton
-          icon="back"
-          onPress={onBack}
-          accessibilityLabel={t('back')}
-        />
-        <Text
-          accessibilityLabel={`${activity.durationMinutes} min`}
-          className={`font-sans-bold text-[76px] leading-[80px] tracking-[-3.5px] ${tint.fg}`}
+        {!headerPhotoFailed && (
+          <Image
+            source={activityImage(activity)}
+            resizeMode="cover"
+            onError={() => setHeaderPhotoFailed(true)}
+            accessible={false}
+            style={styles.photo}
+          />
+        )}
+        <View
+          className="flex-1 justify-between px-5 pb-5"
+          style={{ paddingTop: (online ? insets.top : 0) + 14 }}
         >
-          {activity.durationMinutes}
-          <Text className={`font-mono text-[15px] tracking-[1.5px] ${tint.fg}`}>
-            {' '}
-            {t('min')}
-          </Text>
-        </Text>
+          <IconButton
+            icon="back"
+            onPress={onBack}
+            accessibilityLabel={t('back')}
+          />
+          <View className={`self-start rounded-xl px-3 py-1.5 ${tint.bg}`}>
+            <Text
+              accessibilityLabel={`${activity.durationMinutes} min`}
+              className={`font-sans-bold text-[40px] leading-[44px] tracking-[-1.5px] ${tint.fg}`}
+            >
+              {activity.durationMinutes}
+              <Text
+                className={`font-mono text-[13px] tracking-[1.3px] ${tint.fg}`}
+              >
+                {' '}
+                {t('min')}
+              </Text>
+            </Text>
+          </View>
+        </View>
       </View>
 
       <ScrollView
@@ -293,3 +315,15 @@ const ActivityDetail = ({
     </View>
   );
 };
+
+// Bundled images default to their file's size: pin both dimensions so the photo fills its
+// (unpadded) container.
+const styles = StyleSheet.create({
+  photo: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+  },
+});
