@@ -7,6 +7,7 @@ Guidance for Claude Code (and humans) working in this repo. Deep docs live in [`
 - Leave every change **uncommitted in the working tree**. The repo owner always reviews the diff and commits it themselves.
 - Read-only git (`git status`, `git diff`, `git log`) is fine.
 - At the end of every task, list the files that changed so the owner can review them.
+- When suggesting a commit message, use Conventional Commits (`type(scope): summary`) with a scope from `commitlint.config.js`. The husky `commit-msg` hook rejects anything else.
 
 ## What this app is
 **Explora** is a React Native (0.87, New Architecture) + TypeScript app. Users browse activities from a bundled JSON file (`src/assets/data/activities.json`), search and filter them, open a detail screen, and save favorites that work fully offline. A favorite can also get a reminder (notifications) and a photo (camera), and "Near me" sorts activities by distance (location). The UI follows the Claude Design prototype (splash → onboarding → optional local sign-in → Browse/Favorites/Settings) in English and Spanish. The list has to stay smooth with 1000+ items, and nothing the user changes can be lost when the app goes to background, the OS kills it, or the network is slow.

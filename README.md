@@ -11,3 +11,4 @@ yarn validate   # typecheck + lint + tests
 
 - Architecture, conventions and how-tos: [`docs/`](docs/README.md)
 - Rules for AI assistants and contributors: [`CLAUDE.md`](CLAUDE.md)
+- Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/) (`type(scope): summary`). A husky `commit-msg` hook runs commitlint; allowed scopes are in [`commitlint.config.js`](commitlint.config.js).
