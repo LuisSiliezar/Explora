@@ -185,6 +185,7 @@ const en = {
   toastOffline: 'Offline — favorites still work',
   toastLang: 'Language set to English',
   toastReminderSet: 'Reminder set — in 1 hour',
+  reminderBody: 'Starting soon at %s',
   toastPhotoSaved: 'Photo saved',
   toastPermissionNeeded: 'Permission needed — check your device settings',
   toastSomethingWrong: 'Something went wrong',
@@ -376,6 +377,7 @@ const es: Strings = {
   toastOffline: 'Sin conexión — los favoritos siguen funcionando',
   toastLang: 'Idioma cambiado a Español',
   toastReminderSet: 'Recordatorio creado — en 1 hora',
+  reminderBody: 'Empieza pronto en %s',
   toastPhotoSaved: 'Foto guardada',
   toastPermissionNeeded:
     'Permiso necesario — revisa los ajustes del dispositivo',

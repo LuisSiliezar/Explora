@@ -12,6 +12,7 @@ import {
 } from './helpers/fakes';
 
 const [walk] = seedActivities;
+const copy = { title: 'Walk', body: 'Empieza pronto' };
 
 describe('favorites', () => {
   it('persists across repository instances (simulates app restart)', async () => {
@@ -56,7 +57,12 @@ describe('favorites', () => {
       favorites: new StorageFavoritesRepository(new MemoryStorage()),
       notifications: createFakeNotifications(),
     };
-    await scheduleReminderUseCase(deps, walk, new Date(Date.now() + 1000));
+    const fireAt = new Date(Date.now() + 1000);
+    await scheduleReminderUseCase(deps, walk, fireAt, copy);
+    expect(deps.notifications.scheduleReminder).toHaveBeenCalledWith({
+      ...copy,
+      fireAt,
+    });
     expect(deps.favorites.getAll()[0].reminderId).toBe('reminder-1');
 
     expect(await toggleFavoriteUseCase(deps, walk)).toBe(false);
@@ -71,7 +77,7 @@ describe('favorites', () => {
       notifications,
     };
     await expect(
-      scheduleReminderUseCase(deps, walk, new Date()),
+      scheduleReminderUseCase(deps, walk, new Date(), copy),
     ).rejects.toMatchObject({ code: 'PERMISSION_DENIED' });
   });
 

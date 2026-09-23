@@ -3,6 +3,12 @@ import { DomainError } from '@domain/errors';
 import type { FavoritesRepository } from '@domain/repositories';
 import type { NotificationPort } from '@domain/services';
 
+/** Localized by the caller: core has no i18n. */
+interface ReminderCopy {
+  title: string;
+  body: string;
+}
+
 interface Deps {
   favorites: FavoritesRepository;
   notifications: NotificationPort;
@@ -13,6 +19,7 @@ export const scheduleReminderUseCase = async (
   { favorites, notifications }: Deps,
   activity: Activity,
   fireAt: Date,
+  copy: ReminderCopy,
 ): Promise<string> => {
   if (!(await notifications.requestPermission())) {
     throw new DomainError('PERMISSION_DENIED', 'Notifications are disabled');
@@ -27,8 +34,7 @@ export const scheduleReminderUseCase = async (
     await notifications.cancel(previous).catch(() => undefined);
   }
   const reminderId = await notifications.scheduleReminder({
-    title: activity.title,
-    body: `Starting soon at ${activity.location}`,
+    ...copy,
     fireAt,
   });
   favorites.update(activity.id, { reminderId });

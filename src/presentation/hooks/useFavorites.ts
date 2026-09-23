@@ -14,6 +14,7 @@ import { useToast } from './useToast';
 /** Favorites are local-first: reads are synchronous and work fully offline. */
 export const useFavorites = () => {
   const deps = useDependencies();
+  const t = useT();
   const { favorites } = deps;
   const list = useSyncExternalStore(favorites.subscribe, favorites.getAll);
 
@@ -24,8 +25,11 @@ export const useFavorites = () => {
   );
   const scheduleReminder = useCallback(
     (activity: Activity, fireAt: Date) =>
-      scheduleReminderUseCase(deps, activity, fireAt),
-    [deps],
+      scheduleReminderUseCase(deps, activity, fireAt, {
+        title: activity.title,
+        body: t('reminderBody', { s: activity.location }),
+      }),
+    [deps, t],
   );
 
   return { favorites: list, attachPhoto, scheduleReminder };
