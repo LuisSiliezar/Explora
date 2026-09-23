@@ -46,13 +46,11 @@ export const Dialog = ({
         {icon}
         <Text
           accessibilityRole="header"
-          className="text-center font-sans-bold text-[18px] tracking-[-0.2px]"
+          className="text-center font-display-bold text-xl tracking-tight"
         >
           {title}
         </Text>
-        <Text className="text-center text-[14px] leading-[20px] text-text-muted">
-          {body}
-        </Text>
+        <Text className="text-center text-base text-text-muted">{body}</Text>
         <View className="mt-1 gap-[9px] self-stretch">
           {actions.map(action => (
             <Button

@@ -32,17 +32,15 @@ export const Banner = memo(
             <View className="h-2 w-2 rounded-full bg-accent" />
           )}
           <Text
-            className={`flex-1 text-[13px] ${
-              body ? 'font-sans-bold text-[14px]' : 'font-sans-semibold'
+            className={`flex-1 text-sm ${
+              body ? 'font-sans-bold text-base' : 'font-sans-semibold'
             }`}
           >
             {title}
           </Text>
         </View>
         {body && (
-          <Text className="mt-[9px] text-[13px] leading-[19px] text-text-muted">
-            {body}
-          </Text>
+          <Text className="mt-[9px] text-sm text-text-muted">{body}</Text>
         )}
         {children}
       </View>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text } from './Text';
 
-/** The design's mono, spaced, uppercase caption ("CATEGORY", "LOCATION"...). */
+/** The design's small, spaced, uppercase caption ("CATEGORY", "LOCATION"...). */
 export const SectionLabel = ({
   children,
   className = '',
@@ -10,7 +10,7 @@ export const SectionLabel = ({
   className?: string;
 }) => (
   <Text
-    className={`font-mono text-[10px] tracking-[0.8px] text-text-muted ${className}`}
+    className={`font-sans-medium text-xs tracking-widest text-text-muted ${className}`}
   >
     {children}
   </Text>

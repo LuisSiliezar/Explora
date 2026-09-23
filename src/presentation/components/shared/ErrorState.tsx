@@ -33,13 +33,11 @@ export const ErrorState = ({
     </View>
     <Text
       accessibilityRole="header"
-      className="text-center font-sans-semibold text-[20px]"
+      className="text-center font-display-semibold text-2xl"
     >
       {title}
     </Text>
-    <Text className="text-center text-[15px] leading-[22px] text-text-muted">
-      {body}
-    </Text>
+    <Text className="text-center text-lg text-text-muted">{body}</Text>
     <View className="gap-2.5 self-stretch">
       <Button label={retryLabel} onPress={onRetry} size="sm" />
       {secondaryLabel && onSecondary && (
@@ -52,7 +50,7 @@ export const ErrorState = ({
       )}
     </View>
     {code && (
-      <Text className="font-mono text-[11px] tracking-[0.6px] text-text-muted">
+      <Text className="font-sans-medium text-xs tracking-wider text-text-muted">
         {code}
       </Text>
     )}

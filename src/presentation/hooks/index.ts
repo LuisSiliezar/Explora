@@ -11,6 +11,8 @@ export { useDependencies } from '@presentation/providers/DependenciesProvider';
 export * from './useIsOnline';
 export * from './useNearMe';
 export * from './useOpenActivity';
+export * from './usePressHaptic';
 export * from './useResetLocalData';
 export * from './useSettings';
+export * from './useTabBarHeight';
 export * from './useToast';

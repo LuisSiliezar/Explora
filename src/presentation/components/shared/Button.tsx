@@ -1,5 +1,9 @@
 import React, { memo } from 'react';
 import { ActivityIndicator, Pressable } from 'react-native';
+import {
+  usePressHaptic,
+  type PressHaptic,
+} from '@presentation/hooks/usePressHaptic';
 import { useTheme } from '@presentation/theme';
 import { Text } from './Text';
 
@@ -21,6 +25,8 @@ interface Props {
   accessibilityLabel?: string;
   accessibilityHint?: string;
   className?: string;
+  /** Tick on press. Pass `none` when the handler gives its own feedback. */
+  haptic?: PressHaptic;
 }
 
 const container: Record<ButtonVariant, string> = {
@@ -52,14 +58,16 @@ export const Button = memo(
     accessibilityLabel,
     accessibilityHint,
     className = '',
+    haptic = 'selection',
   }: Props) => {
     const { colors } = useTheme();
+    const handlePress = usePressHaptic(haptic, onPress);
     const padding =
       variant === 'link' ? 'py-2' : size === 'md' ? 'py-4' : 'py-[13px]';
     const rounded = size === 'md' ? 'rounded-[13px]' : 'rounded-[11px]';
     return (
       <Pressable
-        onPress={onPress}
+        onPress={handlePress}
         disabled={disabled || loading}
         accessibilityRole="button"
         accessibilityLabel={accessibilityLabel ?? text}
@@ -77,11 +85,7 @@ export const Button = memo(
             color={variant === 'primary' ? colors.onPrimary : colors.text}
           />
         ) : (
-          <Text
-            className={`font-sans-semibold ${
-              size === 'md' ? 'text-[16px]' : 'text-[15px]'
-            } ${label[variant]}`}
-          >
+          <Text className={`font-display-semibold text-lg ${label[variant]}`}>
             {text}
           </Text>
         )}

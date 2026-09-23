@@ -29,13 +29,11 @@ export const EmptyState = ({
     </View>
     <Text
       accessibilityRole="header"
-      className="text-center font-sans-semibold text-[20px]"
+      className="text-center font-display-semibold text-2xl"
     >
       {title}
     </Text>
-    <Text className="text-center text-[15px] leading-[22px] text-text-muted">
-      {body}
-    </Text>
+    <Text className="text-center text-lg text-text-muted">{body}</Text>
     <Button
       label={actionLabel}
       onPress={onAction}

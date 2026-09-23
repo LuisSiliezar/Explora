@@ -1,79 +1,79 @@
-import React from 'react';
-import { Pressable, View } from 'react-native';
-import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
+import React, { useContext } from 'react';
+import { Pressable, View, type LayoutChangeEvent } from 'react-native';
+import {
+  BottomTabBarHeightCallbackContext,
+  type BottomTabBarProps,
+} from '@react-navigation/bottom-tabs';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useDependencies } from '@presentation/providers/DependenciesProvider';
-import { useFavorites } from '@presentation/hooks/useFavorites';
 import { useT } from '@presentation/i18n/useT';
-import type { StringKey } from '@presentation/i18n/strings';
 import type { TabParamList } from '@presentation/routes/types';
-import { Icon, type IconName } from '../shared/Icon';
+import { Icon } from '../shared/Icon';
 import { Text } from '../shared/Text';
+import {
+  TAB_ICONS,
+  TAB_ITEM_CLASS,
+  TAB_LABEL_CLASS,
+  TAB_LABELS,
+} from './constants';
 
-const LABELS: Record<keyof TabParamList, StringKey> = {
-  Browse: 'browse',
-  Favorites: 'favorites',
-  Settings: 'settings',
-};
-
-/** The design's flat tab bar: icon + label, green when active. */
+/**
+ * The design's floating pill tab bar: icon + label, a grey pill behind the focused tab.
+ * It floats over the screens, so it reports its height for `useTabBarHeight()`.
+ */
 export const TabBar = ({ state, navigation }: BottomTabBarProps) => {
   const insets = useSafeAreaInsets();
   const t = useT();
   const { haptics } = useDependencies();
-  const { favorites } = useFavorites();
-
-  const icons: Record<keyof TabParamList, IconName> = {
-    Browse: 'browse',
-    Favorites: 'heart',
-    Settings: 'settings',
-  };
+  const onHeightChange = useContext(BottomTabBarHeightCallbackContext);
+  const onLayout = (event: LayoutChangeEvent) =>
+    onHeightChange?.(event.nativeEvent.layout.height);
 
   return (
     <View
-      accessibilityRole="tablist"
-      className="flex-row border-t border-border bg-background pt-2.5"
-      style={{ paddingBottom: Math.max(insets.bottom, 20) }}
+      onLayout={onLayout}
+      pointerEvents="box-none"
+      className="absolute bottom-0 left-0 right-0 px-4"
+      style={{ paddingBottom: Math.max(insets.bottom, 12) }}
     >
-      {state.routes.map((route, index) => {
-        const name = route.name as keyof TabParamList;
-        const focused = state.index === index;
-        const label = t(LABELS[name]);
-        const onPress = () => {
-          const event = navigation.emit({
-            type: 'tabPress',
-            target: route.key,
-            canPreventDefault: true,
-          });
-          if (!focused && !event.defaultPrevented) {
-            haptics.selection();
-            navigation.navigate(route.name, route.params);
-          }
-        };
-        const color = focused ? 'text-accent' : 'text-text-faint';
-        const hasFavorites = name === 'Favorites' && favorites.length > 0;
-        return (
-          <Pressable
-            key={route.key}
-            onPress={onPress}
-            accessibilityRole="tab"
-            accessibilityLabel={label}
-            accessibilityState={{ selected: focused }}
-            testID={`tab-${name.toLowerCase()}`}
-            className="flex-1 items-center gap-1"
-          >
-            <Icon
-              name={icons[name]}
-              size={22}
-              color={focused ? 'accent' : 'textFaint'}
-              filled={hasFavorites}
-            />
-            <Text className={`font-sans-semibold text-[11px] ${color}`}>
-              {label}
-            </Text>
-          </Pressable>
-        );
-      })}
+      <View
+        accessibilityRole="tablist"
+        className="flex-row rounded-full border border-border bg-raised p-1.5 shadow-lg"
+      >
+        {state.routes.map((route, index) => {
+          const name = route.name as keyof TabParamList;
+          const focused = state.index === index;
+          const status = focused ? 'focused' : 'idle';
+          const label = t(TAB_LABELS[name]);
+          const onPress = () => {
+            const event = navigation.emit({
+              type: 'tabPress',
+              target: route.key,
+              canPreventDefault: true,
+            });
+            if (!focused && !event.defaultPrevented) {
+              haptics.selection();
+              navigation.navigate(route.name, route.params);
+            }
+          };
+          return (
+            <Pressable
+              key={route.key}
+              onPress={onPress}
+              accessibilityRole="tab"
+              accessibilityLabel={label}
+              accessibilityState={{ selected: focused }}
+              testID={`tab-${name.toLowerCase()}`}
+              className={`flex-1 items-center gap-1 rounded-full py-2.5 ${TAB_ITEM_CLASS[status]}`}
+            >
+              <Icon name={TAB_ICONS[name]} size={24} color="text" />
+              <Text className={`text-sm text-text ${TAB_LABEL_CLASS[status]}`}>
+                {label}
+              </Text>
+            </Pressable>
+          );
+        })}
+      </View>
     </View>
   );
 };

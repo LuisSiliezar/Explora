@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import { View } from 'react-native';
 import { Text } from './Text';
 
-/** Small mono tag: category (green) or neutral (distance). */
+/** Small uppercase tag: category (green) or neutral (distance). */
 export const Pill = memo(
   ({
     label,
@@ -17,7 +17,7 @@ export const Pill = memo(
       }`}
     >
       <Text
-        className={`font-mono text-[10px] tracking-[0.8px] ${
+        className={`font-sans-medium text-xs tracking-widest ${
           tone === 'category' ? 'text-accent' : 'text-text'
         }`}
       >
