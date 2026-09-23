@@ -1,6 +1,16 @@
 apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
+// react-native-config: which .env file each flavor+buildType reads (must come before dotenv.gradle).
+project.ext.envConfigFiles = [
+    devdebug      : ".env.development",
+    devrelease    : ".env.development",
+    stagingdebug  : ".env.staging",
+    stagingrelease: ".env.staging",
+    proddebug     : ".env.production",
+    prodrelease   : ".env.production",
+]
+apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
 
 /**
  * This is the configuration block to customize your React Native Android app.
@@ -84,6 +94,26 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        // Required by react-native-config because flavors change the applicationId.
+        resValue "string", "build_config_package", "com.explora"
+    }
+    // One app per environment so dev/staging/prod install side by side.
+    flavorDimensions "env"
+    productFlavors {
+        dev {
+            dimension "env"
+            applicationIdSuffix ".dev"
+            resValue "string", "app_name", "Explora Dev"
+        }
+        staging {
+            dimension "env"
+            applicationIdSuffix ".staging"
+            resValue "string", "app_name", "Explora Stg"
+        }
+        prod {
+            dimension "env"
+            resValue "string", "app_name", "Explora"
+        }
     }
     signingConfigs {
         debug {

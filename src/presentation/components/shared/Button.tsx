@@ -1,0 +1,91 @@
+import React, { memo } from 'react';
+import { ActivityIndicator, Pressable } from 'react-native';
+import { useTheme } from '@presentation/theme';
+import { Text } from './Text';
+
+export type ButtonVariant =
+  | 'primary'
+  | 'secondary'
+  | 'danger'
+  | 'destructive'
+  | 'inverse'
+  | 'link';
+
+interface Props {
+  label: string;
+  onPress: () => void;
+  variant?: ButtonVariant;
+  size?: 'md' | 'sm';
+  loading?: boolean;
+  disabled?: boolean;
+  accessibilityLabel?: string;
+  accessibilityHint?: string;
+  className?: string;
+}
+
+const container: Record<ButtonVariant, string> = {
+  primary: 'bg-primary active:bg-primary-pressed',
+  secondary: 'border border-border active:border-text',
+  danger: 'border border-danger-border bg-danger-surface active:opacity-80',
+  destructive: 'bg-danger active:opacity-80',
+  inverse: 'bg-inverse active:opacity-80',
+  link: 'active:opacity-60',
+};
+
+const label: Record<ButtonVariant, string> = {
+  primary: 'text-on-primary',
+  secondary: 'text-text',
+  danger: 'text-danger',
+  destructive: 'text-white',
+  inverse: 'text-on-inverse',
+  link: 'text-accent',
+};
+
+export const Button = memo(
+  ({
+    label: text,
+    onPress,
+    variant = 'primary',
+    size = 'md',
+    loading,
+    disabled,
+    accessibilityLabel,
+    accessibilityHint,
+    className = '',
+  }: Props) => {
+    const { colors } = useTheme();
+    const padding =
+      variant === 'link' ? 'py-2' : size === 'md' ? 'py-4' : 'py-[13px]';
+    const rounded = size === 'md' ? 'rounded-[13px]' : 'rounded-[11px]';
+    return (
+      <Pressable
+        onPress={onPress}
+        disabled={disabled || loading}
+        accessibilityRole="button"
+        accessibilityLabel={accessibilityLabel ?? text}
+        accessibilityHint={accessibilityHint}
+        accessibilityState={{
+          disabled: !!(disabled || loading),
+          busy: !!loading,
+        }}
+        className={`items-center justify-center px-4 ${padding} ${rounded} ${
+          container[variant]
+        } ${disabled ? 'opacity-50' : ''} ${className}`}
+      >
+        {loading ? (
+          <ActivityIndicator
+            color={variant === 'primary' ? colors.onPrimary : colors.text}
+          />
+        ) : (
+          <Text
+            className={`font-sans-semibold ${
+              size === 'md' ? 'text-[16px]' : 'text-[15px]'
+            } ${label[variant]}`}
+          >
+            {text}
+          </Text>
+        )}
+      </Pressable>
+    );
+  },
+);

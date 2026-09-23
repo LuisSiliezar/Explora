@@ -1,0 +1,72 @@
+/**
+ * Single source of truth for colors. CommonJS so tailwind.config.js can require it.
+ * global.css mirrors these values as CSS variables (a test keeps both in sync).
+ */
+const light = {
+  background: '#FFFFFF',
+  canvas: '#F4F5F3',
+  field: '#FAFAFA',
+  raised: '#FFFFFF',
+  skeleton: '#EFEFEF',
+  text: '#1A1A1A',
+  textMuted: '#6B6B6B',
+  textFaint: '#9A9A9A',
+  border: '#E5E5E5',
+  primary: '#7ED957',
+  primaryPressed: '#6FCB46',
+  onPrimary: '#1A1A1A',
+  accent: '#3F8F2C',
+  success: '#E8F7E9',
+  successBorder: '#C9E8CC',
+  danger: '#D64545',
+  dangerSurface: '#FBEAEA',
+  dangerBorder: '#F0C9C9',
+  inverse: '#1A1A1A',
+  onInverse: '#FFFFFF',
+  tagSurface: '#F0F1EF',
+  outdoorsBg: '#E6F5E8',
+  outdoorsFg: '#2F6B22',
+  cultureBg: '#F4F2E2',
+  cultureFg: '#6B6522',
+  workshopsBg: '#F8EDE4',
+  workshopsFg: '#8A5324',
+  leisureBg: '#EBEDF7',
+  leisureFg: '#3E4A8A',
+};
+
+const dark = {
+  background: '#0F110F',
+  canvas: '#171A17',
+  field: '#1C201C',
+  raised: '#1C201C',
+  skeleton: '#252A25',
+  text: '#F2F4F1',
+  textMuted: '#A3A8A2',
+  textFaint: '#6F756E',
+  border: '#2B302B',
+  primary: '#7ED957',
+  primaryPressed: '#6FCB46',
+  onPrimary: '#1A1A1A',
+  accent: '#86D66A',
+  success: '#1D2B1C',
+  successBorder: '#2E4A2B',
+  danger: '#F07070',
+  dangerSurface: '#3A1F1F',
+  dangerBorder: '#5A2C2C',
+  inverse: '#F2F4F1',
+  onInverse: '#1A1A1A',
+  tagSurface: '#252A25',
+  outdoorsBg: '#1B2A1C',
+  outdoorsFg: '#9ED88E',
+  cultureBg: '#2A2818',
+  cultureFg: '#D8CF86',
+  workshopsBg: '#2E2218',
+  workshopsFg: '#E8B088',
+  leisureBg: '#1D2133',
+  leisureFg: '#A9B4EE',
+};
+
+/** camelCase token -> kebab-case CSS variable / class name (textMuted -> text-muted). */
+const toKebab = key => key.replace(/[A-Z]/g, c => `-${c.toLowerCase()}`);
+
+module.exports = { light, dark, toKebab };

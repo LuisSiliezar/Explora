@@ -10,8 +10,16 @@
 		0C80B921A6F3F58F76C31292 /* libPods-Explora.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-Explora.a */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		46B5F087D29E632C6F001540 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
+		4BA3561F6F3D4950ACD833EF /* IBMPlexMono-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D60D8DC157EB4BDF85DC235F /* IBMPlexMono-Regular.ttf */; };
+		6F9E7A782B10427F81AD4770 /* Figtree-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3B4B8AAF97CF4AE489A4FF8C /* Figtree-SemiBold.ttf */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		9074794466744418A84E15F1 /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1D6A6C94AE1742F189FF3A9C /* BootSplash.storyboard */; };
+		96668F64BDCA466F96896CCA /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 92A479C85F0747E08A07428A /* Colors.xcassets */; };
+		BED80A9DDD9146BF9DCCFE9A /* Figtree-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8830DC5688964B65BE079B89 /* Figtree-Medium.ttf */; };
+		CD13B56AFB314A9D9064360A /* Figtree-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 50B46F089392432C9D5157B3 /* Figtree-Regular.ttf */; };
+		CF2BC32A44314543B80E8F2E /* IBMPlexMono-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 95A29A6506F242F0989F5DBC /* IBMPlexMono-Medium.ttf */; };
+		EF2C1B64B91F4CF79A5E791D /* Figtree-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5AB8A1C0C2444B3DB5D9DD2C /* Figtree-Bold.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,11 +27,21 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Explora/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Explora/Info.plist; sourceTree = "<group>"; };
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = Explora/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		1D6A6C94AE1742F189FF3A9C /* BootSplash.storyboard */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = BootSplash.storyboard; path = Explora/BootSplash.storyboard; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-Explora.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Explora.debug.xcconfig"; path = "Target Support Files/Pods-Explora/Pods-Explora.debug.xcconfig"; sourceTree = "<group>"; };
+		3B4B8AAF97CF4AE489A4FF8C /* Figtree-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Figtree-SemiBold.ttf"; path = "../src/assets/fonts/Figtree-SemiBold.ttf"; sourceTree = "<group>"; };
+		50B46F089392432C9D5157B3 /* Figtree-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Figtree-Regular.ttf"; path = "../src/assets/fonts/Figtree-Regular.ttf"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-Explora.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Explora.release.xcconfig"; path = "Target Support Files/Pods-Explora/Pods-Explora.release.xcconfig"; sourceTree = "<group>"; };
+		5AB8A1C0C2444B3DB5D9DD2C /* Figtree-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Figtree-Bold.ttf"; path = "../src/assets/fonts/Figtree-Bold.ttf"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-Explora.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Explora.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = Explora/AppDelegate.swift; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Explora/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		8830DC5688964B65BE079B89 /* Figtree-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Figtree-Medium.ttf"; path = "../src/assets/fonts/Figtree-Medium.ttf"; sourceTree = "<group>"; };
+		92A479C85F0747E08A07428A /* Colors.xcassets */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = folder.assetcatalog; name = Colors.xcassets; path = Explora/Colors.xcassets; sourceTree = "<group>"; };
+		95A29A6506F242F0989F5DBC /* IBMPlexMono-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "IBMPlexMono-Medium.ttf"; path = "../src/assets/fonts/IBMPlexMono-Medium.ttf"; sourceTree = "<group>"; };
+		D60D8DC157EB4BDF85DC235F /* IBMPlexMono-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "IBMPlexMono-Regular.ttf"; path = "../src/assets/fonts/IBMPlexMono-Regular.ttf"; sourceTree = "<group>"; };
+		E0C0F1A10000000000000001 /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
+		E0C0F1A10000000000000002 /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -39,6 +57,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1386EC294A9D4E14B46C7D9B /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				5AB8A1C0C2444B3DB5D9DD2C /* Figtree-Bold.ttf */,
+				95A29A6506F242F0989F5DBC /* IBMPlexMono-Medium.ttf */,
+				D60D8DC157EB4BDF85DC235F /* IBMPlexMono-Regular.ttf */,
+				8830DC5688964B65BE079B89 /* Figtree-Medium.ttf */,
+				50B46F089392432C9D5157B3 /* Figtree-Regular.ttf */,
+				3B4B8AAF97CF4AE489A4FF8C /* Figtree-SemiBold.ttf */,
+			);
+			name = Resources;
+			path = "";
+			sourceTree = "<group>";
+		};
 		13B07FAE1A68108700A75B9A /* Explora */ = {
 			isa = PBXGroup;
 			children = (
@@ -47,6 +79,8 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */,
+				1D6A6C94AE1742F189FF3A9C /* BootSplash.storyboard */,
+				92A479C85F0747E08A07428A /* Colors.xcassets */,
 			);
 			name = Explora;
 			sourceTree = "<group>";
@@ -71,10 +105,12 @@
 			isa = PBXGroup;
 			children = (
 				13B07FAE1A68108700A75B9A /* Explora */,
+				E0C0F1A10000000000000003 /* Config */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				1386EC294A9D4E14B46C7D9B /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -96,6 +132,15 @@
 				5709B34CF0A7D63546082F79 /* Pods-Explora.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		E0C0F1A10000000000000003 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				E0C0F1A10000000000000001 /* Debug.xcconfig */,
+				E0C0F1A10000000000000002 /* Release.xcconfig */,
+			);
+			path = Config;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -161,6 +206,14 @@
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				46B5F087D29E632C6F001540 /* PrivacyInfo.xcprivacy in Resources */,
+				EF2C1B64B91F4CF79A5E791D /* Figtree-Bold.ttf in Resources */,
+				CF2BC32A44314543B80E8F2E /* IBMPlexMono-Medium.ttf in Resources */,
+				4BA3561F6F3D4950ACD833EF /* IBMPlexMono-Regular.ttf in Resources */,
+				BED80A9DDD9146BF9DCCFE9A /* Figtree-Medium.ttf in Resources */,
+				CD13B56AFB314A9D9064360A /* Figtree-Regular.ttf in Resources */,
+				6F9E7A782B10427F81AD4770 /* Figtree-SemiBold.ttf in Resources */,
+				9074794466744418A84E15F1 /* BootSplash.storyboard in Resources */,
+				96668F64BDCA466F96896CCA /* Colors.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -255,14 +308,15 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3B4392A12AC88292D35C810B /* Pods-Explora.debug.xcconfig */;
+			baseConfigurationReference = E0C0F1A10000000000000001 /* Debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Explora/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
+				INFOPLIST_KEY_CFBundleDisplayName = Explora;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -273,7 +327,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
 				PRODUCT_NAME = Explora;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -285,13 +339,14 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5709B34CF0A7D63546082F79 /* Pods-Explora.release.xcconfig */;
+			baseConfigurationReference = E0C0F1A10000000000000002 /* Release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = Explora/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
+				INFOPLIST_KEY_CFBundleDisplayName = Explora;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -302,7 +357,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
 				PRODUCT_NAME = Explora;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SWIFT_VERSION = 5.0;

@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Generated from src/presentation/theme/palette.js (values are R G B). Keep in sync: __tests__/theme.test.ts checks it. */
+@layer base {
+  :root {
+    --background: 255 255 255;
+    --canvas: 244 245 243;
+    --field: 250 250 250;
+    --raised: 255 255 255;
+    --skeleton: 239 239 239;
+    --text: 26 26 26;
+    --text-muted: 107 107 107;
+    --text-faint: 154 154 154;
+    --border: 229 229 229;
+    --primary: 126 217 87;
+    --primary-pressed: 111 203 70;
+    --on-primary: 26 26 26;
+    --accent: 63 143 44;
+    --success: 232 247 233;
+    --success-border: 201 232 204;
+    --danger: 214 69 69;
+    --danger-surface: 251 234 234;
+    --danger-border: 240 201 201;
+    --inverse: 26 26 26;
+    --on-inverse: 255 255 255;
+    --tag-surface: 240 241 239;
+    --outdoors-bg: 230 245 232;
+    --outdoors-fg: 47 107 34;
+    --culture-bg: 244 242 226;
+    --culture-fg: 107 101 34;
+    --workshops-bg: 248 237 228;
+    --workshops-fg: 138 83 36;
+    --leisure-bg: 235 237 247;
+    --leisure-fg: 62 74 138;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --background: 15 17 15;
+      --canvas: 23 26 23;
+      --field: 28 32 28;
+      --raised: 28 32 28;
+      --skeleton: 37 42 37;
+      --text: 242 244 241;
+      --text-muted: 163 168 162;
+      --text-faint: 111 117 110;
+      --border: 43 48 43;
+      --primary: 126 217 87;
+      --primary-pressed: 111 203 70;
+      --on-primary: 26 26 26;
+      --accent: 134 214 106;
+      --success: 29 43 28;
+      --success-border: 46 74 43;
+      --danger: 240 112 112;
+      --danger-surface: 58 31 31;
+      --danger-border: 90 44 44;
+      --inverse: 242 244 241;
+      --on-inverse: 26 26 26;
+      --tag-surface: 37 42 37;
+      --outdoors-bg: 27 42 28;
+      --outdoors-fg: 158 216 142;
+      --culture-bg: 42 40 24;
+      --culture-fg: 216 207 134;
+      --workshops-bg: 46 34 24;
+      --workshops-fg: 232 176 136;
+      --leisure-bg: 29 33 51;
+      --leisure-fg: 169 180 238;
+    }
+  }
+}

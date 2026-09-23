@@ -1,45 +1,22 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import './global.css';
+import React from 'react';
+import { LogBox } from 'react-native';
+import { AppProviders } from '@presentation/providers';
+import { AppRoot } from '@presentation/routes';
 
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+// Dev-only warnings from libraries, not from our code:
+// - NativeWind (react-native-css-interop) registers every core component, including the
+//   deprecated ImageBackground. We never use it.
+// - sonner-native passes dependency arrays to Reanimated hooks (ignored on native).
+LogBox.ignoreLogs([
+  'ImageBackground is deprecated',
+  '[Reanimated] Dependencies should only be used on the web',
+]);
 
-function App() {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  return (
-    <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <AppContent />
-    </SafeAreaProvider>
-  );
-}
-
-function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
-
-  return (
-    <View style={styles.container}>
-      <NewAppScreen
-        templateFileName="App.tsx"
-        safeAreaInsets={safeAreaInsets}
-      />
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
+const App = () => (
+  <AppProviders>
+    <AppRoot />
+  </AppProviders>
+);
 
 export default App;
