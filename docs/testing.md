@@ -1,6 +1,6 @@
 # Testing
 
-Run `yarn test`, or `yarn validate` for typecheck, lint and tests together.
+Run `yarn test`, or `yarn validate` for typecheck, lint, knip and tests together. CI runs the same checks on every PR (see [ci.md](ci.md)).
 
 ## Strategy
 | Level | What | Files |

@@ -1,0 +1,150 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# A newer push to the same branch/PR cancels the run in progress.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: 22
+
+jobs:
+  checks:
+    name: Typecheck, lint, knip, tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: yarn
+
+      - run: yarn install --frozen-lockfile
+
+      - name: Typecheck
+        run: yarn typecheck
+
+      - name: ESLint
+        run: yarn lint
+
+      - name: Prettier
+        run: yarn format:check
+
+      - name: Knip (unused files, exports, dependencies)
+        run: yarn knip
+
+      - name: Jest
+        run: yarn test --ci
+
+  android:
+    name: Android build (dev)
+    needs: checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: yarn
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - run: yarn install --frozen-lockfile
+
+      # .env.* files are gitignored and hold no secrets: the template defaults are the dev values.
+      - name: Create .env.development
+        run: cp .env.example .env.development
+
+      # Release is signed with the debug keystore (android/app/build.gradle), so no secrets are needed.
+      - name: Assemble devRelease APK
+        working-directory: android
+        run: ./gradlew assembleDevRelease --no-daemon
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: explora-dev-release-apk
+          path: android/app/build/outputs/apk/dev/release/*.apk
+          retention-days: 14
+
+  ios:
+    name: iOS build (dev, simulator)
+    needs: checks
+    runs-on: macos-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: yarn
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - run: yarn install --frozen-lockfile
+
+      - name: Create .env.development
+        run: cp .env.example .env.development
+
+      - uses: actions/cache@v4
+        with:
+          path: ios/Pods
+          key: pods-${{ runner.os }}-${{ hashFiles('ios/Podfile.lock') }}
+          restore-keys: pods-${{ runner.os }}-
+
+      - name: Install pods
+        run: yarn pods
+
+      - name: Build Explora-Dev for the simulator
+        # Full log goes to an artifact; on failure the tail is printed here.
+        run: |
+          xcodebuild \
+            -workspace ios/Explora.xcworkspace \
+            -scheme Explora-Dev \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath ios/build \
+            CODE_SIGNING_ALLOWED=NO \
+            build > xcodebuild.log 2>&1 || { tail -n 200 xcodebuild.log; exit 1; }
+
+      - name: Zip Explora.app
+        run: |
+          cd ios/build/Build/Products/Debug-iphonesimulator
+          zip -qr "$GITHUB_WORKSPACE/Explora-dev-simulator.zip" Explora.app
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: explora-dev-simulator-app
+          path: Explora-dev-simulator.zip
+          retention-days: 14
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: xcodebuild-log
+          path: xcodebuild.log

@@ -20,4 +20,5 @@ export const ActivitiesResponseSchema = z.object({
 });
 
 export type ActivityDto = z.infer<typeof ActivityDtoSchema>;
+/** @public */
 export type ActivitiesResponseDto = z.infer<typeof ActivitiesResponseSchema>;

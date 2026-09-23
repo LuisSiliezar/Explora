@@ -13,4 +13,5 @@ export const useTheme = () => {
   } as const;
 };
 
+/** @public */
 export type Theme = ReturnType<typeof useTheme>;

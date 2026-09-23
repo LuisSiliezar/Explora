@@ -22,10 +22,11 @@ yarn android         # = android:dev
 yarn android:dev | android:staging | android:prod
 yarn start           # Metro
 yarn typecheck       # tsc --noEmit
-yarn lint
+yarn lint            # eslint, warnings fail
+yarn knip            # unused files, exports and deps
 yarn test            # jest
-yarn format          # prettier
-yarn validate        # typecheck + lint + test. Run before handing work back for review.
+yarn format          # prettier (format:check in CI)
+yarn validate        # typecheck + lint + knip + test. Run before handing work back for review.
 ```
 
 ## Environments

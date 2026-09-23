@@ -12,9 +12,11 @@ const EnvSchema = z.object({
 });
 
 export type Env = z.infer<typeof EnvSchema>;
+/** @public */
 export type AppEnv = Env['APP_ENV'];
 
 /** Validated once at startup; fails fast with a readable error instead of undefined at runtime. */
 export const env: Env = EnvSchema.parse(Config ?? {});
 
+/** @public */
 export const isProduction = env.APP_ENV === 'production';

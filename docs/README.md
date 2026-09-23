@@ -13,6 +13,7 @@
 | [native-features.md](native-features.md) | Notifications, camera, location, haptics, splash, and permissions |
 | [ui-and-design-system.md](ui-and-design-system.md) | NativeWind, theme tokens, fonts, i18n, toasts, and the screen flow |
 | [testing.md](testing.md) | Test strategy, fakes, mocks |
+| [ci.md](ci.md) | GitHub Actions: checks, knip, Android/iOS build artifacts |
 | [environment.md](environment.md) | dev/staging/prod environments, `.env.*` variables |
 | [decisions/](decisions) | Architecture Decision Records (ADRs), including 005 environments and 006 NativeWind |
 

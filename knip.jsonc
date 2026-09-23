@@ -1,0 +1,11 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  // index.js and jest.setup.js are picked up by the react-native and jest plugins.
+  "entry": ["App.tsx", "__tests__/**/*.{ts,tsx}", "__tests__/helpers/*.js"],
+  "project": ["src/**/*.{ts,tsx,js}", "__tests__/**/*.{ts,tsx,js}", "*.{js,ts,tsx,css}"],
+  // Every folder has an index.ts barrel by convention (CLAUDE.md), even when callers import deeper.
+  "ignore": ["src/**/index.ts"],
+  // Required by the React Native template's Babel/Jest toolchain, never imported directly.
+  "ignoreDependencies": ["@babel/preset-env"],
+  "ignoreExportsUsedInFile": true
+}
