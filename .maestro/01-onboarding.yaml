@@ -7,6 +7,8 @@ tags:
     clearState: true
     permissions:
       all: deny
+      # RN debug builds on Android 17+ prompt for this before loading the bundle from Metro.
+      android.permission.ACCESS_LOCAL_NETWORK: allow
 # First launch after clearState can wait on the JS bundle (Metro in debug).
 - extendedWaitUntil:
     visible:
@@ -16,10 +18,12 @@ tags:
     id: onboarding-skip
 - extendedWaitUntil:
     visible:
-      id: activities-search
+      id: browse-title
     timeout: 15000
 - assertVisible:
     id: tab-browse
+- assertVisible:
+    id: tab-search
 - assertVisible:
     id: tab-favorites
 - assertVisible:

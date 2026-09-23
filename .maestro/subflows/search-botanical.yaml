@@ -2,7 +2,7 @@
 appId: com.explora.dev
 ---
 - tapOn:
-    id: activities-search
+    id: tab-search
 - tapOn:
     id: search-input
 - inputText: Botanical

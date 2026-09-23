@@ -10,11 +10,15 @@ tags:
 - stopApp
 - launchApp:
     clearState: false
+# The splash fades out over the already-mounted tabs; taps before that hit the splash.
 - extendedWaitUntil:
-    visible:
-      id: tab-favorites
+    notVisible:
+      id: splash
     timeout: 15000
 - tapOn:
     id: tab-favorites
-- assertVisible:
-    id: activity-card-act-001
+# First visit after a cold start mounts the Favorites screen; give it a moment.
+- extendedWaitUntil:
+    visible:
+      id: activity-card-act-001
+    timeout: 10000
