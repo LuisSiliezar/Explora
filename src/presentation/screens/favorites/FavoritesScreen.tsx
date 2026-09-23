@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { Pressable, View } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   ActivityList,
@@ -15,6 +16,7 @@ import {
 } from '@presentation/hooks';
 import { useT } from '@presentation/i18n';
 import type { TabScreenProps } from '@presentation/routes/types';
+import { enter } from '@presentation/theme';
 
 /** Reads only from local storage: works with no network at all. */
 export const FavoritesScreen = ({
@@ -36,7 +38,10 @@ export const FavoritesScreen = ({
   return (
     <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
       <OfflineBanner message={t('offlineFavorites')} />
-      <View className="flex-row items-baseline justify-between px-5 pb-3.5 pt-3">
+      <Animated.View
+        entering={enter(0)}
+        className="flex-row items-baseline justify-between px-5 pb-3.5 pt-3"
+      >
         <View className="gap-1">
           <Text
             accessibilityRole="header"
@@ -63,28 +68,30 @@ export const FavoritesScreen = ({
             </Text>
           </Pressable>
         )}
-      </View>
-      {hasFavorites ? (
-        <ActivityList
-          rows={rows}
-          removable={editing}
-          onPressItem={openActivity}
-          onToggleFavorite={toggleFavorite}
-          ListFooterComponent={
-            <Text className="mt-4 font-mono text-[11px] leading-[18px] tracking-[0.6px] text-text-muted">
-              {t('savedOnDevice')}
-            </Text>
-          }
-        />
-      ) : (
-        <EmptyState
-          icon="heart"
-          title={t('emptyFav')}
-          body={t('emptyFavBody')}
-          actionLabel={t('browseActivities')}
-          onAction={() => navigation.navigate('Browse')}
-        />
-      )}
+      </Animated.View>
+      <Animated.View entering={enter(1)} className="flex-1">
+        {hasFavorites ? (
+          <ActivityList
+            rows={rows}
+            removable={editing}
+            onPressItem={openActivity}
+            onToggleFavorite={toggleFavorite}
+            ListFooterComponent={
+              <Text className="mt-4 font-mono text-[11px] leading-[18px] tracking-[0.6px] text-text-muted">
+                {t('savedOnDevice')}
+              </Text>
+            }
+          />
+        ) : (
+          <EmptyState
+            icon="heart"
+            title={t('emptyFav')}
+            body={t('emptyFavBody')}
+            actionLabel={t('browseActivities')}
+            onAction={() => navigation.navigate('Browse')}
+          />
+        )}
+      </Animated.View>
     </View>
   );
 };

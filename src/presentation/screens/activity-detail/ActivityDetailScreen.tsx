@@ -35,7 +35,12 @@ import {
 } from '@presentation/hooks';
 import { useT } from '@presentation/i18n';
 import type { RootStackScreenProps } from '@presentation/routes/types';
-import { activityImage, categoryTint, useTheme } from '@presentation/theme';
+import {
+  activityImage,
+  categoryTint,
+  enter,
+  useTheme,
+} from '@presentation/theme';
 import { formatDistance } from '@presentation/utils';
 
 const REMINDER_DELAY_MS = 60 * 60 * 1000;
@@ -194,7 +199,10 @@ const ActivityDetail = ({
         contentContainerClassName="gap-4 p-5"
         contentContainerStyle={{ paddingBottom: insets.bottom + 24 }}
       >
-        <View className="flex-row items-start gap-3.5">
+        <Animated.View
+          entering={enter(0)}
+          className="flex-row items-start gap-3.5"
+        >
           <View className="flex-1 gap-2">
             <Pill label={activity.category.toUpperCase()} />
             <Text
@@ -215,9 +223,12 @@ const ActivityDetail = ({
               },
             )}
           />
-        </View>
+        </Animated.View>
 
-        <View className="flex-row gap-[22px] border-y border-border py-3.5">
+        <Animated.View
+          entering={enter(1)}
+          className="flex-row gap-[22px] border-y border-border py-3.5"
+        >
           <View className="flex-1 gap-1">
             <SectionLabel>{t('locationLabel')}</SectionLabel>
             <Text className="font-sans-semibold text-[16px]">
@@ -232,14 +243,14 @@ const ActivityDetail = ({
               </Text>
             </View>
           )}
-        </View>
+        </Animated.View>
 
-        <View className="gap-2">
+        <Animated.View entering={enter(2)} className="gap-2">
           <SectionLabel>{t('about')}</SectionLabel>
           <Text className="text-[16px] leading-[24px]">
             {activity.description}
           </Text>
-        </View>
+        </Animated.View>
 
         {favorite && (
           <Animated.View
@@ -268,7 +279,7 @@ const ActivityDetail = ({
           </View>
         )}
 
-        <View className="mt-2 gap-2.5">
+        <Animated.View entering={enter(3)} className="mt-2 gap-2.5">
           <SectionLabel>{t('more')}</SectionLabel>
           {favorite?.photoUri && (
             <Image
@@ -290,7 +301,7 @@ const ActivityDetail = ({
             size="sm"
             onPress={() => setPhotoPickerOpen(true)}
           />
-        </View>
+        </Animated.View>
       </ScrollView>
 
       <Dialog

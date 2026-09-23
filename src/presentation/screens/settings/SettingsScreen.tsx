@@ -1,5 +1,6 @@
 import React, { useState, type ReactNode } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { TextScale } from '@domain/entities';
 import { env } from '@config/env';
@@ -25,6 +26,7 @@ import {
 } from '@presentation/hooks';
 import { LANGUAGES, useT } from '@presentation/i18n';
 import type { TabScreenProps } from '@presentation/routes/types';
+import { enter } from '@presentation/theme';
 import { formatSyncTime } from '@presentation/utils';
 import { LanguageSheet } from './LanguageSheet';
 
@@ -34,17 +36,20 @@ const TEXT_SIZES: { value: TextScale; size: number; label: string }[] = [
   { value: 1.12, size: 19, label: 'L' },
 ];
 
+/** A labelled block. `order` staggers its entrance after the ones above it. */
 const Section = ({
   label,
+  order,
   children,
 }: {
   label: string;
+  order: number;
   children: ReactNode;
 }) => (
-  <View className="gap-3">
+  <Animated.View entering={enter(order)} className="gap-3">
     <SectionLabel>{label}</SectionLabel>
     {children}
-  </View>
+  </Animated.View>
 );
 
 const Row = ({
@@ -155,12 +160,14 @@ export const SettingsScreen = ({ navigation }: TabScreenProps<'Settings'>) => {
   return (
     <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
       <ScrollView contentContainerClassName="gap-[26px] px-5 pb-6 pt-3">
-        <Text
-          accessibilityRole="header"
-          className="font-sans-bold text-[26px] tracking-[-0.5px]"
-        >
-          {t('settings')}
-        </Text>
+        <Animated.View entering={enter(0)}>
+          <Text
+            accessibilityRole="header"
+            className="font-sans-bold text-[26px] tracking-[-0.5px]"
+          >
+            {t('settings')}
+          </Text>
+        </Animated.View>
 
         <View className="flex-row items-center gap-[13px] rounded-[14px] border border-border p-3.5">
           <View className="h-11 w-11 items-center justify-center rounded-full bg-success">
@@ -197,7 +204,7 @@ export const SettingsScreen = ({ navigation }: TabScreenProps<'Settings'>) => {
           </Pressable>
         </View>
 
-        <Section label={t('language')}>
+        <Section label={t('language')} order={1}>
           <Pressable
             onPress={() => setLanguageOpen(true)}
             accessibilityRole="button"
@@ -218,7 +225,7 @@ export const SettingsScreen = ({ navigation }: TabScreenProps<'Settings'>) => {
           </Pressable>
         </Section>
 
-        <Section label={t('notifications')}>
+        <Section label={t('notifications')} order={2}>
           <Row
             title={t('notifNew')}
             subtitle={notificationsText}
@@ -255,7 +262,7 @@ export const SettingsScreen = ({ navigation }: TabScreenProps<'Settings'>) => {
           )}
         </Section>
 
-        <Section label={t('textSize')}>
+        <Section label={t('textSize')} order={3}>
           <View className="flex-row gap-2">
             {TEXT_SIZES.map(option => {
               const selected = textScale === option.value;
@@ -290,7 +297,7 @@ export const SettingsScreen = ({ navigation }: TabScreenProps<'Settings'>) => {
           </Text>
         </Section>
 
-        <Section label={t('permissions')}>
+        <Section label={t('permissions')} order={4}>
           <Row
             title={t('location')}
             subtitle={permissionText}
@@ -304,7 +311,7 @@ export const SettingsScreen = ({ navigation }: TabScreenProps<'Settings'>) => {
           </Row>
         </Section>
 
-        <Section label={t('data')}>
+        <Section label={t('data')} order={5}>
           <Stat
             label={t('cachedActivities')}
             value={String(data?.length ?? 0)}

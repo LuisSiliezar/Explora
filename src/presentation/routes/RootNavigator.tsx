@@ -9,6 +9,7 @@ import { AuthScreen } from '@presentation/screens/auth/AuthScreen';
 import { FavoritesScreen } from '@presentation/screens/favorites/FavoritesScreen';
 import { OnboardingScreen } from '@presentation/screens/onboarding/OnboardingScreen';
 import { SettingsScreen } from '@presentation/screens/settings/SettingsScreen';
+import { duration } from '@presentation/theme';
 import type { RootStackParamList, TabParamList } from './types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -19,7 +20,10 @@ const renderTabBar = (props: React.ComponentProps<typeof TabBar>) => (
 );
 
 const Tabs = () => (
-  <Tab.Navigator tabBar={renderTabBar} screenOptions={{ headerShown: false }}>
+  <Tab.Navigator
+    tabBar={renderTabBar}
+    screenOptions={{ headerShown: false, animation: 'fade' }}
+  >
     <Tab.Screen name="Browse" component={ActivitiesScreen} />
     <Tab.Screen name="Favorites" component={FavoritesScreen} />
     <Tab.Screen name="Settings" component={SettingsScreen} />
@@ -34,10 +38,20 @@ export const RootNavigator = () => {
   const authKey = onboardingDone ? 'app' : 'onboarding';
 
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+        animation: 'slide_from_right',
+        animationDuration: duration.screen,
+      }}
+    >
       {onboardingDone ? (
         <>
-          <Stack.Screen name="Tabs" component={Tabs} />
+          <Stack.Screen
+            name="Tabs"
+            component={Tabs}
+            options={{ animation: 'fade' }}
+          />
           <Stack.Screen
             name="ActivityDetail"
             component={ActivityDetailScreen}
@@ -51,7 +65,11 @@ export const RootNavigator = () => {
         </>
       ) : (
         <>
-          <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+          <Stack.Screen
+            name="Onboarding"
+            component={OnboardingScreen}
+            options={{ animation: 'fade' }}
+          />
           <Stack.Screen
             name="Auth"
             navigationKey={authKey}

@@ -50,6 +50,13 @@ All UI copy lives in `presentation/i18n/strings.ts` (English and Spanish, ported
 - **Haptics**: `useDependencies().haptics.selection() | success() | warning()`.
 - **Dialogs** replace `Alert` for permission pre-prompts and confirmations, so they follow the theme and the language.
 
+## Motion
+
+- Tokens live in `presentation/theme/motion.ts`: `duration` and `enter(order)`, a staggered `FadeInDown` for a screen's top-level blocks (`entering={enter(0)}`, `enter(1)`…).
+- Screen transitions are navigator options in `routes/RootNavigator.tsx`: the stack slides from the right (ActivityDetail, swipe back works), Onboarding ⇄ Tabs cross-fade, and the tabs fade on switch.
+- Never put `entering` on list rows (`ActivityList`): it costs frames at 1000+ items.
+- Reanimated layout animations honor the OS "Reduce Motion" setting on their own.
+
 ## Not implemented from the prototype
 
 - Real sign-in and sync. Auth only validates and stores the account on the device.

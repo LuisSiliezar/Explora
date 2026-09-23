@@ -44,7 +44,7 @@ src/
     ├── hooks/                  useActivities, useActivityFilter, useFavorites, useNearMe, useSettings, useToast, useIsOnline, ...
     ├── i18n/                   strings.ts (EN/ES) + useT
     ├── utils/                  formatDistance, formatSyncTime
-    └── theme/                  palette.js (source of truth), tokens, useTheme
+    └── theme/                  palette.js (source of truth), tokens, motion, useTheme
 __tests__/                      unit + render tests, helpers/fakes.ts
 jest.setup.js                   native module mocks
 ```
