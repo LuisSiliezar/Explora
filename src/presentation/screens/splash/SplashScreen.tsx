@@ -39,6 +39,7 @@ export const SplashScreen = ({ onFinish }: { onFinish: () => void }) => {
       style={StyleSheet.absoluteFill}
       className="z-50 items-center justify-center bg-white"
       accessibilityLabel={`Explora. ${t('loadingCatalog')}`}
+      testID="splash"
     >
       <LottieView source={splashAnimation} autoPlay loop style={styles.logo} />
     </Animated.View>
