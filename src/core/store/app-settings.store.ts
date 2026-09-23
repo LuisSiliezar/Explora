@@ -3,7 +3,6 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 import type { KeyValueStorage } from '@config/adapters/storage';
 import type {
   Language,
-  ListLayout,
   NotificationPreferences,
   PermissionStatus,
   TextScale,
@@ -13,7 +12,6 @@ export interface AppSettings {
   onboardingDone: boolean;
   language: Language;
   textScale: TextScale;
-  layout: ListLayout;
   /** The user asked to sort by distance (only honoured while location is granted). */
   nearMe: boolean;
   locationPermission: PermissionStatus;
@@ -24,7 +22,6 @@ export interface AppSettingsState extends AppSettings {
   completeOnboarding: () => void;
   setLanguage: (language: Language) => void;
   setTextScale: (textScale: TextScale) => void;
-  setLayout: (layout: ListLayout) => void;
   setNearMe: (nearMe: boolean) => void;
   setLocationPermission: (status: PermissionStatus) => void;
   setNotifications: (patch: Partial<NotificationPreferences>) => void;
@@ -43,7 +40,6 @@ export const defaultAppSettings = (): AppSettings => ({
   onboardingDone: false,
   language: detectLanguage(),
   textScale: 1,
-  layout: 'list',
   nearMe: false,
   locationPermission: 'prompt',
   notifications: { status: 'prompt', weekly: false, reminders: true },
@@ -61,7 +57,6 @@ export const createAppSettingsStore = (storage: KeyValueStorage) =>
         completeOnboarding: () => set({ onboardingDone: true }),
         setLanguage: language => set({ language }),
         setTextScale: textScale => set({ textScale }),
-        setLayout: layout => set({ layout }),
         setNearMe: nearMe => set({ nearMe }),
         setLocationPermission: locationPermission =>
           set(state => ({
@@ -75,13 +70,17 @@ export const createAppSettingsStore = (storage: KeyValueStorage) =>
       }),
       {
         name: 'app-settings:v1',
-        version: 2,
-        // v1 also stored a local sign-in `account`. Drop it, keep everything else.
+        version: 3,
+        // v1 also stored a local sign-in `account`, v2 a list/grid `layout`. Drop them, keep the rest.
         migrate: persisted => {
           const settings = {
-            ...(persisted as AppSettings & { account?: unknown }),
+            ...(persisted as AppSettings & {
+              account?: unknown;
+              layout?: unknown;
+            }),
           };
           delete settings.account;
+          delete settings.layout;
           return settings;
         },
         storage: createJSONStorage(() => storage),
@@ -89,7 +88,6 @@ export const createAppSettingsStore = (storage: KeyValueStorage) =>
           onboardingDone,
           language,
           textScale,
-          layout,
           nearMe,
           locationPermission,
           notifications,
@@ -97,7 +95,6 @@ export const createAppSettingsStore = (storage: KeyValueStorage) =>
           onboardingDone,
           language,
           textScale,
-          layout,
           nearMe,
           locationPermission,
           notifications,

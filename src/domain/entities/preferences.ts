@@ -1,6 +1,5 @@
 export type Language = 'en' | 'es';
 export type TextScale = 0.92 | 1 | 1.12;
-export type ListLayout = 'list' | 'grid';
 /** 'prompt' means the app hasn't asked yet. */
 export type PermissionStatus = 'prompt' | 'granted' | 'denied';
 
