@@ -1,0 +1,20 @@
+appId: com.explora.dev
+name: Favorite survives an app kill (local-first)
+tags:
+  - smoke
+---
+- runFlow: subflows/launch-fresh.yaml
+- runFlow: subflows/search-botanical.yaml
+- tapOn:
+    id: favorite-act-001
+- stopApp
+- launchApp:
+    clearState: false
+- extendedWaitUntil:
+    visible:
+      id: tab-favorites
+    timeout: 15000
+- tapOn:
+    id: tab-favorites
+- assertVisible:
+    id: activity-card-act-001

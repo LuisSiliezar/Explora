@@ -7,5 +7,7 @@
   "ignore": ["src/**/index.ts"],
   // Required by the React Native template's Babel/Jest toolchain, never imported directly.
   "ignoreDependencies": ["@babel/preset-env"],
+  // System CLI installed with Homebrew (docs/testing.md), not an npm package.
+  "ignoreBinaries": ["maestro"],
   "ignoreExportsUsedInFile": true
 }

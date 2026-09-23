@@ -56,6 +56,7 @@ export const FilterSheet = ({
           <TextInput
             value={query}
             onChangeText={onChangeQuery}
+            testID="search-input"
             placeholder={t('searchPlaceholder')}
             placeholderTextColor={colors.textFaint}
             autoFocus

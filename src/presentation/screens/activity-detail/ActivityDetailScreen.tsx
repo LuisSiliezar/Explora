@@ -74,6 +74,7 @@ export const ActivityDetailScreen = ({
           icon="back"
           onPress={navigation.goBack}
           accessibilityLabel={t('back')}
+          testID="detail-back"
         />
       </View>
       {isPending && !isError ? (
@@ -179,6 +180,7 @@ const ActivityDetail = ({
             icon="back"
             onPress={onBack}
             accessibilityLabel={t('back')}
+            testID="detail-back"
           />
           <View className={`self-start rounded-xl px-3 py-1.5 ${tint.bg}`}>
             <Text
@@ -218,6 +220,7 @@ const ActivityDetail = ({
             variant="circle"
             isFavorite={!!favorite}
             onPress={() => toggleFavorite(activity)}
+            testID="detail-favorite"
             accessibilityLabel={t(
               favorite ? 'removeFromFavorites' : 'addToFavorites',
               {

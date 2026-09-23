@@ -1,0 +1,21 @@
+appId: com.explora.dev
+name: Favorite from detail → shows in Favorites → remove
+tags:
+  - smoke
+---
+- runFlow: subflows/launch-fresh.yaml
+- runFlow: subflows/search-botanical.yaml
+- tapOn:
+    id: activity-card-act-001
+- tapOn:
+    id: detail-favorite
+- tapOn:
+    id: detail-back
+- tapOn:
+    id: tab-favorites
+- assertVisible:
+    id: activity-card-act-001
+- tapOn:
+    id: favorite-act-001
+- assertNotVisible:
+    id: activity-card-act-001

@@ -1,0 +1,18 @@
+# Fresh install state, permissions denied (deterministic), onboarding skipped.
+appId: com.explora.dev
+---
+- launchApp:
+    clearState: true
+    permissions:
+      all: deny
+# First launch after clearState can wait on the JS bundle (Metro in debug).
+- extendedWaitUntil:
+    visible:
+      id: onboarding-skip
+    timeout: 30000
+- tapOn:
+    id: onboarding-skip
+- extendedWaitUntil:
+    visible:
+      id: activities-search
+    timeout: 15000

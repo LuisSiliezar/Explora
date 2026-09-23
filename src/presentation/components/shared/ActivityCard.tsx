@@ -44,6 +44,7 @@ export const ActivityCard = memo(
           accessibilityRole="button"
           accessibilityLabel={`${activity.title}, ${activity.category}, ${activity.durationMinutes} min, ${activity.location}`}
           accessibilityHint={t('opensDetails')}
+          testID={`activity-card-${activity.id}`}
           className="flex-1 flex-row items-start gap-[13px] active:opacity-70"
         >
           <ActivityThumb activity={activity} variant="thumb" />
@@ -70,6 +71,7 @@ export const ActivityCard = memo(
             onPress={handleToggle}
             accessibilityRole="button"
             accessibilityLabel={t('removeFromFavorites', { s: activity.title })}
+            testID={`favorite-${activity.id}`}
             className="rounded-[9px] border border-danger-border bg-danger-surface px-3 py-2 active:opacity-80"
           >
             <Text className="font-sans-semibold text-[13px] text-danger">
@@ -80,6 +82,7 @@ export const ActivityCard = memo(
           <FavoriteButton
             isFavorite={isFavorite}
             onPress={handleToggle}
+            testID={`favorite-${activity.id}`}
             accessibilityLabel={t(
               isFavorite ? 'removeFromFavorites' : 'addToFavorites',
               { s: activity.title },
@@ -116,6 +119,7 @@ export const ActivityGridCard = memo(
           accessibilityRole="button"
           accessibilityLabel={`${activity.title}, ${activity.category}, ${activity.durationMinutes} min, ${activity.location}`}
           accessibilityHint={t('opensDetails')}
+          testID={`activity-card-${activity.id}`}
           className="gap-2 active:opacity-70"
         >
           <ActivityThumb activity={activity} variant="grid" />
@@ -147,6 +151,7 @@ export const ActivityGridCard = memo(
             isFavorite={isFavorite}
             onPress={handleToggle}
             compact
+            testID={`favorite-${activity.id}`}
             accessibilityLabel={t(
               isFavorite ? 'removeFromFavorites' : 'addToFavorites',
               { s: activity.title },

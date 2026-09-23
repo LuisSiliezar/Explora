@@ -1,0 +1,4 @@
+# Maestro workspace config: `yarn e2e` runs every top-level flow here.
+# subflows/ holds reusable steps and is not run on its own.
+flows:
+  - '*'

@@ -59,6 +59,7 @@ export const TabBar = ({ state, navigation }: BottomTabBarProps) => {
             accessibilityRole="tab"
             accessibilityLabel={label}
             accessibilityState={{ selected: focused }}
+            testID={`tab-${name.toLowerCase()}`}
             className="flex-1 items-center gap-1"
           >
             <Icon

@@ -160,6 +160,7 @@ export const ActivitiesScreen = ({ navigation }: TabScreenProps<'Browse'>) => {
           onPress={() => setSheetOpen(true)}
           accessibilityRole="search"
           accessibilityLabel={t('searchPlaceholder')}
+          testID="activities-search"
           className="h-[46px] flex-row items-center gap-2.5 rounded-xl border border-border bg-field px-3.5 active:border-text"
         >
           <Icon name="search" size={16} color="textMuted" />

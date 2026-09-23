@@ -17,6 +17,7 @@ interface Props {
   variant?: 'icon' | 'circle';
   /** Smaller heart for grid cells. */
   compact?: boolean;
+  testID?: string;
 }
 
 /** Heart with the design's "pop" when it becomes a favorite. */
@@ -27,6 +28,7 @@ export const FavoriteButton = memo(
     accessibilityLabel,
     variant = 'icon',
     compact,
+    testID,
   }: Props) => {
     const scale = useSharedValue(1);
     const wasFavorite = useRef(isFavorite);
@@ -51,6 +53,7 @@ export const FavoriteButton = memo(
         accessibilityRole="button"
         accessibilityState={{ selected: isFavorite }}
         accessibilityLabel={accessibilityLabel}
+        testID={testID}
         className={
           circle
             ? `h-[54px] w-[54px] items-center justify-center rounded-full ${

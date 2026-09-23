@@ -278,6 +278,7 @@ export const OnboardingScreen = (
           onPress={finish}
           accessibilityRole="button"
           accessibilityLabel={t('skip')}
+          testID="onboarding-skip"
           hitSlop={8}
         >
           <Text className="font-sans-semibold text-[15px] text-text-muted">

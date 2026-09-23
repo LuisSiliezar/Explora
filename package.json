@@ -8,6 +8,8 @@
     "lint": "eslint . --max-warnings=0",
     "start": "react-native start",
     "test": "jest",
+    "e2e": "maestro test .maestro",
+    "e2e:studio": "maestro studio",
     "knip": "knip",
     "pods": "cd ios && LANG=en_US.UTF-8 bundle exec pod install && cd ..",
     "typecheck": "tsc --noEmit",

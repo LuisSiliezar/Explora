@@ -1,0 +1,16 @@
+appId: com.explora.dev
+name: Search → open detail → back
+tags:
+  - smoke
+---
+- runFlow: subflows/launch-fresh.yaml
+- runFlow: subflows/search-botanical.yaml
+- tapOn:
+    id: activity-card-act-001
+- assertVisible:
+    id: detail-favorite
+- assertVisible: Botanical Garden Walk
+- tapOn:
+    id: detail-back
+- assertVisible:
+    id: activities-search

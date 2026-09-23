@@ -1,0 +1,13 @@
+# From Browse: search for the first bundled activity (act-001, "Botanical Garden Walk").
+appId: com.explora.dev
+---
+- tapOn:
+    id: activities-search
+- tapOn:
+    id: search-input
+- inputText: Botanical
+- pressKey: Enter
+- extendedWaitUntil:
+    visible:
+      id: activity-card-act-001
+    timeout: 10000
