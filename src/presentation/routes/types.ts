@@ -13,8 +13,6 @@ export type TabParamList = {
 
 export type RootStackParamList = {
   Onboarding: undefined;
-  /** `from` decides what happens after signing in: finish onboarding, or go back. */
-  Auth: { from: 'onboarding' | 'settings' };
   Tabs: NavigatorScreenParams<TabParamList>;
   ActivityDetail: { id: string; title?: string };
 };

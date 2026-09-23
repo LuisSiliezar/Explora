@@ -15,7 +15,6 @@ import {
   Toggle,
 } from '@presentation/components';
 import {
-  useAccount,
   useActivities,
   useDependencies,
   useFavorites,
@@ -83,7 +82,7 @@ const Stat = ({ label, value }: { label: string; value: string }) => (
   </View>
 );
 
-export const SettingsScreen = ({ navigation }: TabScreenProps<'Settings'>) => {
+export const SettingsScreen = (_props: TabScreenProps<'Settings'>) => {
   const t = useT();
   const insets = useSafeAreaInsets();
   const toast = useToast();
@@ -95,7 +94,6 @@ export const SettingsScreen = ({ navigation }: TabScreenProps<'Settings'>) => {
   const language = useSettings(state => state.language);
   const textScale = useSettings(state => state.textScale);
   const notifications = useSettings(state => state.notifications);
-  const { account, signOut } = useAccount();
   const { favorites } = useFavorites();
   const { data, dataUpdatedAt } = useActivities();
   const nearMe = useNearMe();
@@ -168,41 +166,6 @@ export const SettingsScreen = ({ navigation }: TabScreenProps<'Settings'>) => {
             {t('settings')}
           </Text>
         </Animated.View>
-
-        <View className="flex-row items-center gap-[13px] rounded-[14px] border border-border p-3.5">
-          <View className="h-11 w-11 items-center justify-center rounded-full bg-success">
-            <Text className="font-sans-bold text-[17px] text-accent">
-              {account
-                ? (account.name ?? account.email).charAt(0).toUpperCase()
-                : '?'}
-            </Text>
-          </View>
-          <View className="flex-1 gap-[3px]">
-            <Text numberOfLines={1} className="font-sans-semibold text-[16px]">
-              {account ? account.name ?? account.email : t('guestAccount')}
-            </Text>
-            <Text numberOfLines={1} className="text-[13px] text-text-muted">
-              {account ? account.email : t('guestSub')}
-            </Text>
-          </View>
-          <Pressable
-            onPress={() => {
-              if (account) {
-                signOut();
-                toast.show(t('toastSignedOut'));
-              } else {
-                navigation.navigate('Auth', { from: 'settings' });
-              }
-            }}
-            accessibilityRole="button"
-            accessibilityLabel={t(account ? 'signOut' : 'signIn')}
-            className="rounded-[10px] border border-border px-[13px] py-[9px] active:border-text"
-          >
-            <Text className="font-sans-semibold text-[13px]">
-              {t(account ? 'signOut' : 'signIn')}
-            </Text>
-          </Pressable>
-        </View>
 
         <Section label={t('language')} order={1}>
           <Pressable

@@ -16,5 +16,4 @@ export * from './Pill';
 export * from './SectionLabel';
 export * from './Skeleton';
 export * from './Text';
-export * from './TextField';
 export * from './Toggle';

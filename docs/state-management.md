@@ -25,7 +25,7 @@ Favorites are **user data, and the device is the source of truth**. They must be
 - Changing a persisted shape? Bump `version` and add a `migrate` (see the filter store's v1 → v2 migration from one `category` to `categories[]`).
 
 ## App settings store (`core/store/app-settings.store.ts`)
-Holds everything the user sets once and expects to keep: `onboardingDone`, `language`, `textScale`, `layout`, `nearMe`, `locationPermission`, `notifications` and the local `account`. UI reads slices with `useSettings(s => s.language)`. Writes go through the store's actions (`settingsStore.getState().setLanguage('es')`).
+Holds everything the user sets once and expects to keep: `onboardingDone`, `language`, `textScale`, `layout`, `nearMe`, `locationPermission`, and `notifications`. UI reads slices with `useSettings(s => s.language)`. Writes go through the store's actions (`settingsStore.getState().setLanguage('es')`).
 
-- The **password is never stored**. `signInUseCase` validates it and only the `Account` (email, optional name) is saved.
+- The persisted payload is at `version: 2`. v1 also held a local sign-in `account`; `migrate` drops it and keeps everything else. Bump the version and extend `migrate` whenever a persisted field changes shape.
 - `locationPermission` mirrors what the user answered in our pre-prompt / the OS prompt. Setting it to anything but `granted` also turns `nearMe` off.

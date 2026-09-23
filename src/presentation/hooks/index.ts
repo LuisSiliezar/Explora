@@ -1,5 +1,4 @@
 export * from './query-keys';
-export * from './useAccount';
 export * from './useActivities';
 export * from './useActivity';
 export * from './useActivityFilter';

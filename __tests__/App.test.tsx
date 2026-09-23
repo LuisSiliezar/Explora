@@ -44,14 +44,27 @@ const hasTab = (renderer: ReactTestRenderer.ReactTestRenderer) =>
   renderer.root.findAll(node => node.props.accessibilityRole === 'tab').length >
   0;
 
-test('first launch: onboarding → skip → continue as guest lands on the tabs', async () => {
+test('first launch: onboarding → skip lands on the tabs', async () => {
   const dependencies = createFakeContainer();
   dependencies.settingsStore.getState().setLanguage('en');
   const { renderer, cleanup } = await render(dependencies);
   expect(hasTab(renderer)).toBe(false);
 
   await press(renderer, 'Skip');
-  await press(renderer, 'Continue without an account');
+
+  expect(dependencies.settingsStore.getState().onboardingDone).toBe(true);
+  expect(hasTab(renderer)).toBe(true);
+  await cleanup();
+});
+
+test('first launch: stepping through onboarding → get started lands on the tabs', async () => {
+  const dependencies = createFakeContainer();
+  dependencies.settingsStore.getState().setLanguage('en');
+  const { renderer, cleanup } = await render(dependencies);
+
+  await press(renderer, 'Next');
+  await press(renderer, 'Next');
+  await press(renderer, 'Get started');
 
   expect(dependencies.settingsStore.getState().onboardingDone).toBe(true);
   expect(hasTab(renderer)).toBe(true);

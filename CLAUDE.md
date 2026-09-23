@@ -10,7 +10,7 @@ Guidance for Claude Code (and humans) working in this repo. Deep docs live in [`
 - When suggesting a commit message, use Conventional Commits (`type(scope): summary`) with a scope from `commitlint.config.js`. The husky `commit-msg` hook rejects anything else.
 
 ## What this app is
-**Explora** is a React Native (0.87, New Architecture) + TypeScript app. Users browse activities from a bundled JSON file (`src/assets/data/activities.json`), search and filter them, open a detail screen, and save favorites that work fully offline. A favorite can also get a reminder (notifications) and a photo (camera), and "Near me" sorts activities by distance (location). The UI follows the Claude Design prototype (splash → onboarding → optional local sign-in → Browse/Favorites/Settings) in English and Spanish. The list has to stay smooth with 1000+ items, and nothing the user changes can be lost when the app goes to background, the OS kills it, or the network is slow.
+**Explora** is a React Native (0.87, New Architecture) + TypeScript app. Users browse activities from a bundled JSON file (`src/assets/data/activities.json`), search and filter them, open a detail screen, and save favorites that work fully offline. A favorite can also get a reminder (notifications) and a photo (camera), and "Near me" sorts activities by distance (location). The UI follows the Claude Design prototype (splash → onboarding → Browse/Favorites/Settings) in English and Spanish. The list has to stay smooth with 1000+ items, and nothing the user changes can be lost when the app goes to background, the OS kills it, or the network is slow.
 
 ## Commands (Yarn only, never npm)
 ```bash
@@ -25,6 +25,7 @@ yarn typecheck       # tsc --noEmit
 yarn lint            # eslint, warnings fail
 yarn knip            # unused files, exports and deps
 yarn test            # jest
+yarn e2e             # maestro flows in .maestro/ (dev app on a booted simulator/emulator)
 yarn format          # prettier (format:check in CI)
 yarn validate        # typecheck + lint + knip + test. Run before handing work back for review.
 ```

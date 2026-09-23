@@ -6,8 +6,8 @@ The UI implements the **"Explora Prototype (no photos)"** Claude Design project:
 
 ```
 BootSplash (native) → SplashScreen (white, looping logo Lottie, waits for the catalog, min 1.2 s)
-  first run:  Onboarding (3 steps) → Auth (sign in / create / continue as guest)
-  afterwards: Tabs [Browse · Favorites · Settings] + ActivityDetail + Auth (modal from Settings)
+  first run:  Onboarding (3 steps; Skip / Get started finish it)
+  afterwards: Tabs [Browse · Favorites · Settings] + ActivityDetail
 ```
 
 `RootNavigator` switches between the two stacks on `settings.onboardingDone`. The splash is an overlay in `AppRoot`, so the navigator (and the catalog query) mounts right away underneath it.
@@ -60,6 +60,6 @@ All UI copy lives in `presentation/i18n/strings.ts` (English and Spanish, ported
 
 ## Not implemented from the prototype
 
-- Real sign-in and sync. Auth only validates and stores the account on the device.
+- Sign-in and sync. There are no accounts: favorites and settings live on the device only.
 - French ("needs download") and the weekly-summary schedule. The switch is stored, but nothing sends it.
 - The prototype's "scenario panel" (its controls for forcing states: offline, error, permissions). The app takes those states from the real system instead.

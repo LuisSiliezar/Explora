@@ -67,7 +67,7 @@ const BARS = [
   { width: '22%', opacity: 0.3 },
 ] as const;
 
-/** Pill that flips EN ⇄ ES (onboarding and auth). */
+/** Pill that flips EN ⇄ ES. */
 export const LanguagePill = () => {
   const { settingsStore, haptics } = useDependencies();
   const language = useSettings(state => state.language);
@@ -237,12 +237,13 @@ const OnboardingPage = memo(
   },
 );
 
-export const OnboardingScreen = ({
-  navigation,
-}: RootStackScreenProps<'Onboarding'>) => {
+export const OnboardingScreen = (
+  _props: RootStackScreenProps<'Onboarding'>,
+) => {
   const t = useT();
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
+  const { settingsStore } = useDependencies();
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
   const scrollX = useSharedValue(0);
   const [index, setIndex] = useState(0);
@@ -252,7 +253,8 @@ export const OnboardingScreen = ({
     scrollX.value = e.contentOffset.x;
   });
 
-  const toAuth = () => navigation.navigate('Auth', { from: 'onboarding' });
+  // The navigator swaps to the app once onboarding is done.
+  const finish = () => settingsStore.getState().completeOnboarding();
 
   const onMomentumScrollEnd = (e: NativeSyntheticEvent<NativeScrollEvent>) =>
     setIndex(Math.round(e.nativeEvent.contentOffset.x / width));
@@ -273,7 +275,7 @@ export const OnboardingScreen = ({
       <View className="flex-row items-center justify-between px-5 pt-[18px]">
         <LanguagePill />
         <Pressable
-          onPress={toAuth}
+          onPress={finish}
           accessibilityRole="button"
           accessibilityLabel={t('skip')}
           hitSlop={8}
@@ -317,7 +319,7 @@ export const OnboardingScreen = ({
         </View>
         <Button
           label={t(last ? 'getStarted' : 'next')}
-          onPress={last ? toAuth : next}
+          onPress={last ? finish : next}
         />
       </View>
     </View>

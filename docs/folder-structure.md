@@ -18,7 +18,7 @@ src/
 │   ├── query/                  QueryClient + AppState/NetInfo lifecycle
 │   └── di/container.ts         composition root + Dependencies type
 ├── domain/
-│   ├── entities/               Activity, Favorite, ActivityFilter, Account, Coordinates, preferences
+│   ├── entities/               Activity, Favorite, ActivityFilter, Coordinates, preferences
 │   ├── repositories/           ActivityRepository, FavoritesRepository (interfaces)
 │   ├── datasources/            ActivityDataSource (interface)
 │   ├── services/               NotificationPort, CameraPort, LocationPort, HapticsPort
@@ -26,7 +26,6 @@ src/
 ├── core/
 │   ├── use-cases/activities/   getActivities, getActivityById, filterActivities, sortByDistance/sortByTitle
 │   ├── use-cases/favorites/    toggleFavorite, restoreFavorite (undo), resetLocalData, attachPhoto, scheduleReminder
-│   ├── use-cases/account/      signIn (local-only validation)
 │   └── store/                  activity-filter.store, app-settings.store (zustand + persist)
 ├── infrastructure/
 │   ├── interfaces/             DTOs + zod schemas (raw shapes)
@@ -37,7 +36,7 @@ src/
 └── presentation/
     ├── providers/              AppProviders, DependenciesProvider/useDependencies
     ├── routes/                 AppRoot (splash overlay), RootNavigator (onboarding | tabs), typed params
-    ├── screens/                splash/, onboarding/, auth/, activities/ (+FilterSheet), activity-detail/, favorites/, settings/ (+LanguageSheet)
+    ├── screens/                splash/, onboarding/, activities/ (+FilterSheet), activity-detail/, favorites/, settings/ (+LanguageSheet)
     ├── components/lists/       ActivityList (FlashList, list or 2-col grid)
     ├── components/navigation/  TabBar
     ├── components/shared/      Text, Button, Chip, Toggle, Pill, DurationTile, ActivityCard/GridCard, FavoriteButton, Banner, Dialog, BottomSheet, ...

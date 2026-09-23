@@ -3,8 +3,6 @@ export type DomainErrorCode =
   | 'NETWORK'
   | 'OFFLINE'
   | 'VALIDATION'
-  | 'INVALID_EMAIL'
-  | 'WEAK_PASSWORD'
   | 'PERMISSION_DENIED'
   | 'UNKNOWN';
 

@@ -51,15 +51,32 @@ describe('app settings store', () => {
     first.getState().completeOnboarding();
     first.getState().setLanguage('es');
     first.getState().setTextScale(1.12);
-    first.getState().setAccount({ email: 'ana@example.com' });
 
     const restored = createAppSettingsStore(storage).getState();
     expect(restored).toMatchObject({
       onboardingDone: true,
       language: 'es',
       textScale: 1.12,
-      account: { email: 'ana@example.com' },
     });
+  });
+
+  it('migrates v1 data: drops the old local account, keeps the rest', () => {
+    const storage = new MemoryStorage();
+    storage.setItem(
+      'app-settings:v1',
+      JSON.stringify({
+        state: {
+          onboardingDone: true,
+          language: 'es',
+          account: { email: 'ana@example.com' },
+        },
+        version: 1,
+      }),
+    );
+
+    const restored = createAppSettingsStore(storage).getState();
+    expect(restored).toMatchObject({ onboardingDone: true, language: 'es' });
+    expect(restored).not.toHaveProperty('account');
   });
 
   it('turns "near me" off when location is denied', () => {

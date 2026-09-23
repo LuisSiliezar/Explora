@@ -2,7 +2,6 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import type { KeyValueStorage } from '@config/adapters/storage';
 import type {
-  Account,
   Language,
   ListLayout,
   NotificationPreferences,
@@ -19,7 +18,6 @@ export interface AppSettings {
   nearMe: boolean;
   locationPermission: PermissionStatus;
   notifications: NotificationPreferences;
-  account: Account | null;
 }
 
 export interface AppSettingsState extends AppSettings {
@@ -30,7 +28,6 @@ export interface AppSettingsState extends AppSettings {
   setNearMe: (nearMe: boolean) => void;
   setLocationPermission: (status: PermissionStatus) => void;
   setNotifications: (patch: Partial<NotificationPreferences>) => void;
-  setAccount: (account: Account | null) => void;
 }
 
 export const detectLanguage = (locale?: string): Language => {
@@ -50,11 +47,10 @@ export const defaultAppSettings = (): AppSettings => ({
   nearMe: false,
   locationPermission: 'prompt',
   notifications: { status: 'prompt', weekly: false, reminders: true },
-  account: null,
 });
 
 /**
- * Persisted app preferences and the local session. Writes are synchronous (MMKV),
+ * Persisted app preferences. Writes are synchronous (MMKV),
  * so nothing is lost if the OS kills the app. Storage is injected (DIP).
  */
 export const createAppSettingsStore = (storage: KeyValueStorage) =>
@@ -76,11 +72,18 @@ export const createAppSettingsStore = (storage: KeyValueStorage) =>
           set(state => ({
             notifications: { ...state.notifications, ...patch },
           })),
-        setAccount: account => set({ account }),
       }),
       {
         name: 'app-settings:v1',
-        version: 1,
+        version: 2,
+        // v1 also stored a local sign-in `account`. Drop it, keep everything else.
+        migrate: persisted => {
+          const settings = {
+            ...(persisted as AppSettings & { account?: unknown }),
+          };
+          delete settings.account;
+          return settings;
+        },
         storage: createJSONStorage(() => storage),
         partialize: ({
           onboardingDone,
@@ -90,7 +93,6 @@ export const createAppSettingsStore = (storage: KeyValueStorage) =>
           nearMe,
           locationPermission,
           notifications,
-          account,
         }): AppSettings => ({
           onboardingDone,
           language,
@@ -99,7 +101,6 @@ export const createAppSettingsStore = (storage: KeyValueStorage) =>
           nearMe,
           locationPermission,
           notifications,
-          account,
         }),
       },
     ),

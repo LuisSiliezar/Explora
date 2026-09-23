@@ -6,7 +6,6 @@ import { useConnectivityToast } from '@presentation/hooks/useConnectivityToast';
 import { useSettings } from '@presentation/hooks/useSettings';
 import { ActivitiesScreen } from '@presentation/screens/activities/ActivitiesScreen';
 import { ActivityDetailScreen } from '@presentation/screens/activity-detail/ActivityDetailScreen';
-import { AuthScreen } from '@presentation/screens/auth/AuthScreen';
 import { FavoritesScreen } from '@presentation/screens/favorites/FavoritesScreen';
 import { OnboardingScreen } from '@presentation/screens/onboarding/OnboardingScreen';
 import { SettingsScreen } from '@presentation/screens/settings/SettingsScreen';
@@ -31,13 +30,10 @@ const Tabs = () => (
   </Tab.Navigator>
 );
 
-/** First run: onboarding → optional sign in. After that: the app, with sign in as a modal. */
+/** First run: onboarding. After that: the app. The two cross-fade; detail slides in. */
 export const RootNavigator = () => {
   const onboardingDone = useSettings(state => state.onboardingDone);
   useConnectivityToast();
-  // "Auth" exists in both branches. A new key drops its route when the branch flips,
-  // otherwise React Navigation would keep showing it after onboarding completes.
-  const authKey = onboardingDone ? 'app' : 'onboarding';
 
   return (
     <Stack.Navigator
@@ -58,26 +54,13 @@ export const RootNavigator = () => {
             name="ActivityDetail"
             component={ActivityDetailScreen}
           />
-          <Stack.Screen
-            name="Auth"
-            navigationKey={authKey}
-            component={AuthScreen}
-            options={{ presentation: 'modal' }}
-          />
         </>
       ) : (
-        <>
-          <Stack.Screen
-            name="Onboarding"
-            component={OnboardingScreen}
-            options={{ animation: 'fade' }}
-          />
-          <Stack.Screen
-            name="Auth"
-            navigationKey={authKey}
-            component={AuthScreen}
-          />
-        </>
+        <Stack.Screen
+          name="Onboarding"
+          component={OnboardingScreen}
+          options={{ animation: 'fade' }}
+        />
       )}
     </Stack.Navigator>
   );
