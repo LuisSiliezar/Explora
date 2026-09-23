@@ -35,11 +35,14 @@ export const categoryColors = (
   Leisure: { bg: colors.leisureBg, fg: colors.leisureFg },
 });
 
+/** DM Sans for body text, labels and tags; Plus Jakarta Sans for headings and titles. */
 export const fonts = {
-  regular: 'Figtree-Regular',
-  medium: 'Figtree-Medium',
-  semibold: 'Figtree-SemiBold',
-  bold: 'Figtree-Bold',
-  mono: 'IBMPlexMono-Regular',
-  monoMedium: 'IBMPlexMono-Medium',
+  regular: 'DMSans-Regular',
+  medium: 'DMSans-Medium',
+  semibold: 'DMSans-SemiBold',
+  bold: 'DMSans-Bold',
+  display: 'PlusJakartaSans-Regular',
+  displayMedium: 'PlusJakartaSans-Medium',
+  displaySemibold: 'PlusJakartaSans-SemiBold',
+  displayBold: 'PlusJakartaSans-Bold',
 } as const;
