@@ -18,6 +18,19 @@ describe('activity filter store', () => {
     expect(store.getState().duration).toBeNull();
   });
 
+  it('clears the search but keeps the categories', () => {
+    const store = createActivityFilterStore(new MemoryStorage());
+    store.getState().setQuery('garden');
+    store.getState().toggleDuration('mid');
+    store.getState().toggleCategory('Outdoors');
+    store.getState().clearSearch();
+    expect(store.getState()).toMatchObject({
+      query: '',
+      duration: null,
+      categories: ['Outdoors'],
+    });
+  });
+
   it('migrates the v1 single category', () => {
     const storage = new MemoryStorage();
     storage.setItem(
@@ -77,6 +90,21 @@ describe('app settings store', () => {
     const restored = createAppSettingsStore(storage).getState();
     expect(restored).toMatchObject({ onboardingDone: true, language: 'es' });
     expect(restored).not.toHaveProperty('account');
+  });
+
+  it('migrates v2 data: drops the old list/grid layout', () => {
+    const storage = new MemoryStorage();
+    storage.setItem(
+      'app-settings:v1',
+      JSON.stringify({
+        state: { onboardingDone: true, layout: 'grid' },
+        version: 2,
+      }),
+    );
+
+    const restored = createAppSettingsStore(storage).getState();
+    expect(restored).toMatchObject({ onboardingDone: true });
+    expect(restored).not.toHaveProperty('layout');
   });
 
   it('turns "near me" off when location is denied', () => {

@@ -20,7 +20,7 @@ describe('strings', () => {
     expect(translate('en', 'toastSaved', { s: 'Sunset Walk' })).toBe(
       'Saved “Sunset Walk” — offline ready',
     );
-    expect(translate('es', 'showResults', { n: 4 })).toBe('Ver 4');
+    expect(translate('es', 'stepOf', { n: 2 })).toBe('02 / 03');
   });
 });
 
