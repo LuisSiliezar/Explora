@@ -76,6 +76,11 @@ const en = {
   retry: 'Retry',
   goFavorites: 'Go to Favorites',
   activityUnavailable: 'Activity unavailable',
+  offlineNoCatalogTitle: 'You’re offline',
+  offlineNoCatalogBody:
+    'Connect once to load the catalog. Your favorites are available right now.',
+  activityUnavailableOffline:
+    'This activity isn’t saved on this device. Connect to open it, or save it next time to keep it offline.',
   emptyNoMatch: 'No activities match',
   emptyNoMatchBody: 'Try a different word or widen your filters.',
   clearFilters: 'Clear filters',
@@ -262,6 +267,11 @@ const es: Strings = {
   retry: 'Reintentar',
   goFavorites: 'Ir a Favoritos',
   activityUnavailable: 'Actividad no disponible',
+  offlineNoCatalogTitle: 'Estás sin conexión',
+  offlineNoCatalogBody:
+    'Conéctate una vez para cargar el catálogo. Tus favoritos ya están disponibles.',
+  activityUnavailableOffline:
+    'Esta actividad no está guardada en este dispositivo. Conéctate para abrirla o guárdala para tenerla sin conexión.',
   emptyNoMatch: 'Ninguna actividad coincide',
   emptyNoMatchBody: 'Prueba otra palabra o amplía los filtros.',
   clearFilters: 'Borrar filtros',

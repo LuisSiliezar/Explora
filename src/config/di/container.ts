@@ -22,6 +22,7 @@ import type {
   NotificationPort,
 } from '@domain/services';
 import {
+  CachedActivityDataSource,
   DevSeedActivityDataSource,
   LocalActivityDataSource,
   RemoteActivityDataSource,
@@ -50,13 +51,19 @@ export interface Dependencies {
   haptics: HapticsPort;
 }
 
-const createActivityDataSource = (): ActivityDataSource => {
+const createActivityDataSource = (
+  storage: KeyValueStorage,
+): ActivityDataSource => {
+  // The bundled JSON is already offline; a remote catalog keeps its last good copy.
   const source: ActivityDataSource = env.API_URL
-    ? new RemoteActivityDataSource(
-        new AxiosAdapter({
-          baseURL: env.API_URL,
-          timeoutMs: env.API_TIMEOUT_MS,
-        }),
+    ? new CachedActivityDataSource(
+        new RemoteActivityDataSource(
+          new AxiosAdapter({
+            baseURL: env.API_URL,
+            timeoutMs: env.API_TIMEOUT_MS,
+          }),
+        ),
+        storage,
       )
     : new LocalActivityDataSource(activitiesJson);
 
@@ -69,7 +76,7 @@ const createActivityDataSource = (): ActivityDataSource => {
 export const createContainer = (
   storage: KeyValueStorage = new MMKVStorageAdapter(),
 ): Dependencies => ({
-  activities: new ActivityRepositoryImpl(createActivityDataSource()),
+  activities: new ActivityRepositoryImpl(createActivityDataSource(storage)),
   favorites: new StorageFavoritesRepository(storage),
   filterStore: createActivityFilterStore(storage),
   settingsStore: createAppSettingsStore(storage),

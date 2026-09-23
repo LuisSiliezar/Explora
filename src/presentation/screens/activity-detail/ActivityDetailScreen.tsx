@@ -54,10 +54,12 @@ export const ActivityDetailScreen = ({
   const { colors } = useTheme();
   const {
     data: activity,
+    error,
     isPending,
     isError,
     refetch,
   } = useActivity(route.params.id);
+  const offline = isDomainError(error) && error.code === 'OFFLINE';
 
   if (activity) {
     return <ActivityDetail activity={activity} onBack={navigation.goBack} />;
@@ -80,8 +82,8 @@ export const ActivityDetailScreen = ({
         </View>
       ) : (
         <ErrorState
-          title={t('activityUnavailable')}
-          body={t('errorBody')}
+          title={t(offline ? 'offlineNoCatalogTitle' : 'activityUnavailable')}
+          body={t(offline ? 'activityUnavailableOffline' : 'errorBody')}
           retryLabel={t('retry')}
           onRetry={refetch}
         />

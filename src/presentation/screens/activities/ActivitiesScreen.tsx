@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { isDomainError } from '@domain/errors';
 import {
   ActivityList,
   ActivitySkeleton,
@@ -49,7 +50,8 @@ export const ActivitiesScreen = ({ navigation }: TabScreenProps<'Browse'>) => {
   const { settingsStore, haptics } = useDependencies();
   const language = useSettings(state => state.language);
   const layout = useSettings(state => state.layout);
-  const { data, isPending, isError, refetch, dataUpdatedAt } = useActivities();
+  const { data, error, isPending, isError, refetch, dataUpdatedAt } =
+    useActivities();
   const filter = useActivityFilter(data);
   const nearMe = useNearMe();
   const rows = useActivityRows(filter.results, nearMe.origin);
@@ -88,10 +90,11 @@ export const ActivitiesScreen = ({ navigation }: TabScreenProps<'Browse'>) => {
       return <ActivitySkeleton />;
     }
     if (isError && !data) {
+      const offline = isDomainError(error) && error.code === 'OFFLINE';
       return (
         <ErrorState
-          title={t('errorTitle')}
-          body={t('errorBody')}
+          title={t(offline ? 'offlineNoCatalogTitle' : 'errorTitle')}
+          body={t(offline ? 'offlineNoCatalogBody' : 'errorBody')}
           retryLabel={t('retry')}
           onRetry={refetch}
           secondaryLabel={t('goFavorites')}

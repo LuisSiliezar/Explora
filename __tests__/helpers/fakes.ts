@@ -28,6 +28,14 @@ export class InMemoryActivityDataSource implements ActivityDataSource {
   }
 }
 
+/** Fails like a remote source would (offline, timeout, bad payload...). */
+export class FailingActivityDataSource implements ActivityDataSource {
+  constructor(private readonly error: unknown) {}
+  async getAll(): Promise<Activity[]> {
+    throw this.error;
+  }
+}
+
 export const createFakeNotifications = (): jest.Mocked<NotificationPort> => ({
   requestPermission: jest.fn(async () => true),
   scheduleReminder: jest.fn<Promise<string>, [ReminderRequest]>(

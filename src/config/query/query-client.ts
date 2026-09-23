@@ -12,12 +12,15 @@ export const queryClient = new QueryClient({
     queries: {
       staleTime: 5 * 60 * 1000,
       gcTime: 24 * 60 * 60 * 1000,
+      // Always run the first attempt: local and cached sources answer offline.
+      // Only retries pause until NetInfo reports the connection is back.
+      networkMode: 'offlineFirst',
       // Don't retry errors that won't fix themselves.
       retry: (failureCount, error) =>
         failureCount < 2 &&
         !(
           isDomainError(error) &&
-          ['NOT_FOUND', 'VALIDATION'].includes(error.code)
+          ['NOT_FOUND', 'VALIDATION', 'OFFLINE'].includes(error.code)
         ),
     },
   },

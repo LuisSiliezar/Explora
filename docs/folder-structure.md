@@ -31,7 +31,7 @@ src/
 ├── infrastructure/
 │   ├── interfaces/             DTOs + zod schemas (raw shapes)
 │   ├── mappers/                DTO → entity
-│   ├── datasources/            Local (JSON), Remote (HTTP), DevSeed (decorator)
+│   ├── datasources/            Local (JSON), Remote (HTTP), Cached + DevSeed (decorators)
 │   ├── repositories/           ActivityRepositoryImpl, StorageFavoritesRepository
 │   └── services/               Notifee, ImagePicker, Geolocation, HapticFeedback adapters
 └── presentation/
