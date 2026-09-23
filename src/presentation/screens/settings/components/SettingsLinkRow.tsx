@@ -22,10 +22,7 @@ export const SettingsLinkRow = ({ label, value, onPress, testID }: Props) => {
       testID={testID}
       className="flex-row items-center gap-3 border-b border-border py-6 active:opacity-60"
     >
-      <Text
-        numberOfLines={1}
-        className="flex-1 font-display-semibold text-xl"
-      >
+      <Text numberOfLines={1} className="flex-1 font-display-semibold text-xl">
         {label}
       </Text>
       {!!value && (

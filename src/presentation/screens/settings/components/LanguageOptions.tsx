@@ -41,9 +41,7 @@ export const LanguageOptions = () => {
           );
         })}
       </View>
-      <Text className="text-sm text-text-muted">
-        {t('languageFoot')}
-      </Text>
+      <Text className="text-sm text-text-muted">{t('languageFoot')}</Text>
     </View>
   );
 };
