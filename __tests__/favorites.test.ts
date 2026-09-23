@@ -1,6 +1,7 @@
 import { MemoryStorage } from '@config/adapters/storage';
 import {
   attachPhotoUseCase,
+  clearReminderUseCase,
   scheduleReminderUseCase,
   toggleFavoriteUseCase,
 } from '@core/use-cases';
@@ -60,6 +61,7 @@ describe('favorites', () => {
     const fireAt = new Date(Date.now() + 1000);
     await scheduleReminderUseCase(deps, walk, fireAt, copy);
     expect(deps.notifications.scheduleReminder).toHaveBeenCalledWith({
+      activityId: walk.id,
       ...copy,
       fireAt,
     });
@@ -67,6 +69,19 @@ describe('favorites', () => {
 
     expect(await toggleFavoriteUseCase(deps, walk)).toBe(false);
     expect(deps.notifications.cancel).toHaveBeenCalledWith('reminder-1');
+  });
+
+  it('clears the reminder id once the reminder is opened', async () => {
+    const deps = {
+      favorites: new StorageFavoritesRepository(new MemoryStorage()),
+      notifications: createFakeNotifications(),
+    };
+    await scheduleReminderUseCase(deps, walk, new Date(), copy);
+
+    clearReminderUseCase(deps, walk.id);
+
+    expect(deps.favorites.isFavorite(walk.id)).toBe(true);
+    expect(deps.favorites.getAll()[0].reminderId).toBeUndefined();
   });
 
   it('refuses to schedule without notification permission', async () => {

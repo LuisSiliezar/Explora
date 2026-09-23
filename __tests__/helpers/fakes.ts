@@ -42,6 +42,12 @@ export const createFakeNotifications = (): jest.Mocked<NotificationPort> => ({
     async () => 'reminder-1',
   ),
   cancel: jest.fn<Promise<void>, [string]>(async () => undefined),
+  getInitialOpenedActivity: jest.fn<Promise<string | null>, []>(
+    async () => null,
+  ),
+  onReminderOpened: jest.fn<() => void, [(activityId: string) => void]>(
+    () => () => undefined,
+  ),
 });
 
 export const createFakeCamera = (

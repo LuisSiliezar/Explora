@@ -34,6 +34,7 @@ export const scheduleReminderUseCase = async (
     await notifications.cancel(previous).catch(() => undefined);
   }
   const reminderId = await notifications.scheduleReminder({
+    activityId: activity.id,
     ...copy,
     fireAt,
   });

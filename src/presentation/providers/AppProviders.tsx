@@ -11,10 +11,13 @@ import {
 import { QueryClientProvider, type QueryClient } from '@tanstack/react-query';
 import { Toaster } from 'sonner-native';
 import { createContainer, type Dependencies } from '@config/di';
+import { env } from '@config/env';
 import {
   queryClient as defaultQueryClient,
   setupQueryLifecycle,
 } from '@config/query';
+import { clearReminderUseCase } from '@core/use-cases';
+import { createLinking } from '@presentation/routes/linking';
 import { useTheme, type Colors } from '@presentation/theme';
 import { DependenciesProvider } from './DependenciesProvider';
 
@@ -55,6 +58,14 @@ export const AppProviders = ({
   queryClient = defaultQueryClient,
 }: PropsWithChildren<Props>) => {
   const [deps] = useState(() => dependencies ?? createContainer());
+  const [linking] = useState(() =>
+    createLinking({
+      prefix: `${env.APP_URL_SCHEME}://`,
+      notifications: deps.notifications,
+      onReminderOpened: activityId => clearReminderUseCase(deps, activityId),
+      isReady: () => deps.settingsStore.getState().onboardingDone,
+    }),
+  );
   const { scheme, colors, fonts } = useTheme();
   const dark = scheme === 'dark';
 
@@ -66,7 +77,10 @@ export const AppProviders = ({
         <StatusBar barStyle={dark ? 'light-content' : 'dark-content'} />
         <QueryClientProvider client={queryClient}>
           <DependenciesProvider value={deps}>
-            <NavigationContainer theme={navigationTheme(dark, colors)}>
+            <NavigationContainer
+              linking={linking}
+              theme={navigationTheme(dark, colors)}
+            >
               {children}
             </NavigationContainer>
           </DependenciesProvider>

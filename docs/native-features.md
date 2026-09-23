@@ -25,9 +25,41 @@ UI-only libraries don't need a port, but each is reached from **one** place:
 - **Near me** (Browse chip, `useNearMe`): our pre-prompt dialog ("Allow while using app / Don't allow / Not now"), then the OS prompt, then a locating overlay while `useCurrentLocation` fetches the position. Activities are sorted with `sortByDistance` (haversine) and show a distance pill. Denied → a banner with **Open Settings**; everything else keeps working in alphabetical order. Settings → Permissions → Location re-asks (or opens device settings).
   > Activities carry optional `latitude`/`longitude` (still `schemaVersion: 1`; the fields are optional in the zod DTO). The bundled coordinates are fictional, placed around the iOS Simulator's default location (Apple Park) so the demo distances match the design.
 - **Notifications** (Settings): pre-prompt, then `NotificationPort.requestPermission()`. The weekly-summary switch is a stored preference only; nothing schedules it yet.
-- **Remind me in 1 hour** (Detail → More): `scheduleReminderUseCase` asks for permission, favorites the activity, cancels any previous reminder, schedules a timestamp trigger, and stores the `reminderId`. Unfavoriting cancels the reminder.
+- **Remind me in 1 hour** (Detail → More): `scheduleReminderUseCase` asks for permission, favorites the activity, cancels any previous reminder, schedules a timestamp trigger (carrying `data.activityId` and the localized `reminderBody`), and stores the `reminderId`. Unfavoriting cancels the reminder. Tapping the reminder opens the activity (see below) and `clearReminderUseCase` forgets the id, so the button reads "Remind me" again.
 - **Add a photo** (Detail → More): choose Camera or Library. The URI is stored on the favorite, shown under More, and restored by Undo.
 - **Haptics**: selection ticks on chips, toggles and tabs; success on save; warning on blocked actions.
+
+## Notifications & deep links
+Deep links and reminder taps share one path: both turn into a URL that React Navigation resolves with `createLinking` (`presentation/routes/linking.ts`, passed to `NavigationContainer` in `AppProviders`).
+
+Each environment has its own scheme (`APP_URL_SCHEME`), so side-by-side installs never steal each other's links:
+
+| Env | Scheme |
+|---|---|
+| dev | `explora-dev://` |
+| staging | `explora-staging://` |
+| prod | `explora://` |
+
+| Path | Opens |
+|---|---|
+| `activity/:id` | `ActivityDetail` (renders from the list cache or the favorite snapshot, so it works offline) |
+| `browse`, `favorites`, `settings` | that tab |
+
+Reminder tap flow:
+- **App killed**: `getInitialURL` asks `Linking` first, then `NotificationPort.getInitialOpenedActivity()` (notifee `getInitialNotification`).
+- **App alive**: `NotificationPort.onReminderOpened` fires on a notifee foreground `PRESS`, and also on returning to `active` with a notification intent (Android background taps). Ids are deduped, so a tap never navigates twice.
+- **Foreground on iOS**: `foregroundPresentationOptions` shows the banner.
+- **Background handler**: `index.js` calls `registerNotificationBackgroundHandler()` (a no-op `onBackgroundEvent`). notifee requires it on Android.
+
+Native wiring: iOS `CFBundleURLTypes` (`$(APP_URL_SCHEME)`) + `RCTLinkingManager` in `AppDelegate.swift`. Android uses a VIEW/BROWSABLE intent filter on `MainActivity` with `${appUrlScheme}` from the flavor's `manifestPlaceholders`.
+
+Links are ignored until onboarding is done, because the target screens aren't mounted yet.
+
+Try it (after a native rebuild):
+```bash
+xcrun simctl openurl booted "explora-dev://activity/<id>"
+adb shell am start -W -a android.intent.action.VIEW -d "explora-dev://activity/<id>" com.explora.dev
+```
 
 ## Permissions
 | Platform | Key | Why |
