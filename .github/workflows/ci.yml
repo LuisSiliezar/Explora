@@ -101,8 +101,10 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: yarn
 
+      # No .ruby-version in the repo (locally the Gemfile runs on macOS's system Ruby).
       - uses: ruby/setup-ruby@v1
         with:
+          ruby-version: '3.3'
           bundler-cache: true
 
       - run: yarn install --frozen-lockfile
