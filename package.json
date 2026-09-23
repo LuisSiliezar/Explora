@@ -16,7 +16,7 @@
     "typecheck": "tsc --noEmit",
     "format": "prettier --write \"src/**/*.{ts,tsx}\" \"__tests__/**/*.{ts,tsx}\" App.tsx",
     "format:check": "prettier --check \"src/**/*.{ts,tsx}\" \"__tests__/**/*.{ts,tsx}\" App.tsx",
-    "validate": "yarn typecheck && yarn lint && yarn knip && yarn test",
+    "validate": "yarn format:check && yarn typecheck && yarn lint && yarn knip && yarn test",
     "ios:dev": "react-native run-ios --scheme Explora-Dev --simulator \"iPhone 17 Pro\"",
     "ios:staging": "react-native run-ios --scheme Explora-Staging --simulator \"iPhone 17 Pro\"",
     "ios:prod": "react-native run-ios --scheme Explora-Prod --mode Release --simulator \"iPhone 17 Pro\"",

@@ -27,7 +27,7 @@ yarn knip            # unused files, exports and deps
 yarn test            # jest
 yarn e2e             # maestro flows in .maestro/ (dev app on a booted simulator/emulator)
 yarn format          # prettier (format:check in CI)
-yarn validate        # typecheck + lint + knip + test. Run before handing work back for review.
+yarn validate        # format:check + typecheck + lint + knip + test. Run before handing work back for review.
 ```
 
 ## Environments

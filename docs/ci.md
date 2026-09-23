@@ -16,7 +16,7 @@ Build outputs appear under **Artifacts** on the run's summary page and are kept 
 
 ## Run the same checks locally
 ```bash
-yarn validate       # typecheck + lint + knip + test
+yarn validate       # format:check + typecheck + lint + knip + test
 yarn format:check   # yarn format fixes it
 ```
 

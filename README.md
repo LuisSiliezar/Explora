@@ -6,7 +6,7 @@ React Native + TypeScript app for browsing activities, searching and filtering t
 cp .env.example .env
 yarn && yarn pods
 yarn ios        # or: yarn android
-yarn validate   # typecheck + lint + tests
+yarn validate   # format:check + typecheck + lint + knip + tests
 ```
 
 - Architecture, conventions and how-tos: [`docs/`](docs/README.md)
