@@ -6,7 +6,7 @@ Use three tools, each for one kind of state. Don't mix them.
 |---|---|---|---|
 | **Server/async data** (anything fetched, cacheable, may be stale) | TanStack Query | `presentation/hooks/useActivities`, `useActivity`, `useCurrentLocation` | activity list, activity detail, device position |
 | **User-owned persistent data** | Repository + `useSyncExternalStore` | `infrastructure/repositories/favorites.repository.impl.ts`, `hooks/useFavorites` | favorites, photo URI, reminder id |
-| **Persisted UI state** (must survive kill/background) | zustand + `persist` | `core/store/activity-filter.store.ts`, `core/store/app-settings.store.ts` | search text, categories, duration; onboarding done, language, text size, list/grid, permission statuses, local account |
+| **Persisted UI state** (must survive kill/background) | zustand + `persist` | `core/store/activity-filter.store.ts`, `core/store/app-settings.store.ts` | search text, categories, duration; onboarding done, language, text size, permission statuses, local account |
 | **Ephemeral UI state** | `useState` | component | "is scheduling…" spinner |
 
 ## Why favorites are not in TanStack Query or zustand
@@ -25,7 +25,7 @@ Favorites are **user data, and the device is the source of truth**. They must be
 - Changing a persisted shape? Bump `version` and add a `migrate` (see the filter store's v1 → v2 migration from one `category` to `categories[]`).
 
 ## App settings store (`core/store/app-settings.store.ts`)
-Holds everything the user sets once and expects to keep: `onboardingDone`, `language`, `textScale`, `layout`, `nearMe`, `locationPermission`, and `notifications`. UI reads slices with `useSettings(s => s.language)`. Writes go through the store's actions (`settingsStore.getState().setLanguage('es')`).
+Holds everything the user sets once and expects to keep: `onboardingDone`, `language`, `textScale`, `nearMe`, `locationPermission`, and `notifications`. UI reads slices with `useSettings(s => s.language)`. Writes go through the store's actions (`settingsStore.getState().setLanguage('es')`).
 
 - The persisted payload is at `version: 2`. v1 also held a local sign-in `account`; `migrate` drops it and keeps everything else. Bump the version and extend `migrate` whenever a persisted field changes shape.
 - `locationPermission` mirrors what the user answered in our pre-prompt / the OS prompt. Setting it to anything but `granted` also turns `nearMe` off.

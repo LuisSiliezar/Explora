@@ -3,8 +3,9 @@
 ## What's in place
 | Technique | Where |
 |---|---|
-| **FlashList v2** (cell recycling, no `estimatedItemSize` needed in v2) | `components/lists/ActivityList.tsx` |
-| `memo` rows + stable `renderItem`/`keyExtractor` | `ActivityCard`, `ActivityList` |
+| **FlashList v2** (cell recycling, no `estimatedItemSize` needed in v2) | `components/lists/ActivityList.tsx` (rows), `ActivityCarousel.tsx` (one horizontal list per category, nested in the vertical `CategorySections` list) |
+| `memo` rows + stable `renderItem`/`keyExtractor` | `ActivityCard`, `ActivityCarouselCard`, `ActivityList`, `ActivityCarousel` |
+| Fixed carousel card width (`CAROUSEL_CARD_WIDTH`), so horizontal cells never need measuring | `activity-card/constants` |
 | Per-row subscription: `useIsFavorite(id)` re-renders **one** row when it toggles, not the list | `hooks/useFavorites.ts` |
 | Precomputed lowercase `searchText` on each entity (computed once in the mapper) | `activity.mapper.ts` |
 | Pure single-pass `filterActivities`, returns the same array when the filter is empty | `core/use-cases/activities/filter-activities.use-case.ts` |
@@ -30,8 +31,9 @@ Debug builds run JS unoptimized and with dev checks, so their numbers mean nothi
 4. `yarn perf:android`. It:
    - runs `.maestro/perf/setup.yaml` (fresh install state, skip onboarding, list loaded; not measured),
    - resets `dumpsys gfxinfo`,
-   - runs `.maestro/perf/1000-items.yaml`: 20 fast flings down + 10 up through 1200 rows, search
-     `Botanical` (1200 → 100), 5 flings through results, favorite a row, open detail, back,
+   - runs `.maestro/perf/1000-items.yaml`: 20 fast flings left + 10 right through the first
+     carousel (300 cards), 4 flings down + 4 up through the sections, search `Botanical`
+     (1200 → 100), 5 flings through the results, favorite a row, open detail, back,
    - saves `perf/<timestamp>/device.txt`, `gfxinfo.txt` and `summary.txt`.
 5. Repeat 3 times and report the median run. Record the screen with `adb shell screenrecord` for the demo.
 

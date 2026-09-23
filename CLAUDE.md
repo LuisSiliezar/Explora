@@ -69,10 +69,11 @@ presentation → core → domain ← infrastructure
 - Every folder has an `index.ts` barrel. Import through aliases: `@domain/…`, `@core/…`, `@infrastructure/…`, `@presentation/…`, `@config/…`, `@assets/…`, `@src/…`.
 - Use-cases are functions of the form `(deps, ...args)`. Repositories and adapters are classes that `implements` an interface.
 - Errors that cross layers are `DomainError` with a `code`. Don't throw raw strings or library errors past infrastructure.
-- Styling: NativeWind `className` built on the theme tokens (`bg-background`, `text-text-muted`, `bg-primary`...). Use `useTheme()` only for props that can't take a class. No raw hex values: dark mode comes from the CSS variables. See [docs/ui-and-design-system.md](docs/ui-and-design-system.md).
+- Styling: NativeWind `className` built on the theme tokens (`bg-background`, `text-text-muted`, `bg-primary`...). Use `useTheme()` only for props that can't take a class. No raw hex values: dark mode comes from the CSS variables. Type uses only the NativeWind scale (`text-xs`…`text-6xl`, `leading-*`, `tracking-*`), never `text-[Npx]`, `leading-[..]` or `tracking-[..]`. See [docs/ui-and-design-system.md](docs/ui-and-design-system.md).
 - Text: always `components/shared/Text` (applies the fonts and the in-app text size). Copy: always `useT()` keys from `presentation/i18n/strings.ts`, in both `en` and `es`.
 - Every pressable needs an `accessibilityRole` and `accessibilityLabel`.
 - Lists: use `ActivityList` (FlashList). Row components are `memo` and receive stable callbacks.
+- Screens only compose. Screen-only parts, hooks, constants, pure helpers and StyleSheets go in that screen's `components/`, `hooks/`, `constants/`, `utils/` and `styles/` subfolders (created only when needed). See [docs/folder-structure.md](docs/folder-structure.md#screen-folder-anatomy).
 
 ## Adding a feature (checklist)
 1. Entity or port in `domain/`
@@ -97,5 +98,5 @@ Full walkthrough: [docs/adding-a-feature.md](docs/adding-a-feature.md).
 - `nativewind/babel` already registers the Reanimated/Worklets Babel plugin. Don't add `react-native-worklets/plugin` again.
 - Colors live in `src/presentation/theme/palette.js` **and** `global.css`. Change both (a test compares them). After editing `metro.config.js`, `tailwind.config.js` or `global.css`, restart Metro with `yarn start --reset-cache`.
 - Tailwind only sees literal class names: build dynamic classes from maps (`categoryTint`), not string interpolation of token names.
-- Fonts in `src/assets/fonts` are linked with `npx react-native-asset`. Rerun it after adding a font, and use one font family per weight (Android).
+- Fonts (Plus Jakarta Sans for headings via `font-display-*`, DM Sans for everything else via `font-sans-*`) in `src/assets/fonts` are linked with `npx react-native-asset`. Rerun it after adding a font, and use one font family per weight (Android). The file name must match the font's PostScript name (iOS). Fonts are native assets: after changing them, do a clean Android build (`cd android && ./gradlew clean`, then `yarn android`). A stale APK silently falls back to Roboto.
 - Jest uses `react-native-reanimated/jest/resolver` plus `setUpTests()` (see `jest.setup.js`). Don't mock Reanimated wholesale.
