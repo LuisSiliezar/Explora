@@ -26,6 +26,10 @@
     --danger-border: 240 201 201;
     --inverse: 26 26 26;
     --on-inverse: 255 255 255;
+    --warning: 201 138 27;
+    --toast: 26 26 26;
+    --on-toast: 255 255 255;
+    --toast-border: 26 26 26;
     --tag-surface: 240 241 239;
     --outdoors-bg: 230 245 232;
     --outdoors-fg: 47 107 34;
@@ -60,6 +64,10 @@
       --danger-border: 90 44 44;
       --inverse: 242 244 241;
       --on-inverse: 26 26 26;
+      --warning: 227 177 85;
+      --toast: 37 42 37;
+      --on-toast: 242 244 241;
+      --toast-border: 54 60 54;
       --tag-surface: 37 42 37;
       --outdoors-bg: 27 42 28;
       --outdoors-fg: 158 216 142;

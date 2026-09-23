@@ -51,7 +51,12 @@ jest.mock('lottie-react-native', () => {
   return { __esModule: true, default: View };
 });
 jest.mock('sonner-native', () => ({
-  toast: jest.fn(),
+  toast: Object.assign(jest.fn(), {
+    info: jest.fn(),
+    success: jest.fn(),
+    warning: jest.fn(),
+    error: jest.fn(),
+  }),
   Toaster: () => null,
 }));
 // SafeAreaProvider renders nothing until it has insets; the mock provides fixed metrics.

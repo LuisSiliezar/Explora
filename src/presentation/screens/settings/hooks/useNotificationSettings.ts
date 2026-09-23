@@ -20,12 +20,12 @@ export const useNotificationSettings = () => {
   const toggle = () => {
     if (on) {
       setNotifications({ weekly: false });
-      toast.show(t('toastNotifOff'));
+      toast.info(t('toastNotifOff'));
       return;
     }
     if (notifications.status === 'granted') {
       setNotifications({ weekly: true });
-      toast.show(t('toastNotifOn'));
+      toast.success(t('toastNotifOn'));
       return;
     }
     setPromptVisible(true);
@@ -46,7 +46,7 @@ export const useNotificationSettings = () => {
     });
     if (granted) {
       haptics.success();
-      toast.show(t('toastNotifOn'));
+      toast.success(t('toastNotifOn'));
     } else {
       haptics.warning();
     }
@@ -61,7 +61,7 @@ export const useNotificationSettings = () => {
 
   const notNow = () => {
     setPromptVisible(false);
-    toast.show(t('toastLocCancelled'));
+    toast.info(t('toastNotifCancelled'));
   };
 
   return {

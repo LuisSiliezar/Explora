@@ -30,35 +30,13 @@ export const useNearMe = () => {
       await queryClient.fetchQuery(currentLocationQuery(location));
       settingsStore.getState().setNearMe(true);
       haptics.success();
-      toast.show(t('toastLocOn'));
+      toast.success(t('toastLocOn'));
     } catch {
       settingsStore.getState().setNearMe(false);
       haptics.warning();
-      toast.show(t('toastLocFailed'));
+      toast.error(t('toastLocFailed'));
     }
   }, [queryClient, location, settingsStore, haptics, toast, t]);
-
-  const onPressNearMe = useCallback(() => {
-    if (permission === 'granted') {
-      const next = !nearMe;
-      if (
-        next &&
-        !queryClient.getQueryData(currentLocationQuery(location).queryKey)
-      ) {
-        setRequesting(true);
-        locate().finally(() => setRequesting(false));
-        return;
-      }
-      setNearMe(next);
-      toast.show(t(next ? 'toastSortedDist' : 'toastSortedAlpha'));
-      return;
-    }
-    if (permission === 'denied') {
-      setBannerDismissed(false);
-      return;
-    }
-    setPromptVisible(true);
-  }, [permission, nearMe, queryClient, location, locate, setNearMe, toast, t]);
 
   const allow = useCallback(async () => {
     setPromptVisible(false);
@@ -77,6 +55,40 @@ export const useNearMe = () => {
     }
   }, [location, setLocationPermission, locate, haptics]);
 
+  const onPressNearMe = useCallback(() => {
+    if (permission === 'granted') {
+      const next = !nearMe;
+      if (
+        next &&
+        !queryClient.getQueryData(currentLocationQuery(location).queryKey)
+      ) {
+        setRequesting(true);
+        locate().finally(() => setRequesting(false));
+        return;
+      }
+      setNearMe(next);
+      toast.info(t(next ? 'toastSortedDist' : 'toastSortedAlpha'));
+      return;
+    }
+    if (permission === 'denied') {
+      // Ask the OS again: the user may have turned location on in device settings.
+      // Still denied -> the banner comes back.
+      allow();
+      return;
+    }
+    setPromptVisible(true);
+  }, [
+    permission,
+    nearMe,
+    queryClient,
+    location,
+    locate,
+    setNearMe,
+    toast,
+    t,
+    allow,
+  ]);
+
   const deny = useCallback(() => {
     setPromptVisible(false);
     setLocationPermission('denied');
@@ -85,7 +97,7 @@ export const useNearMe = () => {
 
   const cancel = useCallback(() => {
     setPromptVisible(false);
-    toast.show(t('toastLocCancelled'));
+    toast.info(t('toastLocCancelled'));
   }, [toast, t]);
 
   return {

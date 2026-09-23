@@ -19,10 +19,10 @@ export const usePhotoAction = (activity: Activity) => {
     setPickerOpen(false);
     try {
       if (await attachPhoto(activity, source)) {
-        toast.show(t('toastPhotoSaved'));
+        toast.success(t('toastPhotoSaved'));
       }
     } catch (error) {
-      toast.show(t(errorToastKey(error)));
+      toast.error(t(errorToastKey(error)));
     }
   };
 

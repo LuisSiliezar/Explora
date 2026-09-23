@@ -13,13 +13,13 @@ export const useRefreshActivities = (refetch: () => Promise<unknown>) => {
   const onRefresh = useCallback(async () => {
     if (!online) {
       haptics.warning();
-      toast.show(t('toastCantRefresh'));
+      toast.warning(t('toastCantRefresh'));
       return;
     }
     setRefreshing(true);
     try {
       await refetch();
-      toast.show(t('toastUpdated'));
+      toast.success(t('toastUpdated'));
     } finally {
       setRefreshing(false);
     }

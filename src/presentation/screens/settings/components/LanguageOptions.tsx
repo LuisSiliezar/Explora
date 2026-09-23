@@ -25,7 +25,7 @@ export const LanguageOptions = () => {
                 }
                 haptics.selection();
                 settingsStore.getState().setLanguage(option.code);
-                toast.show(translate(option.code, 'toastLang'));
+                toast.success(translate(option.code, 'toastLang'));
               }}
               accessibilityRole="radio"
               accessibilityLabel={option.name}

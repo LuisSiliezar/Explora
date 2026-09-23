@@ -21,7 +21,7 @@ export const useResetDataDialog = () => {
     setConfirmVisible(false);
     await resetLocalData();
     haptics.success();
-    toast.show(t('toastReset'));
+    toast.success(t('toastReset'));
   };
 
   return { confirmVisible, ask, keep, confirm };

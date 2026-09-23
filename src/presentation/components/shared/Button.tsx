@@ -63,8 +63,13 @@ export const Button = memo(
     const { colors } = useTheme();
     const handlePress = usePressHaptic(haptic, onPress);
     const padding =
-      variant === 'link' ? 'py-2' : size === 'md' ? 'py-4' : 'py-[13px]';
+      variant === 'link'
+        ? 'px-4 py-2'
+        : size === 'md'
+        ? 'px-4 py-4'
+        : 'px-3.5 py-2.5';
     const rounded = size === 'md' ? 'rounded-[13px]' : 'rounded-[11px]';
+    const textSize = size === 'md' ? 'text-lg' : 'text-base';
     return (
       <Pressable
         onPress={handlePress}
@@ -76,7 +81,7 @@ export const Button = memo(
           disabled: !!(disabled || loading),
           busy: !!loading,
         }}
-        className={`items-center justify-center px-4 ${padding} ${rounded} ${
+        className={`items-center justify-center ${padding} ${rounded} ${
           container[variant]
         } ${disabled ? 'opacity-50' : ''} ${className}`}
       >
@@ -85,7 +90,9 @@ export const Button = memo(
             color={variant === 'primary' ? colors.onPrimary : colors.text}
           />
         ) : (
-          <Text className={`font-display-semibold text-lg ${label[variant]}`}>
+          <Text
+            className={`font-display-semibold ${textSize} ${label[variant]}`}
+          >
             {text}
           </Text>
         )}

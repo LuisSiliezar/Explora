@@ -19,6 +19,7 @@ BootSplash (native) → SplashScreen (white, looping logo Lottie, waits for the 
 - When you add or change a color, edit `palette.js` **and** `global.css` (`__tests__/i18n-theme.test.ts` fails if they drift). Values in CSS are `R G B`, so opacity modifiers like `bg-black/40` keep working.
 - Tailwind only generates classes it can see in the source, so dynamic names must be literal strings. Category tints go through `categoryTint` in `theme/tokens.ts`.
 - `useTheme()` is for values that can't be classes: navigation theme, `placeholderTextColor`, `ActivityIndicator`, `RefreshControl`, the toast styles.
+- Toasts come from `useToast()`. Choose the method that matches the outcome, since the dot color is how users tell toasts apart: `success` (green, it worked), `info` (grey, neutral: a sort changed or something was turned off), `warning` (amber, it didn't fail but the user is limited: offline, permission needed), `error` (red, it failed), and `withAction` (neutral, with an action such as Undo). The pill uses the `toast`/`on-toast`/`toast-border` tokens: dark in light mode, a raised surface in dark mode.
 
 Card artwork is `ActivityThumb`: a bundled photo from `activityImage()` (`theme/activityImages.ts`) with a duration badge in the category tint. It uses the activity's own photo, then its category photo, then `DurationTile` if the image fails. The activity detail header shows the same photo full-bleed, and the onboarding step cards use the category photos (`categoryImage()`). Sources are listed in [image-credits.md](image-credits.md).
 
@@ -44,7 +45,7 @@ Card artwork is `ActivityThumb`: a bundled photo from `activityImage()` (`theme/
   | `text-5xl`  | 42    | 1×          |
   | `text-6xl`  | 52.5  | 1×          |
 
-  Each `text-*` sets its own line height. Only tight display headings add `leading-tight` or `leading-none`. Letter spacing uses `tracking-tighter`/`tight` on big headings and `tracking-wide`/`wider`/`widest` on small uppercase tags. The only numeric size left is in `toaster.styles.tsx` (14 = `text-base`), because sonner styles can't take a class.
+  Each `text-*` sets its own line height. Only tight display headings add `leading-tight` or `leading-none`. Letter spacing uses `tracking-tighter`/`tight` on big headings and `tracking-wide`/`wider`/`widest` on small uppercase tags. The only numeric size left is `TOAST_FONT_SIZE` in `toaster.styles.tsx` (14 = `text-base`, times the in-app text size), because sonner styles can’t take a class.
 
 - Always use `components/shared/Text`, never RN `Text`. It defaults to DM Sans at `text-base` size (14) in the theme text color, and it applies **Settings → Text size** (`textScale` 0.92 / 1 / 1.12) on top of whatever the className sets.
 - Small uppercase captions ("CATEGORY", "LOCATION") use `SectionLabel`.

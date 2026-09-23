@@ -19,7 +19,7 @@ export const useLocationPermissionToggle = () => {
     const granted = await location.requestPermission();
     setLocationPermission(granted ? 'granted' : 'denied');
     if (!granted) {
-      toast.show(t('toastPermissionNeeded'));
+      toast.warning(t('toastPermissionNeeded'));
       Linking.openSettings();
     }
   }, [settingsStore, permission, location, toast, t]);

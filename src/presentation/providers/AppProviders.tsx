@@ -40,6 +40,7 @@ export const AppProviders = ({
   );
   const { scheme, colors } = useTheme();
   const dark = scheme === 'dark';
+  const textScale = deps.settingsStore(state => state.textScale);
 
   useEffect(() => setupQueryLifecycle(), []);
 
@@ -57,15 +58,15 @@ export const AppProviders = ({
             </NavigationContainer>
           </DependenciesProvider>
         </QueryClientProvider>
-        {/* The design's toast: dark pill, green action, sitting above the tab bar. */}
+        {/* The design’s toast: themed pill, green action, clear of the floating tab bar. */}
         <Toaster
           position="bottom-center"
-          offset={96}
+          offset={120}
           duration={2600}
           visibleToasts={1}
           icons={toastIcons}
           theme={dark ? 'dark' : 'light'}
-          toastOptions={toasterOptions(colors)}
+          toastOptions={toasterOptions(colors, textScale)}
         />
       </SafeAreaProvider>
     </GestureHandlerRootView>

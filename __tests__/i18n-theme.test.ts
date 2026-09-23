@@ -18,7 +18,7 @@ describe('strings', () => {
 
   it('substitutes placeholders', () => {
     expect(translate('en', 'toastSaved', { s: 'Sunset Walk' })).toBe(
-      'Saved “Sunset Walk” — offline ready',
+      'Added “Sunset Walk” to Favorites',
     );
     expect(translate('es', 'stepOf', { n: 2 })).toBe('02 / 03');
   });

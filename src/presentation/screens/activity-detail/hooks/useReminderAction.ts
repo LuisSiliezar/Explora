@@ -19,9 +19,9 @@ export const useReminderAction = (activity: Activity) => {
         activity,
         new Date(Date.now() + REMINDER_DELAY_MS),
       );
-      toast.show(t('toastReminderSet'));
+      toast.success(t('toastReminderSet'));
     } catch (error) {
-      toast.show(t(errorToastKey(error)));
+      toast.error(t(errorToastKey(error)));
     } finally {
       setScheduling(false);
     }
