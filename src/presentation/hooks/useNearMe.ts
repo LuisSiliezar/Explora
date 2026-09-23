@@ -1,5 +1,4 @@
 import { useCallback, useState } from 'react';
-import { Linking } from 'react-native';
 import { useQueryClient } from '@tanstack/react-query';
 import { useT } from '@presentation/i18n/useT';
 import { useDependencies } from '@presentation/providers/DependenciesProvider';
@@ -40,7 +39,6 @@ export const useNearMe = () => {
   }, [queryClient, location, settingsStore, haptics, toast, t]);
 
   const onPressNearMe = useCallback(() => {
-    haptics.selection();
     if (permission === 'granted') {
       const next = !nearMe;
       if (
@@ -60,17 +58,7 @@ export const useNearMe = () => {
       return;
     }
     setPromptVisible(true);
-  }, [
-    haptics,
-    permission,
-    nearMe,
-    queryClient,
-    location,
-    locate,
-    setNearMe,
-    toast,
-    t,
-  ]);
+  }, [permission, nearMe, queryClient, location, locate, setNearMe, toast, t]);
 
   const allow = useCallback(async () => {
     setPromptVisible(false);
@@ -100,21 +88,6 @@ export const useNearMe = () => {
     toast.show(t('toastLocCancelled'));
   }, [toast, t]);
 
-  /** Settings row: turn off locally, or ask the OS (falling back to device settings). */
-  const togglePermission = useCallback(async () => {
-    haptics.selection();
-    if (permission === 'granted') {
-      setLocationPermission('denied');
-      return;
-    }
-    const granted = await location.requestPermission();
-    setLocationPermission(granted ? 'granted' : 'denied');
-    if (!granted) {
-      toast.show(t('toastPermissionNeeded'));
-      Linking.openSettings();
-    }
-  }, [haptics, permission, location, setLocationPermission, toast, t]);
-
   return {
     active,
     permission,
@@ -125,7 +98,6 @@ export const useNearMe = () => {
     deny,
     cancel,
     onPressNearMe,
-    togglePermission,
     bannerVisible: permission === 'denied' && !bannerDismissed,
     dismissBanner: useCallback(() => setBannerDismissed(true), []),
   };
