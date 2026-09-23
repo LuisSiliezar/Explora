@@ -1,0 +1,61 @@
+# Perf run on 1200 seeded items: scroll, search, favorite, open detail.
+# Needs a STAGING RELEASE build with DEV_SEED_MULTIPLIER=100 (see docs/performance.md).
+# Lives outside the top-level folder, so `yarn e2e` does not run it. Run: `yarn perf:android`.
+appId: com.explora.staging
+---
+# Starts on Browse: run setup.yaml first (the perf script does), then reset gfxinfo.
+- extendedWaitUntil:
+    visible:
+      id: activity-card-act-001-0
+    timeout: 15000
+
+# 1. Fast scroll through the full list (20 flings down, 10 back up).
+- repeat:
+    times: 20
+    commands:
+      - swipe:
+          start: 50%, 85%
+          end: 50%, 15%
+          duration: 150
+- repeat:
+    times: 10
+    commands:
+      - swipe:
+          start: 50%, 15%
+          end: 50%, 85%
+          duration: 150
+
+# 2. Search: 1200 -> 100 matches, then scroll the results.
+- tapOn:
+    id: activities-search
+- tapOn:
+    id: search-input
+- inputText: Botanical
+- pressKey: Enter
+- extendedWaitUntil:
+    visible:
+      id: activity-card-act-001-0
+    timeout: 10000
+- repeat:
+    times: 5
+    commands:
+      - swipe:
+          start: 50%, 85%
+          end: 50%, 15%
+          duration: 150
+
+# 3. Interaction: favorite a row, open a detail screen, go back.
+- scrollUntilVisible:
+    element:
+      id: favorite-act-001-0
+    direction: UP
+- tapOn:
+    id: favorite-act-001-0
+- tapOn:
+    id: activity-card-act-001-0
+- assertVisible:
+    id: detail-favorite
+- tapOn:
+    id: detail-back
+- assertVisible:
+    id: activities-search

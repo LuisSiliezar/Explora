@@ -3,7 +3,7 @@ import {
   MMKVStorageAdapter,
   type KeyValueStorage,
 } from '@config/adapters/storage';
-import { env } from '@config/env';
+import { env, isProduction } from '@config/env';
 import {
   createActivityFilterStore,
   createAppSettingsStore,
@@ -67,7 +67,8 @@ const createActivityDataSource = (
       )
     : new LocalActivityDataSource(activitiesJson);
 
-  return __DEV__ && env.DEV_SEED_MULTIPLIER > 0
+  // Never in production. Staging release builds may seed, so perf is measured on a release build.
+  return !isProduction && env.DEV_SEED_MULTIPLIER > 0
     ? new DevSeedActivityDataSource(source, env.DEV_SEED_MULTIPLIER)
     : source;
 };
