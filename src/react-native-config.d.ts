@@ -4,6 +4,7 @@ declare module 'react-native-config' {
     APP_ENV?: string;
     APP_DISPLAY_NAME?: string;
     APP_BUNDLE_ID?: string;
+    APP_URL_SCHEME?: string;
     API_URL?: string;
     API_TIMEOUT_MS?: string;
     DEV_SEED_MULTIPLIER?: string;

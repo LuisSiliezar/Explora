@@ -24,6 +24,7 @@ From Xcode, pick the scheme (Explora-Dev, Explora-Staging or Explora-Prod). From
 |---|---|---|
 | `APP_ENV` | JS (`env.APP_ENV`, `isProduction`) | `development` \| `staging` \| `production` |
 | `APP_DISPLAY_NAME` | iOS Info.plist `CFBundleDisplayName`, JS | Home-screen name (Android takes it from the flavor's `resValue`) |
+| `APP_URL_SCHEME` | iOS Info.plist `CFBundleURLSchemes`, JS (`linking` prefix) | Deep-link scheme: `explora-dev`, `explora-staging`, `explora`. Android can't read it in the manifest, so each flavor repeats it in `manifestPlaceholders.appUrlScheme` (`android/app/build.gradle`). Keep them in sync. |
 | `APP_BUNDLE_ID` | iOS `PRODUCT_BUNDLE_IDENTIFIER` | Bundle ID (Android uses `applicationIdSuffix`) |
 | `API_URL` | JS container | Remote activities API. Leave empty to use the bundled JSON. |
 | `API_TIMEOUT_MS` | `AxiosAdapter` | HTTP timeout |

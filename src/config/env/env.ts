@@ -6,6 +6,11 @@ const EnvSchema = z.object({
     .enum(['development', 'staging', 'production'])
     .default('development'),
   APP_DISPLAY_NAME: z.string().default('Explora'),
+  /** Deep-link scheme without "://" (explora-dev, explora-staging, explora). */
+  APP_URL_SCHEME: z
+    .string()
+    .regex(/^[a-z][a-z0-9+.-]*$/)
+    .default('explora'),
   API_URL: z.string().default(''),
   API_TIMEOUT_MS: z.coerce.number().int().positive().default(10000),
   DEV_SEED_MULTIPLIER: z.coerce.number().int().min(0).default(0),
