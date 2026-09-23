@@ -12,15 +12,12 @@ const en = {
   ob1Title: 'Find something to do today',
   ob1Body:
     'Twelve activities across outdoors, culture, workshops and leisure — with duration and location up front.',
-  ob1Note: 'ACTIVITIES IN THE CATALOG',
   ob2Title: 'Save what you like',
   ob2Body:
     'Tap the heart and it stays in Favorites, available offline on the train, in a basement, anywhere.',
-  ob2Note: 'SAVED & AVAILABLE OFFLINE',
   ob3Title: 'Sort by what’s near you',
   ob3Body:
     'Allow location once and activities reorder by distance. Decline it and everything else still works.',
-  ob3Note: 'SORTED BY DISTANCE',
   stepOf: '0%n / 03',
   browse: 'Browse',
   search: 'Search',
@@ -32,6 +29,7 @@ const en = {
   prefTextSize: 'Text size',
   prefLocation: 'Location',
   prefData: 'Data & storage',
+  darkMode: 'Dark mode',
   stateOn: 'On',
   stateOff: 'Off',
   stateBlocked: 'Blocked',
@@ -187,15 +185,12 @@ const es: Strings = {
   ob1Title: 'Encuentra algo que hacer hoy',
   ob1Body:
     'Doce actividades entre aire libre, cultura, talleres y ocio — con duración y lugar a la vista.',
-  ob1Note: 'ACTIVIDADES EN EL CATÁLOGO',
   ob2Title: 'Guarda lo que te gusta',
   ob2Body:
     'Toca el corazón y se queda en Favoritos, disponible sin conexión en el tren, en un sótano, donde sea.',
-  ob2Note: 'GUARDADAS Y SIN CONEXIÓN',
   ob3Title: 'Ordena por lo que tienes cerca',
   ob3Body:
     'Permite la ubicación una vez y las actividades se ordenan por distancia. Si la rechazas, todo lo demás sigue funcionando.',
-  ob3Note: 'ORDENADAS POR DISTANCIA',
   stepOf: '0%n / 03',
   browse: 'Explorar',
   search: 'Buscar',
@@ -207,6 +202,7 @@ const es: Strings = {
   prefTextSize: 'Tamaño del texto',
   prefLocation: 'Ubicación',
   prefData: 'Datos y almacenamiento',
+  darkMode: 'Modo oscuro',
   stateOn: 'Activado',
   stateOff: 'Desactivado',
   stateBlocked: 'Bloqueado',

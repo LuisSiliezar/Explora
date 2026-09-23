@@ -21,7 +21,7 @@ BootSplash (native) → SplashScreen (white, looping logo Lottie, waits for the 
 - `useTheme()` is for values that can't be classes: navigation theme, `placeholderTextColor`, `ActivityIndicator`, `RefreshControl`, the toast styles.
 - Toasts come from `useToast()`. Choose the method that matches the outcome, since the dot color is how users tell toasts apart: `success` (green, it worked), `info` (grey, neutral: a sort changed or something was turned off), `warning` (amber, it didn't fail but the user is limited: offline, permission needed), `error` (red, it failed), and `withAction` (neutral, with an action such as Undo). The pill uses the `toast`/`on-toast`/`toast-border` tokens: dark in light mode, a raised surface in dark mode.
 
-Card artwork is `ActivityThumb`: a bundled photo from `activityImage()` (`theme/activityImages.ts`) with a duration badge in the category tint. It uses the activity's own photo, then its category photo, then `DurationTile` if the image fails. The activity detail header shows the same photo full-bleed, and the onboarding step cards use the category photos (`categoryImage()`). Sources are listed in [image-credits.md](image-credits.md).
+Card artwork is `ActivityThumb`: a bundled photo from `activityImage()` (`theme/activityImages.ts`) with a duration badge in the category tint. It uses the activity's own photo, then its category photo, then `DurationTile` if the image fails. The activity detail header shows the same photo full-bleed, and each onboarding step is a full-screen category photo (`categoryImage()`) with a dark gradient scrim and white (`text-on-photo`) text over it. Sources are listed in [image-credits.md](image-credits.md).
 
 ## Typography
 
@@ -71,7 +71,7 @@ A shared component stays a single flat file while it does one job. When it grows
 
 - Icons are [Lucide](https://lucide.dev) vectors (`lucide-react-native`, drawn with the existing `react-native-svg`). Use `<Icon name="heart" size={20} color="accent" filled />` from `components/shared/Icon`; it's the only file that imports lucide.
 - `name` is a key of the `ICONS` map in `Icon.tsx`. To add an icon, import it there and give it an app-level name (`back`, `forward`, `browse`...). Named imports keep the bundle to the icons we use.
-- `color` is a palette token resolved through `useTheme()`, so dark mode works without a class. `colorValue` takes a raw color only where one already exists (onboarding's category tints). Icons don't scale with Settings → Text size.
+- `color` is a palette token resolved through `useTheme()`, so dark mode works without a class. `colorValue` takes a raw color only where one already exists. Icons don't scale with Settings → Text size.
 - Icons are decorative: the parent `Pressable` carries the `accessibilityLabel`. Don't draw icons with Unicode glyphs in `Text`.
 - Jest maps `lucide-react-native` to its CommonJS build (`jest.config.js`), because the RN preset doesn't transform its `.mjs` entry.
 
@@ -89,7 +89,7 @@ All UI copy lives in `presentation/i18n/strings.ts` (English and Spanish, ported
 
 - Tokens live in `presentation/theme/motion.ts`: `duration` and `enter(order)`, a staggered `FadeInDown` for a screen's top-level blocks (`entering={enter(0)}`, `enter(1)`…).
 - Screen transitions are navigator options in `routes/RootNavigator.tsx`: the stack slides from the right (ActivityDetail, swipe back works), Onboarding ⇄ Tabs cross-fade, and the tabs fade on switch.
-- The onboarding pager drives its dots and the hero photo parallax from the scroll offset (`useAnimatedScrollHandler`) on the UI thread.
+- The onboarding pager drives its dots and the background photo parallax from the scroll offset (`useAnimatedScrollHandler`) on the UI thread.
 - Never put `entering` on list rows (`ActivityList`): it costs frames at 1000+ items.
 - Reanimated layout animations honor the OS "Reduce Motion" setting on their own.
 

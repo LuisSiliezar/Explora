@@ -1,3 +1,4 @@
+export * from './DarkModeRow';
 export * from './DataPanel';
 export * from './DataSection';
 export * from './LanguageOptions';

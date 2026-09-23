@@ -39,6 +39,7 @@
     --workshops-fg: 138 83 36;
     --leisure-bg: 235 237 247;
     --leisure-fg: 62 74 138;
+    --on-photo: 255 255 255;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -77,6 +78,7 @@
       --workshops-fg: 232 176 136;
       --leisure-bg: 29 33 51;
       --leisure-fg: 169 180 238;
+      --on-photo: 255 255 255;
     }
   }
 }

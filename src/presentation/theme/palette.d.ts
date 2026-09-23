@@ -20,6 +20,7 @@ type Palette = Record<
   | 'dangerBorder'
   | 'inverse'
   | 'onInverse'
+  | 'onPhoto'
   | 'warning'
   | 'toast'
   | 'onToast'

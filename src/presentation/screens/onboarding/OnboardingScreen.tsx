@@ -1,5 +1,5 @@
-import React from 'react';
-import { View } from 'react-native';
+import React, { useState } from 'react';
+import { StatusBar, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button } from '@presentation/components';
@@ -17,20 +17,23 @@ export const OnboardingScreen = (
   const insets = useSafeAreaInsets();
   const { settingsStore } = useDependencies();
   const pager = useOnboardingPager();
+  // The page text sits just above the footer, whatever its height (text size).
+  const [footerHeight, setFooterHeight] = useState(0);
 
   // The navigator swaps to the app once onboarding is done.
   const finish = () => settingsStore.getState().completeOnboarding();
 
   return (
     <View
-      className="flex-1 bg-background"
+      className="flex-1 bg-inverse"
       style={{
         paddingTop: insets.top,
         paddingBottom: Math.max(insets.bottom, 34),
       }}
     >
-      <OnboardingTopBar onSkip={finish} />
+      <StatusBar barStyle="light-content" />
 
+      {/* Full-screen pager behind the top bar and footer. */}
       <Animated.ScrollView
         ref={pager.scrollRef}
         horizontal
@@ -40,7 +43,7 @@ export const OnboardingScreen = (
         onScroll={pager.onScroll}
         scrollEventThrottle={16}
         onMomentumScrollEnd={pager.onMomentumScrollEnd}
-        className="flex-1"
+        className="absolute inset-0"
       >
         {STEPS.map((s, i) => (
           <OnboardingPage
@@ -48,12 +51,22 @@ export const OnboardingScreen = (
             step={s}
             n={i + 1}
             width={pager.width}
+            bottomInset={footerHeight + Math.max(insets.bottom, 34)}
             scrollX={pager.scrollX}
           />
         ))}
       </Animated.ScrollView>
 
-      <View className="gap-[18px] px-5">
+      <OnboardingTopBar onSkip={finish} />
+
+      {/* Lets swipes in the middle reach the pager. */}
+      <View className="flex-1" pointerEvents="none" />
+
+      <View
+        className="gap-[18px] px-5"
+        pointerEvents="box-none"
+        onLayout={e => setFooterHeight(e.nativeEvent.layout.height)}
+      >
         <View
           className="flex-row justify-center gap-[7px]"
           accessibilityLabel={t('stepOf', { n: pager.index + 1 })}

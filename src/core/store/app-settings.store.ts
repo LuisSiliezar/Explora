@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import type { KeyValueStorage } from '@config/adapters/storage';
 import type {
+  ColorSchemePreference,
   Language,
   NotificationPreferences,
   PermissionStatus,
@@ -12,6 +13,7 @@ export interface AppSettings {
   onboardingDone: boolean;
   language: Language;
   textScale: TextScale;
+  colorScheme: ColorSchemePreference;
   /** The user asked to sort by distance (only honoured while location is granted). */
   nearMe: boolean;
   locationPermission: PermissionStatus;
@@ -22,6 +24,7 @@ export interface AppSettingsState extends AppSettings {
   completeOnboarding: () => void;
   setLanguage: (language: Language) => void;
   setTextScale: (textScale: TextScale) => void;
+  setColorScheme: (colorScheme: ColorSchemePreference) => void;
   setNearMe: (nearMe: boolean) => void;
   setLocationPermission: (status: PermissionStatus) => void;
   setNotifications: (patch: Partial<NotificationPreferences>) => void;
@@ -40,6 +43,7 @@ export const defaultAppSettings = (): AppSettings => ({
   onboardingDone: false,
   language: detectLanguage(),
   textScale: 1,
+  colorScheme: 'system',
   nearMe: false,
   locationPermission: 'prompt',
   notifications: { status: 'prompt', weekly: false, reminders: true },
@@ -57,6 +61,7 @@ export const createAppSettingsStore = (storage: KeyValueStorage) =>
         completeOnboarding: () => set({ onboardingDone: true }),
         setLanguage: language => set({ language }),
         setTextScale: textScale => set({ textScale }),
+        setColorScheme: colorScheme => set({ colorScheme }),
         setNearMe: nearMe => set({ nearMe }),
         setLocationPermission: locationPermission =>
           set(state => ({
@@ -88,6 +93,7 @@ export const createAppSettingsStore = (storage: KeyValueStorage) =>
           onboardingDone,
           language,
           textScale,
+          colorScheme,
           nearMe,
           locationPermission,
           notifications,
@@ -95,6 +101,7 @@ export const createAppSettingsStore = (storage: KeyValueStorage) =>
           onboardingDone,
           language,
           textScale,
+          colorScheme,
           nearMe,
           locationPermission,
           notifications,

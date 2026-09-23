@@ -14,17 +14,18 @@ interface Props {
   scrollX: SharedValue<number>;
 }
 
-/** Pager dot: stretches and turns green as its page scrolls into place. */
+/** Pager dot: stretches and turns from translucent white to green as its page scrolls into place. */
 export const PagerDot = memo(({ i, width, scrollX }: Props) => {
   const { colors } = useTheme();
   const style = useAnimatedStyle(() => {
     const range = pageRange(i, width);
     return {
       width: interpolate(scrollX.value, range, [7, 22, 7], 'clamp'),
+      opacity: interpolate(scrollX.value, range, [0.5, 1, 0.5], 'clamp'),
       backgroundColor: interpolateColor(scrollX.value, range, [
-        colors.border,
+        colors.onPhoto,
         colors.primary,
-        colors.border,
+        colors.onPhoto,
       ]),
     };
   });

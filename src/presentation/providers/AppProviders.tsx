@@ -1,5 +1,10 @@
-import React, { useEffect, useState, type PropsWithChildren } from 'react';
-import { StatusBar, StyleSheet } from 'react-native';
+import React, {
+  useEffect,
+  useLayoutEffect,
+  useState,
+  type PropsWithChildren,
+} from 'react';
+import { Appearance, StatusBar, StyleSheet } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
@@ -37,6 +42,15 @@ export const AppProviders = ({
       onReminderOpened: activityId => clearReminderUseCase(deps, activityId),
       isReady: () => deps.settingsStore.getState().onboardingDone,
     }),
+  );
+  const colorScheme = deps.settingsStore(state => state.colorScheme);
+  // Overrides the OS scheme app-wide, so useColorScheme() and NativeWind's dark vars both follow Settings → Dark mode.
+  useLayoutEffect(
+    () =>
+      Appearance.setColorScheme(
+        colorScheme === 'system' ? 'auto' : colorScheme,
+      ),
+    [colorScheme],
   );
   const { scheme, colors } = useTheme();
   const dark = scheme === 'dark';

@@ -25,16 +25,6 @@ export const categoryTint: Record<
   Leisure: { bg: 'bg-leisure-bg', fg: 'text-leisure-fg' },
 };
 
-/** The same tints as raw colors, for places that can't take a class (e.g. dynamic step cards). */
-export const categoryColors = (
-  colors: Colors,
-): Record<ActivityCategory, { bg: string; fg: string }> => ({
-  Outdoors: { bg: colors.outdoorsBg, fg: colors.outdoorsFg },
-  Culture: { bg: colors.cultureBg, fg: colors.cultureFg },
-  Workshops: { bg: colors.workshopsBg, fg: colors.workshopsFg },
-  Leisure: { bg: colors.leisureBg, fg: colors.leisureFg },
-});
-
 /** DM Sans for body text, labels and tags; Plus Jakarta Sans for headings and titles. */
 export const fonts = {
   regular: 'DMSans-Regular',

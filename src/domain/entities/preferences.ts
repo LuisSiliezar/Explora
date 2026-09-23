@@ -1,5 +1,7 @@
 export type Language = 'en' | 'es';
 export type TextScale = 0.92 | 1 | 1.12;
+/** 'system' follows the device's light/dark setting. */
+export type ColorSchemePreference = 'system' | 'light' | 'dark';
 /** 'prompt' means the app hasn't asked yet. */
 export type PermissionStatus = 'prompt' | 'granted' | 'denied';
 

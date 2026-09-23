@@ -8,7 +8,7 @@ import { useTabBarHeight } from '@presentation/hooks';
 import { useT } from '@presentation/i18n';
 import type { TabScreenProps } from '@presentation/routes/types';
 import { enter, spacing } from '@presentation/theme';
-import { SettingsHeader, SettingsLinkRow } from './components';
+import { DarkModeRow, SettingsHeader, SettingsLinkRow } from './components';
 import { APP_VERSION, SETTINGS_SECTIONS } from './constants';
 import { useSettingsSummary } from './hooks';
 
@@ -38,6 +38,7 @@ export const SettingsScreen = ({ navigation }: TabScreenProps<'Settings'>) => {
               testID={`settings-${key}`}
             />
           ))}
+          <DarkModeRow />
         </Animated.View>
         <Text className="font-sans-medium text-xs tracking-wider text-text-muted">
           {t('version', {

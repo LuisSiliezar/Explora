@@ -125,6 +125,14 @@ describe('app settings store', () => {
     });
   });
 
+  it('follows the system scheme until the user picks one', () => {
+    const storage = new MemoryStorage();
+    const store = createAppSettingsStore(storage);
+    expect(store.getState().colorScheme).toBe('system');
+    store.getState().setColorScheme('dark');
+    expect(createAppSettingsStore(storage).getState().colorScheme).toBe('dark');
+  });
+
   it('detects Spanish locales', () => {
     expect(detectLanguage('es-MX')).toBe('es');
     expect(detectLanguage('en-US')).toBe('en');

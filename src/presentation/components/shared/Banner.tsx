@@ -32,7 +32,7 @@ export const Banner = memo(
             <View className="h-2 w-2 rounded-full bg-accent" />
           )}
           <Text
-            className={`flex-1 text-sm ${
+            className={`flex-1 text-lg ${
               body ? 'font-sans-bold text-base' : 'font-sans-semibold'
             }`}
           >
@@ -40,7 +40,7 @@ export const Banner = memo(
           </Text>
         </View>
         {body && (
-          <Text className="mt-[9px] text-sm text-text-muted">{body}</Text>
+          <Text className="mt-[9px] text-base text-text-muted">{body}</Text>
         )}
         {children}
       </View>
