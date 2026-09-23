@@ -2,6 +2,7 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { TabBar } from '@presentation/components/navigation';
+import { useConnectivityToast } from '@presentation/hooks/useConnectivityToast';
 import { useSettings } from '@presentation/hooks/useSettings';
 import { ActivitiesScreen } from '@presentation/screens/activities/ActivitiesScreen';
 import { ActivityDetailScreen } from '@presentation/screens/activity-detail/ActivityDetailScreen';
@@ -33,6 +34,7 @@ const Tabs = () => (
 /** First run: onboarding → optional sign in. After that: the app, with sign in as a modal. */
 export const RootNavigator = () => {
   const onboardingDone = useSettings(state => state.onboardingDone);
+  useConnectivityToast();
   // "Auth" exists in both branches. A new key drops its route when the branch flips,
   // otherwise React Navigation would keep showing it after onboarding completes.
   const authKey = onboardingDone ? 'app' : 'onboarding';

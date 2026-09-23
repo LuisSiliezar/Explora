@@ -4,6 +4,7 @@ export * from './useActivities';
 export * from './useActivity';
 export * from './useActivityFilter';
 export * from './useActivityRows';
+export * from './useConnectivityToast';
 export * from './useCurrentLocation';
 export * from './useDebouncedValue';
 export * from './useFavorites';

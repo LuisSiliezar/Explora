@@ -12,6 +12,7 @@
 | Cold start in airplane mode | Queries use `networkMode: 'offlineFirst'` (`config/query/query-client.ts`): the first attempt always runs, so the bundled JSON (or the cached catalog) loads instead of the query pausing forever. Only retries wait for the network. |
 | Remote catalog (`API_URL` set) while offline | `CachedActivityDataSource` decorates `RemoteActivityDataSource`. It writes every good response to MMKV (`activities-cache:v1`) **synchronously**, and a `NETWORK` failure returns that last good copy, even after process death. |
 | Offline with nothing cached yet | The decorator throws `DomainError('OFFLINE')`. That code isn't retried, so Browse and Detail show an offline-specific `ErrorState` (with a shortcut to Favorites) instead of a spinner. `refetchOnReconnect` recovers them automatically. |
+| Connectivity changes mid-session | `useConnectivityToast` (mounted in `RootNavigator`) shows `toastOffline` with a warning haptic, then `toastOnline` on reconnect. `OfflineBanner` stays up while offline, and pull-to-refresh is blocked with a toast. |
 | Open Favorites in airplane mode | `FavoritesScreen` reads only from `StorageFavoritesRepository`, which loads synchronously from MMKV. Each favorite stores a **full `Activity` snapshot**. |
 | Open a favorite's detail offline | `useActivity` uses the favorite snapshot as `placeholderData`. |
 | Toggle a favorite, then the OS kills the app | `commit()` writes to MMKV **synchronously** before notifying the UI. There's no debounce or async flush that could be lost. |
