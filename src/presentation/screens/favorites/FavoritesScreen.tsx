@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from 'react';
-import { Pressable, View } from 'react-native';
+import React, { useState } from 'react';
+import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
@@ -10,13 +10,14 @@ import {
 } from '@presentation/components';
 import {
   useDependencies,
-  useFavorites,
   useOpenActivity,
   useToggleFavorite,
 } from '@presentation/hooks';
 import { useT } from '@presentation/i18n';
 import type { TabScreenProps } from '@presentation/routes/types';
 import { enter } from '@presentation/theme';
+import { FavoritesHeader } from './components';
+import { useFavoriteRows } from './hooks';
 
 /** Reads only from local storage: works with no network at all. */
 export const FavoritesScreen = ({
@@ -25,50 +26,25 @@ export const FavoritesScreen = ({
   const t = useT();
   const insets = useSafeAreaInsets();
   const { haptics } = useDependencies();
-  const { favorites } = useFavorites();
+  const rows = useFavoriteRows();
   const toggleFavorite = useToggleFavorite();
   const openActivity = useOpenActivity();
   const [editing, setEditing] = useState(false);
-  const rows = useMemo(
-    () => favorites.map(fav => ({ activity: fav.activity, distanceKm: null })),
-    [favorites],
-  );
   const hasFavorites = rows.length > 0;
+
+  const toggleEditing = () => {
+    haptics.selection();
+    setEditing(!editing);
+  };
 
   return (
     <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
       <OfflineBanner message={t('offlineFavorites')} />
-      <Animated.View
-        entering={enter(0)}
-        className="flex-row items-baseline justify-between px-5 pb-3.5 pt-3"
-      >
-        <View className="gap-1">
-          <Text
-            accessibilityRole="header"
-            className="font-sans-bold text-[26px] tracking-[-0.5px]"
-          >
-            {t('favorites')}
-          </Text>
-          <Text className="font-mono text-[11px] text-text-muted">
-            {rows.length} {t('saved')}
-          </Text>
-        </View>
-        {hasFavorites && (
-          <Pressable
-            onPress={() => {
-              haptics.selection();
-              setEditing(!editing);
-            }}
-            hitSlop={8}
-            accessibilityRole="button"
-            accessibilityLabel={t(editing ? 'done' : 'edit')}
-          >
-            <Text className="font-sans-semibold text-[15px] text-accent">
-              {t(editing ? 'done' : 'edit')}
-            </Text>
-          </Pressable>
-        )}
-      </Animated.View>
+      <FavoritesHeader
+        count={rows.length}
+        editing={editing}
+        onToggleEditing={hasFavorites ? toggleEditing : undefined}
+      />
       <Animated.View entering={enter(1)} className="flex-1">
         {hasFavorites ? (
           <ActivityList
@@ -77,7 +53,7 @@ export const FavoritesScreen = ({
             onPressItem={openActivity}
             onToggleFavorite={toggleFavorite}
             ListFooterComponent={
-              <Text className="mt-4 font-mono text-[11px] leading-[18px] tracking-[0.6px] text-text-muted">
+              <Text className="mt-4 font-sans-medium text-xs tracking-wider text-text-muted">
                 {t('savedOnDevice')}
               </Text>
             }
