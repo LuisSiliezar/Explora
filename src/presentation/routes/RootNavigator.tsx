@@ -8,6 +8,8 @@ import { ActivitiesScreen } from '@presentation/screens/activities/ActivitiesScr
 import { ActivityDetailScreen } from '@presentation/screens/activity-detail/ActivityDetailScreen';
 import { FavoritesScreen } from '@presentation/screens/favorites/FavoritesScreen';
 import { OnboardingScreen } from '@presentation/screens/onboarding/OnboardingScreen';
+import { SearchScreen } from '@presentation/screens/search/SearchScreen';
+import { SettingsDetailScreen } from '@presentation/screens/settings/SettingsDetailScreen';
 import { SettingsScreen } from '@presentation/screens/settings/SettingsScreen';
 import { duration } from '@presentation/theme';
 import type { RootStackParamList, TabParamList } from './types';
@@ -25,6 +27,7 @@ const Tabs = () => (
     screenOptions={{ headerShown: false, animation: 'fade' }}
   >
     <Tab.Screen name="Browse" component={ActivitiesScreen} />
+    <Tab.Screen name="Search" component={SearchScreen} />
     <Tab.Screen name="Favorites" component={FavoritesScreen} />
     <Tab.Screen name="Settings" component={SettingsScreen} />
   </Tab.Navigator>
@@ -53,6 +56,10 @@ export const RootNavigator = () => {
           <Stack.Screen
             name="ActivityDetail"
             component={ActivityDetailScreen}
+          />
+          <Stack.Screen
+            name="SettingsDetail"
+            component={SettingsDetailScreen}
           />
         </>
       ) : (

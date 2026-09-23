@@ -39,6 +39,7 @@ export const createLinking = ({
         Tabs: {
           screens: {
             Browse: 'browse',
+            Search: 'search',
             Favorites: 'favorites',
             Settings: 'settings',
           },
