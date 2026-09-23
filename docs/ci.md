@@ -7,9 +7,10 @@ GitHub Actions runs [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) on
 |---|---|---|
 | `checks` | ubuntu | `yarn typecheck`, `yarn lint` (ESLint, warnings fail), `yarn format:check` (Prettier), `yarn knip`, `yarn test --ci` |
 | `android` | ubuntu | Builds `assembleDevRelease` (signed with the debug keystore) and uploads the APK |
+| `android-e2e` | ubuntu | Installs that APK on an API 34 emulator and runs the Maestro flows in `.maestro/` (see [testing.md](testing.md#e2e-with-maestro)). Uploads a JUnit report plus Maestro's screenshots and logs |
 | `ios` | macOS | `yarn pods`, then builds the `Explora-Dev` scheme for the simulator without code signing and uploads `Explora.app` (zipped) |
 
-The native jobs only start when `checks` passes. Both build the **dev** environment: `.env.*` files are gitignored, so CI copies `.env.example` (whose defaults are the dev values) to `.env.development`. If you add a variable, give it a working default in `.env.example`.
+The native jobs only start when `checks` passes, and `android-e2e` only after `android`. Both build the **dev** environment: `.env.*` files are gitignored, so CI copies `.env.example` (whose defaults are the dev values) to `.env.development`. If you add a variable, give it a working default in `.env.example`.
 
 Build outputs appear under **Artifacts** on the run's summary page and are kept for 14 days. The simulator build installs with `xcrun simctl install booted Explora.app`. When the iOS build fails, the full `xcodebuild.log` is uploaded too.
 
