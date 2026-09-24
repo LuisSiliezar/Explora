@@ -11,10 +11,11 @@ interface Props {
   strip?: boolean;
   children?: ReactNode;
   className?: string;
+  testID?: string;
 }
 
 export const Banner = memo(
-  ({ tone, title, body, strip, children, className = '' }: Props) => {
+  ({ tone, title, body, strip, children, className = '', testID }: Props) => {
     const colors =
       tone === 'notice'
         ? 'bg-success border-success-border'
@@ -25,6 +26,7 @@ export const Banner = memo(
     return (
       <View
         accessibilityRole={tone === 'danger' ? 'alert' : 'summary'}
+        testID={testID}
         className={`${colors} ${shape} ${className}`}
       >
         <View className="flex-row items-center gap-[9px]">

@@ -9,6 +9,7 @@ export const SavedOfflineNote = () => {
   return (
     <Animated.View
       entering={FadeInDown.duration(200)}
+      testID="detail-saved-offline"
       className="flex-row items-center gap-2.5 rounded-[10px] bg-success px-3.5 py-3"
     >
       <Icon name="heart" size={17} color="accent" filled />

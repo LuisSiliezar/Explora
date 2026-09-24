@@ -10,7 +10,12 @@ export const OfflineBanner = ({ message }: { message: string }) => {
     return null;
   }
   return (
-    <Animated.View entering={FadeIn.duration(200)}>
+    <Animated.View
+      entering={FadeIn.duration(200)}
+      // Keep the node in the native tree so e2e can find it by id.
+      collapsable={false}
+      testID="offline-banner"
+    >
       <Banner tone="notice" title={message} strip />
     </Animated.View>
   );

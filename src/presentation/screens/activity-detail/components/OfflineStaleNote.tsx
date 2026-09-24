@@ -7,7 +7,7 @@ import { useT } from '@presentation/i18n';
 export const OfflineStaleNote = () => {
   const t = useT();
   return (
-    <View className="gap-2.5">
+    <View className="gap-2.5" testID="detail-stale-note">
       <Text className="text-sm text-text-muted">{t('staleNote')}</Text>
       <Button
         label={t('refreshUnavailable')}

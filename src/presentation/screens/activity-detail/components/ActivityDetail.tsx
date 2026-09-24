@@ -42,7 +42,12 @@ export const ActivityDetail = ({ activity, onBack }: Props) => {
     <View className="flex-1 bg-background">
       {!online && (
         <View style={{ paddingTop: insets.top }} className="bg-success">
-          <Banner tone="notice" title={t('detailOffline')} strip />
+          <Banner
+            tone="notice"
+            title={t('detailOffline')}
+            strip
+            testID="detail-offline-banner"
+          />
         </View>
       )}
       <DetailHero activity={activity} online={online} onBack={onBack} />
