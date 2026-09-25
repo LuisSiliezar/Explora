@@ -1,5 +1,14 @@
 import { useMemo } from 'react';
+import { AccessibilityInfo } from 'react-native';
 import { toast } from 'sonner-native';
+
+/** Toasts are visual only: announce them so VoiceOver/TalkBack users hear the outcome too. */
+const announced =
+  <A extends unknown[]>(show: (message: string, ...rest: A) => unknown) =>
+  (message: string, ...rest: A) => {
+    AccessibilityInfo.announceForAccessibility(message);
+    show(message, ...rest);
+  };
 
 /**
  * The only place screens reach the toast library (swap it here without touching UI).
@@ -9,19 +18,21 @@ export const useToast = () =>
   useMemo(
     () => ({
       /** Neutral feedback (a sort changed, a setting was turned off). */
-      info: (message: string) => toast.info(message),
+      info: announced(toast.info),
       /** Something the user asked for worked. */
-      success: (message: string) => toast.success(message),
+      success: announced(toast.success),
       /** It didn't fail, but the user is limited (offline, permission needed). */
-      warning: (message: string) => toast.warning(message),
+      warning: announced(toast.warning),
       /** The action failed. */
-      error: (message: string) => toast.error(message),
+      error: announced(toast.error),
       /** A neutral toast with an inline action, e.g. Undo. */
-      withAction: (message: string, label: string, onPress: () => void) =>
-        toast.info(message, {
-          action: { label, onClick: onPress },
-          duration: 4000,
-        }),
+      withAction: announced(
+        (message: string, label: string, onPress: () => void) =>
+          toast.info(message, {
+            action: { label, onClick: onPress },
+            duration: 4000,
+          }),
+      ),
     }),
     [],
   );
