@@ -80,6 +80,9 @@ const en = {
   retry: 'Retry',
   goFavorites: 'Go to Favorites',
   activityUnavailable: 'Activity unavailable',
+  activityNotFoundTitle: 'Activity not found',
+  activityNotFoundBody:
+    'This link points to an activity that doesn’t exist or was removed.',
   offlineNoCatalogTitle: 'You’re offline',
   offlineNoCatalogBody:
     'Connect once to load the catalog. Your favorites are available right now.',
@@ -265,6 +268,9 @@ const es: Strings = {
   retry: 'Reintentar',
   goFavorites: 'Ir a Favoritos',
   activityUnavailable: 'Actividad no disponible',
+  activityNotFoundTitle: 'Actividad no encontrada',
+  activityNotFoundBody:
+    'Este enlace apunta a una actividad que no existe o se eliminó.',
   offlineNoCatalogTitle: 'Estás sin conexión',
   offlineNoCatalogBody:
     'Conéctate una vez para cargar el catálogo. Tus favoritos ya están disponibles.',

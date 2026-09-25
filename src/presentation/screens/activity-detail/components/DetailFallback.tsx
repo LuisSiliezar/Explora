@@ -13,14 +13,14 @@ interface Props {
   onRetry: () => void;
 }
 
-/** Shown until the activity is available: a skeleton, or an error with retry. */
+/** Shown until the activity is available: a skeleton, an error with retry, or not found. */
 export const DetailFallback = ({ loading, error, onBack, onRetry }: Props) => {
   const t = useT();
   const insets = useSafeAreaInsets();
   if (loading) {
     return <DetailSkeleton onBack={onBack} />;
   }
-  const offline = isDomainError(error) && error.code === 'OFFLINE';
+  const code = isDomainError(error) ? error.code : undefined;
   return (
     <View
       className="flex-1 bg-background"
@@ -34,12 +34,28 @@ export const DetailFallback = ({ loading, error, onBack, onRetry }: Props) => {
           testID="detail-back"
         />
       </View>
-      <ErrorState
-        title={t(offline ? 'offlineNoCatalogTitle' : 'activityUnavailable')}
-        body={t(offline ? 'activityUnavailableOffline' : 'errorBody')}
-        retryLabel={t('retry')}
-        onRetry={onRetry}
-      />
+      {code === 'NOT_FOUND' ? (
+        // A bad deep link: retrying can't help, so the only action is back.
+        <ErrorState
+          title={t('activityNotFoundTitle')}
+          body={t('activityNotFoundBody')}
+          retryLabel={t('back')}
+          onRetry={onBack}
+        />
+      ) : (
+        <ErrorState
+          title={t(
+            code === 'OFFLINE'
+              ? 'offlineNoCatalogTitle'
+              : 'activityUnavailable',
+          )}
+          body={t(
+            code === 'OFFLINE' ? 'activityUnavailableOffline' : 'errorBody',
+          )}
+          retryLabel={t('retry')}
+          onRetry={onRetry}
+        />
+      )}
     </View>
   );
 };
