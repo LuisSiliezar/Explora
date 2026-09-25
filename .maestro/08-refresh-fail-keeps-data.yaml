@@ -1,0 +1,38 @@
+appId: com.explora.dev
+name: A failed refresh adds nothing and keeps favorites and search
+tags:
+  - resilience
+---
+- runFlow: subflows/launch-fresh.yaml
+- runFlow: subflows/search-botanical.yaml
+- tapOn:
+    id: favorite-act-001
+
+- runFlow:
+    file: subflows/set-network.yaml
+    env:
+      MODE: fail
+- tapOn:
+    id: tab-browse
+- assertVisible:
+    id: simulated-network-badge
+- runFlow: subflows/pull-to-refresh.yaml
+
+# Nothing was added, the favorite is still saved, the search is still there.
+- runFlow:
+    file: subflows/assert-catalog-count.yaml
+    env:
+      COUNT: '12'
+- tapOn:
+    id: tab-favorites
+- assertVisible:
+    id: activity-card-act-001
+- tapOn:
+    id: tab-search
+- assertVisible:
+    id: activity-card-act-001
+
+- runFlow:
+    file: subflows/set-network.yaml
+    env:
+      MODE: normal

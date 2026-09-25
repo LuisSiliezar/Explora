@@ -23,7 +23,11 @@ export const DataSection = ({
   const language = useSettings(state => state.language);
   return (
     <>
-      <StatRow label={t('cachedActivities')} value={String(cachedCount)} />
+      <StatRow
+        label={t('cachedActivities')}
+        value={String(cachedCount)}
+        testID="data-cached-count"
+      />
       <StatRow label={t('savedFavorites')} value={String(favoritesCount)} />
       <StatRow
         label={t('lastSync')}

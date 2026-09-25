@@ -1,0 +1,18 @@
+# Settings → Developer → pick the simulated network mode, then back to Settings.
+# Usage: runFlow: { file: subflows/set-network.yaml, env: { MODE: fail } }
+appId: com.explora.dev
+---
+- tapOn:
+    id: tab-settings
+- tapOn:
+    id: settings-developer
+- tapOn:
+    id: dev-network-${MODE}
+# Taps during the push animation can be dropped: settle first, then confirm we're back.
+- waitForAnimationToEnd
+- tapOn:
+    id: settings-back
+- extendedWaitUntil:
+    visible:
+      id: tab-settings
+    timeout: 5000
