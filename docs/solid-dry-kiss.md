@@ -10,7 +10,7 @@ Each principle below is tied to real code you can open.
 | `infrastructure/repositories/activity.repository.impl.ts` | Answer queries about activities (`getById` → `NOT_FOUND`) |
 | `core/use-cases/favorites/toggle-favorite.use-case.ts` | The favorite/unfavorite rule, including cancelling the reminder |
 | `presentation/components/shared/activity-card/ActivityCard.tsx` | Render one row |
-| `presentation/screens/activities/hooks/useRefreshActivities.ts` | Pull-to-refresh, refusing offline |
+| `presentation/hooks/useRefreshActivities.ts` | Pull to refresh on Browse and Search: adds one activity, refuses offline |
 | `presentation/screens/settings/constants/settings.constants.ts` | The text-size options |
 
 A sign SRP is broken: a component that fetches, a mapper that calls a network, or a screen file that also declares sub-components, constants and handlers. Split those into the screen's `components/`, `constants/` and `hooks/` folders (see [folder-structure.md](folder-structure.md#screen-folder-anatomy)).

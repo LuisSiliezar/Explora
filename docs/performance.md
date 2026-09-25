@@ -72,6 +72,48 @@ p99 shows the worst stutters (often the first scroll into unmeasured cells, or t
 - **iOS**: Xcode → Product → Profile (Release) → Instruments "Animation Hitches", then run the
   same steps by hand or with the flow (change `appId` to the iOS staging bundle id).
 
+## Results
+
+Pixel_10 **emulator** (`sdk_gphone16k_arm64`, Android 17, arm64, on an Apple Silicon Mac), `stagingRelease`
+(Hermes, New Architecture, not debuggable), 1200 items, `.maestro/perf/1000-items.yaml`, 2026-09-24.
+Commit `3f278f4-dirty` (the uncommitted refresh work on `develop`). Nothing else ran on the emulator during a capture.
+
+| Run | Janky frames | Legacy janky | p50 / p90 / p95 / p99 (ms) | Slow UI thread | Slow issue draw commands |
+|---|---|---|---|---|---|
+| `perf/20260924-170211` | 7.29% | 0.34% | 18 / 21 / 21 / 22 | 6 | 201 |
+| `perf/20260924-170412` (median) | **6.99%** | 0.19% | **18 / 21 / 21 / 22** | 7 | 188 |
+| `perf/20260924-170612` | 3.69% | 0.06% | 18 / 21 / 21 / 22 | 2 | 110 |
+
+**Reading it:** the frame-time distribution is one tight hump at 16–22 ms with no long tail (the worst frame of a run is ~32 ms).
+The "janky" frames are almost all **Slow issue draw commands** (RenderThread submitting GPU work, which on an
+emulator goes through the host GPU translation layer). The UI thread is slow in only 2–7 frames per run, and bitmap uploads
+are 0. Legacy janky (the app's own frame work over budget) is under 0.4%. So on this emulator the app is not the bottleneck;
+a real low-end phone is still needed for a device verdict (see Limitations).
+
+The two older one-off runs (`perf/20260923-*`, `b544820-dirty`) are superseded by these.
+
+## Improvement (before/after)
+
+Two candidate fixes were measured against the baseline above, with the same device, build type, dataset and scenario. **Neither improved it, so
+neither was kept**; `ActivityThumb` is unchanged.
+
+| | Before | Fix A | Fix B |
+|---|---|---|---|
+| Change | – | `ActivityThumb` `Image`: `fadeDuration={0}` + `resizeMethod="resize"` | `ActivityThumb`: drop the `overflow-hidden` clip and round the `Image` itself |
+| Why try it | – | skip the fade on recycled cells, decode at display size | the jank is in "issue draw commands"; a rounded clip per cell is GPU work |
+| Janky frames (median of 3) | 6.99% | 6.83% | 29.23% |
+| Frame time p50 / p90 / p99 (ms) | 18 / 21 / 22 | 17 / 21 / 23 | 32 / 61 / 133 |
+| Slow UI thread (median) | 6 | 5 | 477 |
+| Raw runs | `perf/20260924-170211`, `-170412`, `-170612` | `perf/20260924-170932`, `-171135`, `-171336` | `perf/20260924-171739`, `-172132`, `-172431` |
+| Verdict | – | no measurable change: inside the baseline's own spread (3.69–7.29%). Bitmap uploads were already 0, so there was nothing to save | **much worse**: rounding the image natively costs more than clipping the parent. Reverted |
+
+A control run of the unchanged "before" APK right after Fix B (`perf/20260924-172740`: 6.79%, 17 / 19 / 20 ms, 2 slow UI
+frames), taken while the host was under *more* load, confirms that Fix B's numbers come from the change, not from host noise.
+
+**Conclusion:** at 1200 items the list holds a steady ~17–18 ms frame on the emulator with no long stalls, and the
+remaining misses are in GPU submission rather than JS, layout or image decoding. The honest next step is a capture on a
+real low-end Android phone, not another speculative fix.
+
 ## Rules for new code
 - Never `.map()` inside `renderItem` or create objects or closures per row in the list's parent without `useCallback` or `useMemo`.
 - Don't pass whole arrays or objects that change identity to rows.
