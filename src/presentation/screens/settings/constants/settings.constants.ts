@@ -1,4 +1,5 @@
-import type { TextScale } from '@domain/entities';
+import { isProduction } from '@config/env';
+import type { NetworkSimulation, TextScale } from '@domain/entities';
 import type { StringKey } from '@presentation/i18n';
 
 /** In-app text size options: store value, preview glyph class (literal, so Tailwind sees it), accessible label, row value. */
@@ -21,7 +22,8 @@ export type SettingsSectionKey =
   | 'notifications'
   | 'textSize'
   | 'location'
-  | 'data';
+  | 'data'
+  | 'developer';
 
 /** Row order on the Settings page, with each row's (and sub-screen's) title. */
 export const SETTINGS_SECTIONS: {
@@ -33,4 +35,19 @@ export const SETTINGS_SECTIONS: {
   { key: 'textSize', title: 'prefTextSize' },
   { key: 'location', title: 'prefLocation' },
   { key: 'data', title: 'prefData' },
+  // Reviewer tools: reproduce slow and failing requests. Hidden in production builds.
+  ...(isProduction
+    ? []
+    : [{ key: 'developer' as const, title: 'prefDeveloper' as const }]),
+];
+
+/** Simulated network modes on the Developer sub-screen. */
+export const NETWORK_MODES: {
+  value: NetworkSimulation;
+  name: StringKey;
+  hint: StringKey;
+}[] = [
+  { value: 'normal', name: 'devNetworkNormal', hint: 'devNetworkNormalHint' },
+  { value: 'slow', name: 'devNetworkSlow', hint: 'devNetworkSlowHint' },
+  { value: 'fail', name: 'devNetworkFail', hint: 'devNetworkFailHint' },
 ];

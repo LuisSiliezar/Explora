@@ -19,6 +19,7 @@ import {
   LocatingOverlay,
   LocationDeniedBanner,
   LocationPromptDialog,
+  SimulatedNetworkBadge,
 } from './components';
 
 export const ActivitiesScreen = ({ navigation }: TabScreenProps<'Browse'>) => {
@@ -45,6 +46,7 @@ export const ActivitiesScreen = ({ navigation }: TabScreenProps<'Browse'>) => {
         >
           Explora
         </Text>
+        <SimulatedNetworkBadge />
         <CategoryChips
           nearMeActive={nearMe.active}
           permission={nearMe.permission}

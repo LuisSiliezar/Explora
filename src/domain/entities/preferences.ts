@@ -12,3 +12,6 @@ export interface NotificationPreferences {
   /** Reminders for saved activities. */
   reminders: boolean;
 }
+
+/** Dev/staging only: how the simulated network answers catalog and refresh requests. */
+export type NetworkSimulation = 'normal' | 'slow' | 'fail';

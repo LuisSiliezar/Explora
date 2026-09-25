@@ -4,3 +4,4 @@ export * from './CategorySections';
 export * from './LocatingOverlay';
 export * from './LocationDeniedBanner';
 export * from './LocationPromptDialog';
+export * from './SimulatedNetworkBadge';

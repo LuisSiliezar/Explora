@@ -6,6 +6,7 @@ export * from './useActivityRows';
 export * from './useConnectivityToast';
 export * from './useCurrentLocation';
 export * from './useDebouncedValue';
+export * from './useDevSettings';
 export * from './useFavorites';
 export { useDependencies } from '@presentation/providers/DependenciesProvider';
 export * from './useIsOnline';

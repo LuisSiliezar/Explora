@@ -7,6 +7,7 @@ import {
   DataPanel,
   LanguageOptions,
   LocationPermissionRow,
+  NetworkSimulationOptions,
   NotificationsPanel,
   SettingsHeader,
   TextSizePicker,
@@ -19,6 +20,7 @@ const SECTION_CONTENT: Record<SettingsSectionKey, ComponentType> = {
   textSize: TextSizePicker,
   location: LocationPermissionRow,
   data: DataPanel,
+  developer: NetworkSimulationOptions,
 };
 
 /** One Settings sub-screen, pushed from a row on the Settings page. */

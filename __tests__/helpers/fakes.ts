@@ -1,6 +1,10 @@
 import { MemoryStorage } from '@config/adapters/storage';
 import type { Dependencies } from '@config/di';
-import { createActivityFilterStore, createAppSettingsStore } from '@core/store';
+import {
+  createActivityFilterStore,
+  createAppSettingsStore,
+  createDevSettingsStore,
+} from '@core/store';
 import type {
   ActivityDataSource,
   ActivityFeedDataSource,
@@ -117,6 +121,7 @@ export const createFakeContainer = (
     favorites: new StorageFavoritesRepository(storage),
     filterStore: createActivityFilterStore(storage),
     settingsStore: createAppSettingsStore(storage),
+    devSettingsStore: createDevSettingsStore(storage),
     notifications: createFakeNotifications(),
     camera: createFakeCamera(),
     location: createFakeLocation(),

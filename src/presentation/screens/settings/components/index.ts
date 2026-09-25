@@ -3,6 +3,7 @@ export * from './DataPanel';
 export * from './DataSection';
 export * from './LanguageOptions';
 export * from './LocationPermissionRow';
+export * from './NetworkSimulationOptions';
 export * from './NotificationPromptDialog';
 export * from './NotificationSettings';
 export * from './NotificationsPanel';

@@ -5,10 +5,13 @@ import {
 } from '@config/adapters/storage';
 import { env, isProduction } from '@config/env';
 import {
+  SIMULATED_SLOW_MS,
   createActivityFilterStore,
   createAppSettingsStore,
+  createDevSettingsStore,
   type ActivityFilterStore,
   type AppSettingsStore,
+  type DevSettingsStore,
 } from '@core/store';
 import type {
   ActivityDataSource,
@@ -30,6 +33,9 @@ import {
   LocalActivityDataSource,
   MockActivityFeedDataSource,
   RemoteActivityDataSource,
+  SimulatedActivityDataSource,
+  SimulatedActivityFeedDataSource,
+  type NetworkSimulationConfig,
 } from '@infrastructure/datasources';
 import {
   ActivityRepositoryImpl,
@@ -50,6 +56,8 @@ export interface Dependencies {
   favorites: FavoritesRepository;
   filterStore: ActivityFilterStore;
   settingsStore: AppSettingsStore;
+  /** Dev/staging switches (network simulation). Present in prod too, but never read there. */
+  devSettingsStore: DevSettingsStore;
   notifications: NotificationPort;
   camera: CameraPort;
   location: LocationPort;
@@ -58,6 +66,7 @@ export interface Dependencies {
 
 const createActivityDataSource = (
   storage: KeyValueStorage,
+  simulation: NetworkSimulationConfig | null,
 ): ActivityDataSource => {
   // The bundled JSON is already offline; a remote catalog keeps its last good copy.
   const source: ActivityDataSource = env.API_URL
@@ -73,28 +82,50 @@ const createActivityDataSource = (
     : new LocalActivityDataSource(activitiesJson);
 
   // Never in production. Staging release builds may seed, so perf is measured on a release build.
-  return !isProduction && env.DEV_SEED_MULTIPLIER > 0
-    ? new DevSeedActivityDataSource(source, env.DEV_SEED_MULTIPLIER)
-    : source;
+  const seeded =
+    !isProduction && env.DEV_SEED_MULTIPLIER > 0
+      ? new DevSeedActivityDataSource(source, env.DEV_SEED_MULTIPLIER)
+      : source;
+  return simulation
+    ? new SimulatedActivityDataSource(seeded, simulation)
+    : seeded;
 };
 
-const createActivityFeed = (): ActivityFeedDataSource =>
-  new MockActivityFeedDataSource();
+const createActivityFeed = (
+  simulation: NetworkSimulationConfig | null,
+): ActivityFeedDataSource => {
+  const feed = new MockActivityFeedDataSource();
+  return simulation
+    ? new SimulatedActivityFeedDataSource(feed, simulation)
+    : feed;
+};
 
 /** Composition root: the ONLY place where concrete implementations are chosen. */
 export const createContainer = (
   storage: KeyValueStorage = new MMKVStorageAdapter(),
-): Dependencies => ({
-  activities: new ActivityRepositoryImpl(
-    createActivityDataSource(storage),
-    createActivityFeed(),
-    new AddedActivitiesStorage(storage),
-  ),
-  favorites: new StorageFavoritesRepository(storage),
-  filterStore: createActivityFilterStore(storage),
-  settingsStore: createAppSettingsStore(storage),
-  notifications: new NotifeeNotificationService(),
-  camera: new ImagePickerCameraService(),
-  location: new GeolocationLocationService(),
-  haptics: new HapticFeedbackService(),
-});
+): Dependencies => {
+  const devSettingsStore = createDevSettingsStore(storage);
+  // Reviewers reproduce slow and failing requests from Settings → Developer (never in prod).
+  const simulation: NetworkSimulationConfig | null = isProduction
+    ? null
+    : {
+        getMode: () => devSettingsStore.getState().network,
+        slowMs: SIMULATED_SLOW_MS,
+      };
+
+  return {
+    activities: new ActivityRepositoryImpl(
+      createActivityDataSource(storage, simulation),
+      createActivityFeed(simulation),
+      new AddedActivitiesStorage(storage),
+    ),
+    favorites: new StorageFavoritesRepository(storage),
+    filterStore: createActivityFilterStore(storage),
+    settingsStore: createAppSettingsStore(storage),
+    devSettingsStore,
+    notifications: new NotifeeNotificationService(),
+    camera: new ImagePickerCameraService(),
+    location: new GeolocationLocationService(),
+    haptics: new HapticFeedbackService(),
+  };
+};
