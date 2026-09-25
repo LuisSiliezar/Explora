@@ -53,13 +53,16 @@ describe('resetLocalDataUseCase', () => {
     deps.favorites.update(seedActivities[1].id, { reminderId: 'r-1' });
     deps.filterStore.getState().setQuery('walk');
 
+    const clearAddedActivities = jest.fn();
     await resetLocalDataUseCase({
       ...deps,
       resetFilters: deps.filterStore.getState().reset,
+      clearAddedActivities,
     });
 
     expect(deps.favorites.getAll()).toEqual([]);
     expect(deps.notifications.cancel).toHaveBeenCalledWith('r-1');
     expect(deps.filterStore.getState().query).toBe('');
+    expect(clearAddedActivities).toHaveBeenCalledTimes(1);
   });
 });

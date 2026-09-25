@@ -12,6 +12,7 @@ export * from './useIsOnline';
 export * from './useNearMe';
 export * from './useOpenActivity';
 export * from './usePressHaptic';
+export * from './useRefreshActivities';
 export * from './useResetLocalData';
 export * from './useSettings';
 export * from './useTabBarHeight';

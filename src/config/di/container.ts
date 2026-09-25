@@ -10,7 +10,10 @@ import {
   type ActivityFilterStore,
   type AppSettingsStore,
 } from '@core/store';
-import type { ActivityDataSource } from '@domain/datasources';
+import type {
+  ActivityDataSource,
+  ActivityFeedDataSource,
+} from '@domain/datasources';
 import type {
   ActivityRepository,
   FavoritesRepository,
@@ -25,10 +28,12 @@ import {
   CachedActivityDataSource,
   DevSeedActivityDataSource,
   LocalActivityDataSource,
+  MockActivityFeedDataSource,
   RemoteActivityDataSource,
 } from '@infrastructure/datasources';
 import {
   ActivityRepositoryImpl,
+  AddedActivitiesStorage,
   StorageFavoritesRepository,
 } from '@infrastructure/repositories';
 import {
@@ -73,11 +78,18 @@ const createActivityDataSource = (
     : source;
 };
 
+const createActivityFeed = (): ActivityFeedDataSource =>
+  new MockActivityFeedDataSource();
+
 /** Composition root: the ONLY place where concrete implementations are chosen. */
 export const createContainer = (
   storage: KeyValueStorage = new MMKVStorageAdapter(),
 ): Dependencies => ({
-  activities: new ActivityRepositoryImpl(createActivityDataSource(storage)),
+  activities: new ActivityRepositoryImpl(
+    createActivityDataSource(storage),
+    createActivityFeed(),
+    new AddedActivitiesStorage(storage),
+  ),
   favorites: new StorageFavoritesRepository(storage),
   filterStore: createActivityFilterStore(storage),
   settingsStore: createAppSettingsStore(storage),

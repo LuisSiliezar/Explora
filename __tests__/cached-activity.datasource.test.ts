@@ -3,10 +3,10 @@ import { queryClient } from '@config/query';
 import type { ActivityDataSource } from '@domain/datasources';
 import { DomainError } from '@domain/errors';
 import { CachedActivityDataSource } from '@infrastructure/datasources';
-import { ActivityRepositoryImpl } from '@infrastructure/repositories';
 import {
   FailingActivityDataSource,
   InMemoryActivityDataSource,
+  createActivityRepository,
   seedActivities,
 } from './helpers/fakes';
 
@@ -113,12 +113,12 @@ describe('CachedActivityDataSource', () => {
   });
 
   it('is a drop-in ActivityDataSource for the repository (LSP)', async () => {
-    const repository = new ActivityRepositoryImpl(
-      new CachedActivityDataSource(
+    const repository = createActivityRepository({
+      dataSource: new CachedActivityDataSource(
         new InMemoryActivityDataSource(),
         new MemoryStorage(),
       ),
-    );
+    });
 
     expect((await repository.getById('act-007')).title).toBe(
       'Pottery Workshop',

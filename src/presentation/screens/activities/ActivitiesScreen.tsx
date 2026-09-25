@@ -8,6 +8,7 @@ import {
   useActivityRows,
   useNearMe,
   useOpenActivity,
+  useRefreshActivities,
   useToggleFavorite,
 } from '@presentation/hooks';
 import { useT } from '@presentation/i18n';
@@ -19,7 +20,6 @@ import {
   LocationDeniedBanner,
   LocationPromptDialog,
 } from './components';
-import { useRefreshActivities } from './hooks';
 
 export const ActivitiesScreen = ({ navigation }: TabScreenProps<'Browse'>) => {
   const t = useT();
@@ -29,7 +29,7 @@ export const ActivitiesScreen = ({ navigation }: TabScreenProps<'Browse'>) => {
   const filter = useActivityFilter(data);
   const nearMe = useNearMe();
   const rows = useActivityRows(filter.browseResults, nearMe.origin);
-  const { refreshing, onRefresh } = useRefreshActivities(refetch);
+  const { refreshing, onRefresh } = useRefreshActivities();
   const toggleFavorite = useToggleFavorite();
   const openActivity = useOpenActivity();
 

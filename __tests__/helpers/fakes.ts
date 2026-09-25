@@ -1,7 +1,10 @@
 import { MemoryStorage } from '@config/adapters/storage';
 import type { Dependencies } from '@config/di';
 import { createActivityFilterStore, createAppSettingsStore } from '@core/store';
-import type { ActivityDataSource } from '@domain/datasources';
+import type {
+  ActivityDataSource,
+  ActivityFeedDataSource,
+} from '@domain/datasources';
 import type { Activity } from '@domain/entities';
 import type {
   CameraPort,
@@ -11,9 +14,11 @@ import type {
   PhotoSource,
   ReminderRequest,
 } from '@domain/services';
+import { MockActivityFeedDataSource } from '@infrastructure/datasources';
 import { ActivityMapper } from '@infrastructure/mappers';
 import {
   ActivityRepositoryImpl,
+  AddedActivitiesStorage,
   StorageFavoritesRepository,
 } from '@infrastructure/repositories';
 import activitiesJson from '@assets/data/activities.json';
@@ -35,6 +40,41 @@ export class FailingActivityDataSource implements ActivityDataSource {
     throw this.error;
   }
 }
+
+/** A feed that fails like a remote source would. */
+export class FailingActivityFeedDataSource implements ActivityFeedDataSource {
+  constructor(private readonly error: unknown) {}
+  async fetchNew(): Promise<Activity> {
+    throw this.error;
+  }
+}
+
+/** Something that resolves only when the test says so (to reproduce late results). */
+export const deferred = <T>() => {
+  let resolve!: (value: T) => void;
+  let reject!: (error: unknown) => void;
+  const promise = new Promise<T>((res, rej) => {
+    resolve = res;
+    reject = rej;
+  });
+  return { promise, resolve, reject };
+};
+
+/** Repository wired like the container, but with in-memory storage and fakes. */
+export const createActivityRepository = ({
+  dataSource = new InMemoryActivityDataSource(),
+  feed = new MockActivityFeedDataSource(),
+  storage = new MemoryStorage(),
+}: {
+  dataSource?: ActivityDataSource;
+  feed?: ActivityFeedDataSource;
+  storage?: MemoryStorage;
+} = {}) =>
+  new ActivityRepositoryImpl(
+    dataSource,
+    feed,
+    new AddedActivitiesStorage(storage),
+  );
 
 export const createFakeNotifications = (): jest.Mocked<NotificationPort> => ({
   requestPermission: jest.fn(async () => true),
@@ -73,7 +113,7 @@ export const createFakeContainer = (
 ): Dependencies => {
   const storage = new MemoryStorage();
   return {
-    activities: new ActivityRepositoryImpl(new InMemoryActivityDataSource()),
+    activities: createActivityRepository({ storage }),
     favorites: new StorageFavoritesRepository(storage),
     filterStore: createActivityFilterStore(storage),
     settingsStore: createAppSettingsStore(storage),

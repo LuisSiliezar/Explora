@@ -14,6 +14,7 @@ import {
   useActivityRows,
   useNearMe,
   useOpenActivity,
+  useRefreshActivities,
   useToggleFavorite,
 } from '@presentation/hooks';
 import { useT } from '@presentation/i18n';
@@ -29,6 +30,7 @@ export const SearchScreen = (_props: TabScreenProps<'Search'>) => {
   const rows = useActivityRows(filter.results, origin);
   const toggleFavorite = useToggleFavorite();
   const openActivity = useOpenActivity();
+  const { refreshing, onRefresh } = useRefreshActivities();
 
   const renderContent = () => {
     if (isPending) {
@@ -52,6 +54,8 @@ export const SearchScreen = (_props: TabScreenProps<'Search'>) => {
         isSearching={filter.isSearching}
         onPressItem={openActivity}
         onToggleFavorite={toggleFavorite}
+        refreshing={refreshing}
+        onRefresh={onRefresh}
         ListEmptyComponent={
           <EmptyState
             title={t('emptyNoMatch')}

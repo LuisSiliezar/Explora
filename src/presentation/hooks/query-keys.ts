@@ -4,3 +4,8 @@ export const queryKeys = {
   activity: (id: string) => ['activities', id] as const,
   currentPosition: ['current-position'] as const,
 };
+
+/** Mutation keys, so any screen can tell whether one is still running (`useIsMutating`). */
+export const mutationKeys = {
+  refreshActivities: ['refresh-activities'] as const,
+};

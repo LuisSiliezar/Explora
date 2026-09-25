@@ -11,15 +11,20 @@ interface Props {
   isSearching: boolean;
   onPressItem: (activity: Activity) => void;
   onToggleFavorite: (activity: Activity) => void;
+  /** Pull to refresh: adds one new activity (same as Browse). */
+  refreshing: boolean;
+  onRefresh: () => void;
   ListEmptyComponent: ReactElement;
 }
 
-/** Search tab: "All results" as rows, or a skeleton while the query settles. */
+/** Search tab: "All results" as rows (pull to refresh adds one), or a skeleton while the query settles. */
 export const SearchResults = ({
   rows,
   isSearching,
   onPressItem,
   onToggleFavorite,
+  refreshing,
+  onRefresh,
   ListEmptyComponent,
 }: Props) => {
   const t = useT();
@@ -39,6 +44,8 @@ export const SearchResults = ({
             rows={rows}
             onPressItem={onPressItem}
             onToggleFavorite={onToggleFavorite}
+            refreshing={refreshing}
+            onRefresh={onRefresh}
             ListEmptyComponent={ListEmptyComponent}
           />
         )}
