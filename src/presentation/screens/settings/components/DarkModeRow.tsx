@@ -20,7 +20,7 @@ export const DarkModeRow = () => {
       testID="settings-darkMode"
       className="flex-row items-center gap-3 border-b border-border py-6"
     >
-      <Text numberOfLines={1} className="flex-1 font-display-semibold text-xl">
+      <Text className="flex-1 font-display-semibold text-xl">
         {t('darkMode')}
       </Text>
       <Toggle

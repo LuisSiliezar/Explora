@@ -2,7 +2,7 @@ import React, { useEffect, useRef, type ComponentRef } from 'react';
 import { Keyboard, Pressable, TextInput } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
-import { Icon } from '@presentation/components';
+import { Icon, MAX_FONT_SCALE } from '@presentation/components';
 import { useT } from '@presentation/i18n';
 import type { TabParamList } from '@presentation/routes/types';
 import { useTheme } from '@presentation/theme';
@@ -34,7 +34,7 @@ export const SearchField = ({ query, onChangeQuery }: Props) => {
     <Pressable
       onPress={() => input.current?.focus()}
       accessible={false}
-      className="h-[54px] flex-row items-center gap-3 rounded-full border-2 border-text-muted bg-field px-5"
+      className="min-h-[54px] flex-row items-center gap-3 rounded-full border-2 border-text-muted bg-field px-5"
     >
       <Icon name="search" size={20} />
       <TextInput
@@ -50,7 +50,9 @@ export const SearchField = ({ query, onChangeQuery }: Props) => {
         returnKeyType="search"
         onSubmitEditing={Keyboard.dismiss}
         accessibilityLabel={t('searchPlaceholder')}
-        className="h-full flex-1 font-sans text-lg text-text"
+        // Same cap as components/shared/Text (ADR-007); the pill grows instead of clipping.
+        maxFontSizeMultiplier={MAX_FONT_SCALE}
+        className="flex-1 py-3 font-sans text-lg text-text"
       />
       {!!query && (
         <Pressable

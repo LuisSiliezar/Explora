@@ -28,3 +28,6 @@ export const TAB_LABEL_CLASS = {
   focused: 'font-sans-semibold',
   idle: 'font-sans-medium',
 } as const;
+
+/** Tab labels grow with the OS text size up to this, then shrink to fit on one line (ADR-007). */
+export const TAB_LABEL_MAX_FONT_SCALE = 1.5;

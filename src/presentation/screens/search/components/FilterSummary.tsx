@@ -14,8 +14,8 @@ interface Props {
 export const FilterSummary = ({ count, hasFilters, onClearAll }: Props) => {
   const t = useT();
   return (
-    <View className="min-h-[20px] flex-row items-center justify-between border-t border-border pt-3.5">
-      <Text className="font-sans-medium text-xs tracking-wide text-text-muted">
+    <View className="min-h-[20px] flex-row items-center justify-between gap-3 border-t border-border pt-3.5">
+      <Text className="flex-1 font-sans-medium text-xs tracking-wide text-text-muted">
         {count} {t('matching')}
       </Text>
       {hasFilters && (

@@ -14,6 +14,7 @@ import {
   TAB_ICONS,
   TAB_ITEM_CLASS,
   TAB_LABEL_CLASS,
+  TAB_LABEL_MAX_FONT_SCALE,
   TAB_LABELS,
 } from './constants';
 
@@ -67,7 +68,15 @@ export const TabBar = ({ state, navigation }: BottomTabBarProps) => {
               className={`flex-1 items-center gap-1 rounded-full py-2.5 ${TAB_ITEM_CLASS[status]}`}
             >
               <Icon name={TAB_ICONS[name]} size={24} color="text" />
-              <Text className={`text-sm text-text ${TAB_LABEL_CLASS[status]}`}>
+              {/* Fixed-size chrome (ADR-007): at the largest text sizes a quarter of the bar can't fit
+                  "Favorites", so the label shrinks on one line instead of breaking mid-word. The tab's
+                  accessibilityLabel still reads the full name. */}
+              <Text
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                maxFontSizeMultiplier={TAB_LABEL_MAX_FONT_SCALE}
+                className={`text-sm text-text ${TAB_LABEL_CLASS[status]}`}
+              >
                 {label}
               </Text>
             </Pressable>

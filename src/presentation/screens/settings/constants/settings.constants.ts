@@ -51,3 +51,6 @@ export const NETWORK_MODES: {
   { value: 'slow', name: 'devNetworkSlow', hint: 'devNetworkSlowHint' },
   { value: 'fail', name: 'devNetworkFail', hint: 'devNetworkFailHint' },
 ];
+
+/** OS font scale from which Settings rows put the value under the label (ADR-007). */
+export const STACKED_ROW_FONT_SCALE = 1.6;
