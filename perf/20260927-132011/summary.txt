@@ -1,0 +1,11 @@
+Total frames rendered: 3196
+Janky frames: 690 (21.59%)
+Janky frames (legacy): 2794 (87.42%)
+50th percentile: 29ms
+90th percentile: 48ms
+95th percentile: 57ms
+99th percentile: 85ms
+Number Missed Vsync: 27
+Number Slow UI thread: 366
+Number Frame deadline missed: 690
+Number Frame deadline missed (legacy): 586

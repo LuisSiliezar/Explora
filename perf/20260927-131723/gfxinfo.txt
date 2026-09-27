@@ -1,0 +1,78 @@
+Applications Graphics Acceleration Info:
+Uptime: 3441012 Realtime: 3441012
+
+** Graphics info for pid 9079 [com.explora.staging] **
+
+Stats since: 3301790458323ns
+Total frames rendered: 3115
+Janky frames: 652 (20.93%)
+Janky frames (legacy): 2532 (81.28%)
+50th percentile: 28ms
+90th percentile: 48ms
+95th percentile: 61ms
+99th percentile: 101ms
+Number Missed Vsync: 38
+Number High input latency: 4489
+Number Slow UI thread: 346
+Number Slow bitmap uploads: 40
+Number Slow issue draw commands: 589
+Number Frame deadline missed: 652
+Number Frame deadline missed (legacy): 555
+HISTOGRAM: 5ms=0 6ms=3 7ms=4 8ms=13 9ms=8 10ms=15 11ms=14 12ms=18 13ms=10 14ms=16 15ms=15 16ms=98 17ms=230 18ms=99 19ms=61 20ms=56 21ms=67 22ms=84 23ms=89 24ms=112 25ms=144 26ms=140 27ms=161 28ms=149 29ms=128 30ms=99 31ms=93 32ms=195 34ms=176 36ms=116 38ms=100 40ms=88 42ms=72 44ms=58 46ms=58 48ms=79 53ms=42 57ms=27 61ms=29 65ms=31 69ms=18 73ms=12 77ms=7 81ms=15 85ms=11 89ms=10 93ms=3 97ms=2 101ms=10 105ms=7 109ms=3 113ms=0 117ms=5 121ms=2 125ms=0 129ms=0 133ms=2 150ms=9 200ms=1 250ms=1 300ms=0 350ms=0 400ms=0 450ms=0 500ms=0 550ms=0 600ms=0 650ms=0 700ms=0 750ms=0 800ms=0 850ms=0 900ms=0 950ms=0 1000ms=0 1050ms=0 1100ms=0 1150ms=0 1200ms=0 1250ms=0 1300ms=0 1350ms=0 1400ms=0 1450ms=0 1500ms=0 1550ms=0 1600ms=0 1650ms=0 1700ms=0 1750ms=0 1800ms=0 1850ms=0 1900ms=0 1950ms=0 2000ms=0 2050ms=0 2100ms=0 2150ms=0 2200ms=0 2250ms=0 2300ms=0 2350ms=0 2400ms=0 2450ms=0 2500ms=0 2550ms=0 2600ms=0 2650ms=0 2700ms=0 2750ms=0 2800ms=0 2850ms=0 2900ms=0 2950ms=0 3000ms=0 3050ms=0 3100ms=0 3150ms=0 3200ms=0 3250ms=0 3300ms=0 3350ms=0 3400ms=0 3450ms=0 3500ms=0 3550ms=0 3600ms=0 3650ms=0 3700ms=0 3750ms=0 3800ms=0 3850ms=0 3900ms=0 3950ms=0 4000ms=0 4050ms=0 4100ms=0 4150ms=0 4200ms=0 4250ms=0 4300ms=0 4350ms=0 4400ms=0 4450ms=0 4500ms=0 4550ms=0 4600ms=0 4650ms=0 4700ms=0 4750ms=0 4800ms=0 4850ms=0 4900ms=0 4950ms=0
+50th gpu percentile: 16ms
+90th gpu percentile: 24ms
+95th gpu percentile: 4950ms
+99th gpu percentile: 4950ms
+GPU HISTOGRAM: 1ms=0 2ms=11 3ms=102 4ms=162 5ms=146 6ms=114 7ms=81 8ms=88 9ms=102 10ms=87 11ms=102 12ms=123 13ms=113 14ms=133 15ms=139 16ms=134 17ms=174 18ms=175 19ms=173 20ms=181 21ms=158 22ms=134 23ms=100 24ms=75 25ms=78 4950ms=230
+
+Pipeline=Skia (OpenGL)
+Memory policy:
+  Max surface area: 2617920
+  Max resource usage: 125.66MB (x48)
+  Background retention: 50% (altUiHidden = true)
+  GPU Context timeout: 10
+Contexts: 1 (stopped = 0)
+CPU Caches:
+  Glyph Cache: 833.47 KB (1 entry)
+  Shadows: 11.86 KB (1 entry)
+  Glyph Count: 54 
+Total CPU memory usage:
+  865618 bytes, 845.33 KB (0.00 bytes is purgeable)
+GPU Caches:
+  Other:
+    Other: 226.02 KB (1 entry)
+    Buffer Object: 11.57 KB (7 entries)
+    StencilAttachment: 541.00 KB (5 entries)
+  Image:
+    Texture: 43.08 MB (79 entries)
+  Scratch:
+    Buffer Object: 174.00 KB (5 entries)
+    Texture: 2.00 MB (2 entries)
+Total GPU memory usage:
+  48249924 bytes, 46.01 MB (42.85 MB is purgeable)
+Pipeline Cache: inactive
+GraphicBufferAllocator buffers:
+            Handle |         Size |     W (Stride) x H | Layers |   Format |      Usage | Requestor
+0xb40076ce92064500 |      unknown | 1080 (   0) x 2424 |      1 |        1 | 0x     b00 | VRI[MainActivity]#0(BLAST Consumer)0
+0xb40076ce92064570 |      unknown | 1080 (   0) x 2424 |      1 |        1 | 0x     b00 | VRI[MainActivity]#0(BLAST Consumer)0
+0xb40076ce92064ea0 |      unknown | 1080 (   0) x 2424 |      1 |        1 | 0x     b00 | VRI[MainActivity]#0(BLAST Consumer)0
+Total allocated by GraphicBufferAllocator (estimate): 0.00 KB
+Imported gralloc buffers:
++ name:VRI[MainActivity]#0(BLAST Consumer)0, id:285, size:10236.56KiB, w/h:1080x2424, usage: 0xb00, req fmt:1, fourcc/mod:875708993/0, dataspace: 0x8810000, compressed: false
++ name:VRI[MainActivity]#0(BLAST Consumer)0, id:286, size:10236.56KiB, w/h:1080x2424, usage: 0xb00, req fmt:1, fourcc/mod:875708993/0, dataspace: 0x8810000, compressed: false
++ name:VRI[MainActivity]#0(BLAST Consumer)0, id:284, size:10236.56KiB, w/h:1080x2424, usage: 0xb00, req fmt:1, fourcc/mod:875708993/0, dataspace: 0x8810000, compressed: false
+Total imported by gralloc: 30709.69KiB
+
+Profile data in ms:
+
+	com.explora.staging/com.explora.MainActivity/android.view.ViewRootImpl@47a9042 (visibility=0)
+View hierarchy:
+
+  com.explora.staging/com.explora.MainActivity/android.view.ViewRootImpl@47a9042
+  265 views, 543.23 kB of render nodes
+
+
+Total ViewRootImpl   : 1
+Total attached Views : 265
+Total RenderNode     : 543.23 kB (used) / 1783.43 kB (capacity)
+

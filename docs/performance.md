@@ -92,6 +92,35 @@ a real low-end phone is still needed for a device verdict (see Limitations).
 
 The two older one-off runs (`perf/20260923-*`, `b544820-dirty`) are superseded by these.
 
+### Re-check on the submission build (2026-09-27)
+
+Same Pixel_10 emulator (`sdk_gphone16k_arm64`, Android 17, arm64), same `.maestro/perf/1000-items.yaml` scenario, same 1200-item dataset.
+
+- **Build:** `stagingRelease` (not debuggable), with `DEV_SEED_MULTIPLIER=100` set only for the build.
+- **Commits:** built from `381e49e`; the first run is labelled `fbee737`. The app code in both is identical to the submission commit `eb88adc`, since everything after it is tests and docs.
+- **APK SHA-256:** `620c9e61…1618`.
+
+**First attempt, not used as a result.** Six runs of the new APK (`perf/20260927-131723` … `-133147`) gave 12.7–22.0% janky frames, p50 of 18–29 ms and 105–554 slow UI-thread frames. That's about 3× the 09-24 baseline, and the spread between runs was wide. The Mac was busy while they ran (load average 5–8): the iOS Simulator and its live panel, the Claude app and Chrome.
+
+**A/B to tell a regression from host noise.** The 09-24 baseline is rebuilt from `f4f3442` (the same app as the baseline, before the 09-27 changes) with the same seed. The two APKs are installed alternately and measured back to back, so both see the same host:
+
+| Run | APK | Host load (1 min) | Janky | Legacy janky | p50 / p90 / p95 / p99 (ms) | Slow UI thread |
+|---|---|---|---|---|---|---|
+| `perf/20260927-133637` | baseline `f4f3442` | 9.0, right after a Gradle build | 21.01% | 81.61% | 28 / 48 / 61 / 89 | 384 |
+| `perf/20260927-133930` | submission | 7.0 | 20.20% | 66.75% | 27 / 44 / 48 / 81 | 525 |
+| `perf/20260927-134234` | baseline `f4f3442` | 4.7 | 7.23% | 0.63% | 17 / 19 / 19 / 20 | 3 |
+| `perf/20260927-134439` | submission | 5.8 | **7.02%** | 0.96% | 17 / 19 / 19 / 20 | 4 |
+| `perf/20260927-134644` | baseline `f4f3442` | 6.4 | 7.83% | 5.97% | 17 / 20 / 22 / 36 | 9 |
+| `perf/20260927-134849` | submission | 4.8 | **7.16%** | 3.30% | 18 / 21 / 22 / 27 | 6 |
+
+**Reading it:** in each pair, the baseline and the submission build move together. Both are about 21% when the host is loaded, and both are 7.0–7.8% when it's quieter. So the jump in the first attempt came from the host, not from the 09-27 changes (the logger, the reminder channel, and rounder pills and badges on every card). Median of the submission build's three A/B runs: **7.16% janky, 18 / 21 / 27 ms (p50 / p90 / p99), 6 slow UI-thread frames**. That's within the 09-24 baseline's own spread (3.69–7.29%, 18 / 21 / 22 ms).
+
+**Limitations of this re-check:**
+- The host couldn't be made idle (the Claude app and Chrome kept running), so the absolute numbers depend on host load. Only the paired comparison is reliable.
+- Two quiet pairs is a small sample.
+- It's an emulator, as before, not a real low-end phone.
+- Commit labels: the capture script stamps the current checkout, so the baseline runs' `device.txt` files were relabelled by hand to `f4f3442 (A/B base APK)`. The first-attempt runs keep the labels the script gave them.
+
 ## Improvement (before/after)
 
 The improvement submitted for Part 2 is the Android reminder banner, in [improvement.md](improvement.md). This section records the performance fixes that were tried first and not kept.
