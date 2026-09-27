@@ -56,6 +56,13 @@ Native wiring: iOS `CFBundleURLTypes` (`$(APP_URL_SCHEME)`) + `RCTLinkingManager
 
 Links are ignored until onboarding is done, because the target screens aren't mounted yet.
 
+Firing a reminder without waiting an hour (see [S8](test-scenarios.md)):
+```bash
+adb shell dumpsys jobscheduler | grep -A12 com.explora.dev   # the JOB #u0a…/<id> line has the id
+adb shell cmd jobscheduler run -f com.explora.dev <id>
+```
+Force the job while the app process is alive; for the app-killed case, run `adb shell am kill com.explora.dev` after the notification is posted. On iOS there's no equivalent: temporarily lower `REMINDER_DELAY_MS` in a Debug build and revert it afterwards.
+
 Try it (after a native rebuild):
 ```bash
 xcrun simctl openurl booted "explora-dev://activity/<id>"
