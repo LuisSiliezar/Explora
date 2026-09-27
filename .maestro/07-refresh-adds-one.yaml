@@ -18,6 +18,9 @@ tags:
 # Search has the same pull to refresh.
 - tapOn:
     id: tab-search
+# The search field auto-focuses. On emulators without a hardware keyboard (CI), the soft
+# keyboard then covers the tab bar, and the first drag only dismisses it (on-drag).
+- hideKeyboard
 - swipe:
     start: 50%, 45%
     end: 50%, 85%
