@@ -19,6 +19,7 @@
 | [decisions-and-evidence.md](decisions-and-evidence.md) | Key trade-offs and links to every piece of evidence                            |
 | [ci.md](ci.md)                                         | GitHub Actions: checks, knip, Android/iOS build artifacts                      |
 | [environment.md](environment.md)                       | dev/staging/prod environments, `.env.*` variables                              |
+| [logging.md](logging.md)                               | `LoggerPort`, log levels per environment, what gets logged where               |
 | [decisions/](decisions)                                | Architecture Decision Records (ADRs), including 007 large text and 008 refresh |
 
 Start with **architecture.md**, then **adding-a-feature.md**.

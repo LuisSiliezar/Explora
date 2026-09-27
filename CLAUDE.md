@@ -52,6 +52,7 @@ presentation → core → domain ← infrastructure
 2. UI gets its dependencies with `useDependencies()`, never through direct imports of services or repositories.
 3. Raw API or JSON shapes (DTOs) stay in `infrastructure/interfaces`. They are validated with zod and converted by a mapper, and only domain entities leave infrastructure.
 4. Native modules (notifee, image-picker, geolocation, mmkv, haptic-feedback) are wrapped behind a port in `domain/services` or `config/adapters`, and nothing else imports them. UI-only libraries each have a single entry point: toasts via `hooks/useToast` (sonner-native), icons via `components/shared/Icon` (lucide-react-native), and BootSplash + Lottie only in `screens/splash`.
+   Diagnostics go through `LoggerPort` (`deps.logger`); `console` is lint-banned outside `ConsoleLogger`. See [docs/logging.md](docs/logging.md).
 5. Server/async data goes through **TanStack Query** (`presentation/hooks`). Persisted UI state uses **zustand** (`core/store`). Favorites use `FavoritesRepository` with `useSyncExternalStore`. Don't mix these up. See [docs/state-management.md](docs/state-management.md).
 6. Local-first: write to local storage first (synchronously), then call native or remote code.
 
