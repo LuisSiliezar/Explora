@@ -1,0 +1,7 @@
+# adb shell dumpsys notification --noredact (Explora channels only), captured 2026-09-27T16:34Z
+# device: sdk_gphone16k_arm64, Android 17, arm64-v8a, emulator
+# app: com.explora.dev versionName=1.0, the same install used for S8b in test-scenarios.md
+# importance: 3 = DEFAULT (status-bar icon, no heads-up), 4 = HIGH (heads-up banner)
+      AppSettings: com.explora.dev (10226) importance=DEFAULT userSet=true
+        NotificationChannel{mId='activity-reminders', mName=Activity reminders, mDescription=, mImportance=4, mOriginalImp=4, ...}
+        NotificationChannel{mId='reminders', mName=Activity reminders, mDescription=, mImportance=3, mOriginalImp=3, ...}

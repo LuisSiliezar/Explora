@@ -15,7 +15,7 @@ One page for the reviewer: what was decided, why, and where the proof is.
 | Accessibility | [accessibility.md](accessibility.md), [ADR-007](decisions/007-large-text.md) | [S7](test-scenarios.md) |
 | One native feature | Deep links + local notifications ([native-features.md](native-features.md)) | `linking.test.ts`, [S8](test-scenarios.md) |
 | 1000+ items, real release measurement | FlashList, `DevSeedActivityDataSource` ×100 = 1200 items | [performance.md](performance.md) → Results |
-| One improvement with before/after | _TODO: fill in after the perf runs_ | [performance.md](performance.md) → Improvement |
+| One improvement with before/after | Android reminders on a HIGH-importance channel, so they show a heads-up banner (`243ba6b`) | [improvement.md](improvement.md), `notifee-notification.service.test.ts`, [dumpsys before/after](evidence/android/S8b-channels-dumpsys.txt); perf attempts that weren't kept: [performance.md](performance.md#improvement-beforeafter) |
 | 2+ automated tests (core + failure) | Jest: `refresh-activities.test.ts` (both), plus 18 other suites; Maestro flows 01–09 | `yarn test`, `yarn e2e` |
 
 ## Key decisions (short)
@@ -39,5 +39,5 @@ One page for the reviewer: what was decided, why, and where the proof is.
 5. (4:00) Developer → Failing: refresh fails, nothing changes. Retry state on a reset catalog.
 6. (5:15) Developer → Slow: pull, search and favorite, Home, reopen: added once, nothing undone.
 7. (6:45) VoiceOver/TalkBack + largest text walk-through.
-8. (8:00) Deep link and reminder notification.
-9. (9:00) Perf numbers before/after and the tests running.
+8. (8:00) Deep link, then the improvement: reminder fired with jobscheduler, heads-up banner, tap opens the detail (before/after from [improvement.md](improvement.md)).
+9. (9:00) Perf numbers at 1200 items and the tests running.

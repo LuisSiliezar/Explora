@@ -10,6 +10,7 @@
 | [state-management.md](state-management.md)             | TanStack Query vs zustand vs FavoritesRepository                               |
 | [offline-and-resilience.md](offline-and-resilience.md) | Offline favorites, backgrounding, slow networks                                |
 | [performance.md](performance.md)                       | Handling 1000+ items, profiling                                                |
+| [improvement.md](improvement.md)                       | Part 2: the Android reminder banner fix, with before/after evidence            |
 | [native-features.md](native-features.md)               | Notifications, camera, location, haptics, splash, and permissions              |
 | [ui-and-design-system.md](ui-and-design-system.md)     | NativeWind, theme tokens, fonts, i18n, toasts, and the screen flow             |
 | [image-credits.md](image-credits.md)                   | Sources and credits for the bundled activity photos                            |

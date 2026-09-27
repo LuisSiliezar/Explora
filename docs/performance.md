@@ -94,6 +94,8 @@ The two older one-off runs (`perf/20260923-*`, `b544820-dirty`) are superseded b
 
 ## Improvement (before/after)
 
+The improvement submitted for Part 2 is the Android reminder banner, in [improvement.md](improvement.md). This section records the performance fixes that were tried first and not kept.
+
 Two candidate fixes were measured against the baseline above, with the same device, build type, dataset and scenario. **Neither improved it, so
 neither was kept**; `ActivityThumb` is unchanged.
 
