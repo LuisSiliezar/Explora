@@ -8,6 +8,7 @@ This record covers the AI-assisted work on **Explora** (React Native + TypeScrip
 - **Git history** of this repo (`git log`, 47 commits) and the current `git status`.
 - **A check run while writing this file:** `yarn validate` (result in §5).
 - Timestamps are UTC and taken from the transcript files.
+- **Update on 2026-09-27 (submission prep):** the entries marked "09-27 (submission prep)" and "submission prep" were added by the AI in that same session, from its own conversation and tool results, and weren't re-read from a transcript file. The quotes from that session are the user's messages, verbatim.
 
 ## 1. Tool and model
 
@@ -54,7 +55,14 @@ Quotes are exact, trimmed with "…". Messages that were only shell input, task 
 - Pasted the full brief again: "check the requirements and tell what's missing". That session is still open, and its transcript has no final answer yet.
 - "test push notifications in ios and android", then "yes, fix the Android channel and update the docs".
 - "Is there a logger in theapp?", "are there unit test?", "Implement the logger and add it to the whole app", "run it on the simulator".
-- This request: fill `AI_SESSION.md` using the assessment's session-summary prompt.
+- Fill `AI_SESSION.md` using the assessment's session-summary prompt (the request that produced the first version of this file).
+
+**2026-09-27: submission prep (the session that last updated this file)**
+- Pasted the full brief: "consider this as the requirements for the app, check the current working tree and make different semantic commits, then with this information tell me what I'm missing".
+- "yes, do the Part 2 write-up and release note".
+- "commit this changes and check on git the pull request from develop to main".
+- "fix the CI timeout, push develop and update the PR", then "turn on auto-fix".
+- "what is still missing?", then "do 9, 11 and the small cleanups" (the S5 scenario, this file, and small cleanups from the AI's list).
 
 **Constraints the user set:** Yarn only, React Native CLI (not Expo), the layered architecture and principles in `CLAUDE.md`, Conventional Commits enforced by commitlint and husky, never commit without being asked, and test on the iPhone 17 Pro simulator plus the Android emulator.
 
@@ -73,6 +81,7 @@ Quotes are exact, trimmed with "…". Messages that were only shell input, task 
 | Performance | Added a release-build perf flow with a 1,200-item seed and ran before/after measurements (results in §5). |
 | Logging | Added `LoggerPort` and `ConsoleLogger`, a `LOG_LEVEL` env value, query and global error capture, and an ESLint `no-console` rule. |
 | Git | Split the working tree into Conventional Commits, set up commitlint and husky, created `develop`, and opened [LuisSiliezar/Explora#2](https://github.com/LuisSiliezar/Explora/pull/2). |
+| Submission prep (09-27) | Grouped the uncommitted tree into 11 commits. Made the first one, then gave the user the commands for the other 10 (see §4). Compared the tree with the brief and listed the gaps. Wrote `docs/improvement.md`, picking the Android reminder banner fix as the Part 2 improvement. Captured the channel importances with `dumpsys` on the emulator as evidence. Rewrote `RELEASE_NOTES.md` with signing, versioning, pre-release checks and the faulty-release response. Limited the CI Android build to `x86_64` and `arm64-v8a`, pushed `develop`, rewrote the PR #2 title and description, and turned on auto-fix. Rewrote S5 and added `activities-content.test.tsx`. Removed the unused `savedOnDevice` string, set `package.json` to `1.0.0`, and replaced the stale `StateView` name in 4 docs. |
 
 ## 4. Decisions: user versus AI
 
@@ -87,6 +96,8 @@ Quotes are exact, trimmed with "…". Messages that were only shell input, task 
 - Leave build and release out of the requirements plan ("omit the build and release for now").
 - Turn on auto-fix for PR #2, and add `format:check` to `yarn validate`.
 - Fix the Android notification channel; implement the logger.
+- **09-27:** asked for the working tree as semantic commits, even though `CLAUDE.md` says never commit. The AI made the first commit. The desktop app's auto-mode permission check then **blocked** the next one, and the AI stopped and gave the commands instead. The user ran commits 2–11 by hand. When they answered one `git add -p` prompt, both hunks of `docs/environment.md` went into the logger docs commit; the AI pointed this out and advised against rewriting history. Later, the user asked the AI directly to commit the Part 2 and release-note work, to push `develop`, to update PR #2, and to turn on auto-fix. It did all four.
+- **09-27:** chose which gaps to work on: the Part 2 write-up and release note first, then S5, this file and the small cleanups.
 
 **The AI suggested (the user adopted it, or it simply landed in the code):**
 - The perf fix `fadeDuration={0}` plus `resizeMethod="resize"` in `ActivityThumb`. The AI proposed it, the list the user pasted back included it, and measurement later showed it had no effect (§5).
@@ -94,6 +105,7 @@ Quotes are exact, trimmed with "…". Messages that were only shell input, task 
 - Treating flow 09 as reliable without changing the flow, and adding "run flows on an idle device" to `docs/testing.md`.
 - Rewriting scenario S5(a), because the app does not behave the way the scenario described.
 - Adding dev-only Maestro `testID`s, the `CachedActivityDataSource` decorator, and a settings-store migration to version 2 when auth was removed.
+- **09-27:** using the Android reminder banner fix as the Part 2 improvement, instead of a performance change. Leaving `android/gradle/gradle-daemon-jvm.properties` uncommitted, because it pins a JDK 21 download while every verified build used JDK 17. Fixing the CI timeout by building 2 ABIs instead of 4. Marking S5 ✅ with the Browse skeleton covered by an automated test instead of a hand check.
 - **Suggestions the user did not take up** (no follow-up in the transcripts): shrinking the Android icon, a System/Light/Dark picker instead of the dark-mode switch, and a "Show onboarding again" dev option.
 
 ## 5. Tests and checks, with observed results
@@ -117,7 +129,13 @@ Quotes are exact, trimmed with "…". Messages that were only shell input, task 
 | 09-25 | `yarn validate` after the 8 commits | pass, 124 tests |
 | 09-27 | Local notifications | Android: all states pass, but the notification showed no banner (channel importance), which was then fixed. iOS: the banner shows, and the tap was not proven. |
 | 09-27 | Logger work | 134 tests pass (9 new). Lint failed on an unused `Text` import in `FavoritesScreen.tsx`, a file the AI had not changed. The simulator build did not start, because another Xcode build held the build database ("database is locked"). |
-| **09-27 (this session)** | `yarn validate` | First run: Prettier and typecheck passed, then **lint failed** with `src/presentation/screens/favorites/FavoritesScreen.tsx:9 'Text' is defined but never used`. The user asked for a fix, and the unused import was removed. Rerun: **all pass**, 23 suites / 134 tests. Jest warned that "A worker process has failed to exit gracefully". |
+| 09-27 (first `AI_SESSION.md` session) | `yarn validate` | First run: Prettier and typecheck passed, then **lint failed** with `src/presentation/screens/favorites/FavoritesScreen.tsx:9 'Text' is defined but never used`. The user asked for a fix, and the unused import was removed. Rerun: **all pass**, 23 suites / 134 tests. Jest warned that "A worker process has failed to exit gracefully". |
+| 09-27 (submission prep) | `yarn validate` before committing | pass, 24 suites / 135 tests |
+| 09-27 | commitlint on the 14 commits made that day | all accepted |
+| 09-27 | `adb shell dumpsys notification` on the Pixel_10 emulator | old `reminders` channel `mImportance=3`, new `activity-reminders` channel `mImportance=4`, both on one install. Saved as `docs/evidence/android/S8b-channels-dumpsys.txt`. |
+| 09-27 | PR #2 CI (head `3f278f4`) | checks and the iOS build passed. The Android build was **cancelled** at its 45 min timeout while assembling all 4 ABIs, so Maestro was skipped. The fix was pushed as `11650d7`; the new run hadn't finished when this was written. |
+| 09-27 | New `activities-content.test.tsx` | The first run printed nothing and was stopped after 120 s. Run directly with `jest`, it passed 4/4 in under 2 s. Watchman printed a "Recrawled this watch" warning, and the cause of the first hang wasn't confirmed. |
+| 09-27 | `yarn validate` after the S5 test and cleanups | pass, 25 suites / 139 tests |
 
 **Where the AI was wrong or had to redo work**
 - Performance: its first hypothesis (image decode and fade) and its second fix (rounding the image) were both wrong. The measurements caught it.
@@ -131,16 +149,17 @@ Quotes are exact, trimmed with "…". Messages that were only shell input, task 
 - Jest warns that a worker process did not exit cleanly, which suggests a timer or handle leaks in some test. The cause has not been investigated.
 - The Maestro iOS driver does not run on this machine, so iOS e2e is manual only. CI runs e2e on Android only.
 - A reminder tap on iOS with the app killed has not been verified.
-- The perf improvement is unproven. The measurements come from an emulator, and a real low-end Android device has not been tested.
+- Performance was measured on an emulator only, and no list-performance fix was kept. Part 2 uses the reminder banner fix instead (`docs/improvement.md`). The Android heads-up banner itself was never captured on screen.
 - Open design issue at the largest text size: the Search filters crowd out the results. The AI left this for the user to decide.
 - The screen-reader check covered the accessibility tree only, not a real VoiceOver or TalkBack session.
 - The 12 activity photos from Cosmos have no verified license. The AI marked them as placeholders.
 - The app has local notifications only (notifee), with no remote push (FCM or APNs).
-- The logger work is uncommitted and has not been run on a device.
-- Build and release were left out on purpose (user decision, 2026-09-24).
+- The logger work is committed, but it hasn't been checked in a running build. The review builds in `build/handoff/` predate it and the reminder fix: they need to be rebuilt from the submission commit, and `RELEASE_NOTES.md` still has placeholders for the commit and hashes.
+- The presentation video or deck hasn't been made.
+- Build and release were left out on purpose on 2026-09-24 (user decision). On 2026-09-27 the release note was written, but the rebuild is still pending.
 
 **Missing or unavailable context**
-- The session "check the requirements and tell what's missing" (started 2026-09-25) is still running, and its transcript has no final answer.
+- The session "check the requirements and tell what's missing" (started 2026-09-25) had no final answer in its transcript when the first version of this file was written. It wasn't re-read for this update.
 - The Claude Design conversation used to create the prototype, and any claude.ai chats, are not in the local transcripts.
 - For each session I read only the user messages and the last assistant replies, not every intermediate step, so some smaller decisions may be missing.
 - Subagent transcripts were not reviewed.

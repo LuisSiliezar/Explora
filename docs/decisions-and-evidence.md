@@ -9,7 +9,7 @@ One page for the reviewer: what was decided, why, and where the proof is.
 | Browse, search by title, filter by category, combined; back keeps both | `useActivityFilter`, `core/store/activity-filter.store.ts` (persisted zustand) | `filter-activities.test.ts`, `.maestro/02`, [S1](test-scenarios.md) |
 | Favorites on disk, survive restart, offline with full details | `StorageFavoritesRepository` (sync MMKV writes, full `Activity` snapshot) | `favorites.test.ts`, `.maestro/04`, `06`, [S2](test-scenarios.md) |
 | Refresh adds one random activity with a unique id; failure adds nothing | `ActivityRepositoryImpl.refresh`, `MockActivityFeedDataSource`, `AddedActivitiesStorage` ([ADR-008](decisions/008-refresh-and-late-results.md)) | `refresh-activities.test.ts`, `offline-feedback.test.tsx`, `.maestro/07`, `08`, [S3](test-scenarios.md), [S4](test-scenarios.md) |
-| Loading, empty, error, retry | `ActivitiesContent`, `StateView`, `ErrorState` | [S5](test-scenarios.md) |
+| Loading, empty, error, retry | `ActivitiesContent`, `EmptyState`, `ErrorState` | `activities-content.test.tsx`, [S5](test-scenarios.md) |
 | Reviewer can reproduce success, failure, slow | Settings → Developer → Simulated network (dev/staging only) | `simulated-network.datasource.test.ts`, [S4–S6](test-scenarios.md) |
 | Background/resume and late results don't undo the user | Read-time merge + mutation-level callbacks + separate stores ([ADR-008](decisions/008-refresh-and-late-results.md), [offline-and-resilience.md](offline-and-resilience.md)) | `refresh-activities.test.ts` ("late results"), `offline-feedback.test.tsx`, `.maestro/09`, [S6](test-scenarios.md) |
 | Accessibility | [accessibility.md](accessibility.md), [ADR-007](decisions/007-large-text.md) | [S7](test-scenarios.md) |

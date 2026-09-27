@@ -36,7 +36,7 @@ Ports are small and focused: `NotificationPort` (3 methods), `CameraPort` (1), `
 ## DRY
 - One `HttpAdapter` for every HTTP call, and one `KeyValueStorage` shared by favorites and the filter store
 - `queryKeys` in one place
-- `StateView` covers loading, empty and error states. `ActionButton` and `FavoriteButton` are reused across screens.
+- The shared `Skeleton`, `EmptyState` and `ErrorState` cover loading, empty and error states. `Button`, `IconButton` and `FavoriteButton` are reused across screens.
 - Theme tokens in `theme/tokens.ts`, with no duplicated colors or spacing
 - `ActivityList` is used by both Explore and Favorites.
 
