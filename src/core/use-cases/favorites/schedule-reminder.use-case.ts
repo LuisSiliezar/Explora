@@ -1,7 +1,7 @@
 import type { Activity } from '@domain/entities';
 import { DomainError } from '@domain/errors';
 import type { FavoritesRepository } from '@domain/repositories';
-import type { NotificationPort } from '@domain/services';
+import type { LoggerPort, NotificationPort } from '@domain/services';
 
 /** Localized by the caller: core has no i18n. */
 interface ReminderCopy {
@@ -12,11 +12,12 @@ interface ReminderCopy {
 interface Deps {
   favorites: FavoritesRepository;
   notifications: NotificationPort;
+  logger: LoggerPort;
 }
 
 /** Schedules (or replaces) a reminder for an activity. Scheduling implies favoriting. */
 export const scheduleReminderUseCase = async (
-  { favorites, notifications }: Deps,
+  { favorites, notifications, logger }: Deps,
   activity: Activity,
   fireAt: Date,
   copy: ReminderCopy,
@@ -31,7 +32,12 @@ export const scheduleReminderUseCase = async (
     .getAll()
     .find(fav => fav.activity.id === activity.id)?.reminderId;
   if (previous) {
-    await notifications.cancel(previous).catch(() => undefined);
+    await notifications.cancel(previous).catch(error =>
+      logger.warn('Cancelling the previous reminder failed', {
+        reminderId: previous,
+        error,
+      }),
+    );
   }
   const reminderId = await notifications.scheduleReminder({
     activityId: activity.id,

@@ -1,0 +1,9 @@
+# Restores connectivity. Used as onFlowComplete so a failed offline flow never
+# leaves the emulator in airplane mode for the next flow.
+appId: com.explora.dev
+---
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - setAirplaneMode: disabled

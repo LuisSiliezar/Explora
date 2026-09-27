@@ -1,0 +1,66 @@
+appId: com.explora.dev
+name: A slow refresh that finishes while the app is in background is applied once, without undoing the user
+tags:
+  - resilience
+---
+- runFlow: subflows/launch-fresh.yaml
+- runFlow:
+    file: subflows/set-network.yaml
+    env:
+      MODE: slow
+
+# Start a 4 s refresh, then keep using the app before it lands.
+- runFlow: subflows/pull-to-refresh.yaml
+- runFlow: subflows/search-botanical.yaml
+- tapOn:
+    id: favorite-act-001
+# Leave the search field: Android restores a focused input (and its keyboard) on resume.
+- tapOn:
+    id: tab-browse
+
+# Leave the app while the 4 s request is in flight. Android pauses RN timers in background,
+# so the simulated response lands right after resume: a late result either way.
+# (Maestro has no sleep: an optional wait for an element that never exists waits the full timeout.)
+- pressKey: Home
+- extendedWaitUntil:
+    visible:
+      id: never-present-background-wait
+    timeout: 6000
+    optional: true
+- launchApp:
+    clearState: false
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: tab-settings
+    timeout: 15000
+# Debug builds only: resuming shows RN's "Fast Refresh disconnected" banner over the header
+# (it covers the back buttons). Release builds, like the APK CI tests, never show it.
+- tapOn:
+    text: Dismiss
+    optional: true
+# Let the late result land (list update + toast) before tapping on.
+- extendedWaitUntil:
+    visible:
+      id: never-present-settle-wait
+    timeout: 5000
+    optional: true
+
+# The late result was applied exactly once, and the user's changes are intact.
+- runFlow:
+    file: subflows/assert-catalog-count.yaml
+    env:
+      COUNT: '13'
+- tapOn:
+    id: tab-favorites
+- assertVisible:
+    id: activity-card-act-001
+- tapOn:
+    id: tab-search
+- assertVisible:
+    id: activity-card-act-001
+
+- runFlow:
+    file: subflows/set-network.yaml
+    env:
+      MODE: normal

@@ -1,7 +1,6 @@
-export * from './ActivityCard';
+export * from './activity-card';
 export * from './ActivityThumb';
 export * from './Banner';
-export * from './BottomSheet';
 export * from './Button';
 export * from './Chip';
 export * from './Dialog';
@@ -14,6 +13,6 @@ export * from './IconButton';
 export * from './OfflineBanner';
 export * from './Pill';
 export * from './SectionLabel';
-export * from './Skeleton';
+export * from './skeleton';
 export * from './Text';
 export * from './Toggle';

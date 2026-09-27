@@ -1,12 +1,13 @@
 import { Linking } from 'react-native';
 import type { LinkingOptions } from '@react-navigation/native';
-import type { NotificationPort } from '@domain/services';
+import type { LoggerPort, NotificationPort } from '@domain/services';
 import type { RootStackParamList } from './types';
 
 interface Options {
   /** `<APP_URL_SCHEME>://`, one per environment. */
   prefix: string;
   notifications: NotificationPort;
+  logger: LoggerPort;
   /** Side effect for a tapped reminder (e.g. forget its id), before navigating. */
   onReminderOpened: (activityId: string) => void;
   /** False while the linked screens aren't mounted yet (onboarding); links are dropped. */
@@ -23,6 +24,7 @@ const activityPath = (id: string) => `activity/${encodeURIComponent(id)}`;
 export const createLinking = ({
   prefix,
   notifications,
+  logger,
   onReminderOpened,
   isReady,
 }: Options): LinkingOptions<RootStackParamList> => {
@@ -39,6 +41,7 @@ export const createLinking = ({
         Tabs: {
           screens: {
             Browse: 'browse',
+            Search: 'search',
             Favorites: 'favorites',
             Settings: 'settings',
           },
@@ -50,7 +53,10 @@ export const createLinking = ({
       // A reminder tap wins: Android can hand a recreated task its old launch URL.
       const activityId = await notifications
         .getInitialOpenedActivity()
-        .catch(() => null);
+        .catch(error => {
+          logger.warn('Reading the opening reminder failed', { error });
+          return null;
+        });
       if (activityId) {
         onReminderOpened(activityId);
         return reminderUrl(activityId);

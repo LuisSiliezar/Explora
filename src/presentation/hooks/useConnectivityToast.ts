@@ -18,10 +18,10 @@ export const useConnectivityToast = () => {
     }
     previous.current = online;
     if (online) {
-      toast.show(t('toastOnline'));
+      toast.success(t('toastOnline'));
     } else {
       haptics.warning();
-      toast.show(t('toastOffline'));
+      toast.warning(t('toastOffline'));
     }
   }, [online, haptics, toast, t]);
 };

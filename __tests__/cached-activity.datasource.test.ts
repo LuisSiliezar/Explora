@@ -3,10 +3,11 @@ import { queryClient } from '@config/query';
 import type { ActivityDataSource } from '@domain/datasources';
 import { DomainError } from '@domain/errors';
 import { CachedActivityDataSource } from '@infrastructure/datasources';
-import { ActivityRepositoryImpl } from '@infrastructure/repositories';
 import {
   FailingActivityDataSource,
   InMemoryActivityDataSource,
+  createActivityRepository,
+  createFakeLogger,
   seedActivities,
 } from './helpers/fakes';
 
@@ -30,6 +31,7 @@ describe('CachedActivityDataSource', () => {
     const source = new CachedActivityDataSource(
       new InMemoryActivityDataSource(),
       storage,
+      createFakeLogger(),
     );
 
     await source.getAll();
@@ -39,12 +41,21 @@ describe('CachedActivityDataSource', () => {
 
   it('falls back to the last good copy on a network failure', async () => {
     const inner = new SwitchableSource();
-    const source = new CachedActivityDataSource(inner, new MemoryStorage());
+    const logger = createFakeLogger();
+    const source = new CachedActivityDataSource(
+      inner,
+      new MemoryStorage(),
+      logger,
+    );
     await source.getAll();
 
     inner.online = false;
 
     expect(await source.getAll()).toEqual(seedActivities);
+    expect(logger.warn).toHaveBeenCalledWith(
+      'Catalog request failed, serving the cached copy',
+      expect.objectContaining({ count: seedActivities.length }),
+    );
   });
 
   it('reads the cache persisted by a previous session (process death)', async () => {
@@ -52,11 +63,13 @@ describe('CachedActivityDataSource', () => {
     await new CachedActivityDataSource(
       new InMemoryActivityDataSource(),
       storage,
+      createFakeLogger(),
     ).getAll();
 
     const relaunched = new CachedActivityDataSource(
       new FailingActivityDataSource(networkError()),
       storage,
+      createFakeLogger(),
     );
 
     expect(await relaunched.getAll()).toHaveLength(12);
@@ -66,6 +79,7 @@ describe('CachedActivityDataSource', () => {
     const source = new CachedActivityDataSource(
       new FailingActivityDataSource(networkError()),
       new MemoryStorage(),
+      createFakeLogger(),
     );
 
     await expect(source.getAll()).rejects.toMatchObject<Partial<DomainError>>({
@@ -79,6 +93,7 @@ describe('CachedActivityDataSource', () => {
     const source = new CachedActivityDataSource(
       new FailingActivityDataSource(networkError()),
       storage,
+      createFakeLogger(),
     );
 
     await expect(source.getAll()).rejects.toMatchObject<Partial<DomainError>>({
@@ -93,6 +108,7 @@ describe('CachedActivityDataSource', () => {
     const source = new CachedActivityDataSource(
       new FailingActivityDataSource(validation),
       storage,
+      createFakeLogger(),
     );
 
     await expect(source.getAll()).rejects.toBe(validation);
@@ -107,18 +123,20 @@ describe('CachedActivityDataSource', () => {
     const source = new CachedActivityDataSource(
       new FailingActivityDataSource(error),
       storage,
+      createFakeLogger(),
     );
 
     await expect(source.getAll(controller.signal)).rejects.toBe(error);
   });
 
   it('is a drop-in ActivityDataSource for the repository (LSP)', async () => {
-    const repository = new ActivityRepositoryImpl(
-      new CachedActivityDataSource(
+    const repository = createActivityRepository({
+      dataSource: new CachedActivityDataSource(
         new InMemoryActivityDataSource(),
         new MemoryStorage(),
+        createFakeLogger(),
       ),
-    );
+    });
 
     expect((await repository.getById('act-007')).title).toBe(
       'Pottery Workshop',

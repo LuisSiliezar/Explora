@@ -52,7 +52,7 @@ export const useToggleFavorite = () => {
       const added = await toggleFavoriteUseCase(deps, activity);
       if (added) {
         deps.haptics.success();
-        toast.show(t('toastSaved', { s: activity.title }));
+        toast.success(t('toastSaved', { s: activity.title }));
         return;
       }
       deps.haptics.selection();

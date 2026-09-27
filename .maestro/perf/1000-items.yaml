@@ -1,33 +1,48 @@
-# Perf run on 1200 seeded items: scroll, search, favorite, open detail.
+# Perf run on 1200 seeded items: carousels, search, favorite, open detail.
 # Needs a STAGING RELEASE build with DEV_SEED_MULTIPLIER=100 (see docs/performance.md).
 # Lives outside the top-level folder, so `yarn e2e` does not run it. Run: `yarn perf:android`.
 appId: com.explora.staging
 ---
 # Starts on Browse: run setup.yaml first (the perf script does), then reset gfxinfo.
+# First card of the first section (Culture) with the seed: "Museum of Inventions #1".
 - extendedWaitUntil:
     visible:
-      id: activity-card-act-001-0
+      id: activity-card-act-005-0
     timeout: 15000
 
-# 1. Fast scroll through the full list (20 flings down, 10 back up).
+# 1. Browse: fast flings through the first carousel (300 cards), then through the sections.
 - repeat:
     times: 20
     commands:
       - swipe:
-          start: 50%, 85%
-          end: 50%, 15%
+          start: 90%, 45% # the first carousel's photos
+          end: 10%, 45%
           duration: 150
 - repeat:
     times: 10
     commands:
       - swipe:
-          start: 50%, 15%
-          end: 50%, 85%
+          start: 10%, 45%
+          end: 90%, 45%
+          duration: 150
+- repeat:
+    times: 4
+    commands:
+      - swipe:
+          start: 50%, 85%
+          end: 50%, 30%
+          duration: 150
+- repeat:
+    times: 4
+    commands:
+      - swipe:
+          start: 50%, 40% # below the title and chips
+          end: 50%, 90%
           duration: 150
 
 # 2. Search: 1200 -> 100 matches, then scroll the results.
 - tapOn:
-    id: activities-search
+    id: tab-search
 - tapOn:
     id: search-input
 - inputText: Botanical
@@ -40,15 +55,22 @@ appId: com.explora.staging
     times: 5
     commands:
       - swipe:
-          start: 50%, 85%
-          end: 50%, 15%
+          start: 50%, 88%
+          end: 50%, 52%
           duration: 150
 
-# 3. Interaction: favorite a row, open a detail screen, go back.
-- scrollUntilVisible:
-    element:
+# 3. Interaction: back to the top, favorite a row, open a detail screen, go back.
+- repeat:
+    times: 8
+    commands:
+      - swipe:
+          start: 50%, 55% # below the search header, or the swipe hits the filters
+          end: 50%, 95%
+          duration: 150
+- extendedWaitUntil:
+    visible:
       id: favorite-act-001-0
-    direction: UP
+    timeout: 10000
 - tapOn:
     id: favorite-act-001-0
 - tapOn:
@@ -58,4 +80,4 @@ appId: com.explora.staging
 - tapOn:
     id: detail-back
 - assertVisible:
-    id: activities-search
+    id: search-input

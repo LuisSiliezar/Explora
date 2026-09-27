@@ -29,6 +29,7 @@ From Xcode, pick the scheme (Explora-Dev, Explora-Staging or Explora-Prod). From
 | `API_URL` | JS container | Remote activities API. Leave empty to use the bundled JSON. |
 | `API_TIMEOUT_MS` | `AxiosAdapter` | HTTP timeout |
 | `DEV_SEED_MULTIPLIER` | container, never in production | Multiplies the seed data (100 → 1200 items) for perf testing |
+| `LOG_LEVEL` | container (`ConsoleLogger`) | Lowest level printed: `debug` (dev), `info` (staging), `warn` (prod), or `silent`. See [logging.md](logging.md). |
 
 JS reads values **only** through `env` in `src/config/env/env.ts`, which validates them with zod when the app starts.
 
@@ -51,7 +52,7 @@ Then **rebuild natively**. A Metro reload does not pick up env changes.
 
 ## Rules
 - **No secrets in env files.** Every value ships inside the app binary and can be extracted. Secrets belong on a backend.
-- The `.env.*` files are committed on purpose because they aren't secret. Personal overrides go in `.env.*.local` (git-ignored).
+- Only `.env.example` is committed. `.env.development`, `.env.staging` and `.env.production` are git-ignored, so create them after cloning: `cp .env.example .env.development` gives the dev values, and the staging/prod values are listed in the [README](../README.md#setup). CI does the same copy. Personal overrides go in `.env.*.local` (also git-ignored).
 - `/tmp/envfile` is shared across projects on the machine. It's overwritten on every scheme build, so don't edit it by hand.
 - If you ever see the wrong environment's values, clean the build (`rm -rf ios/build`, or Product → Clean Build Folder) and rebuild.
 

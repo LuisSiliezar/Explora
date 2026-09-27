@@ -1,19 +1,29 @@
 import { MemoryStorage } from '@config/adapters/storage';
 import type { Dependencies } from '@config/di';
-import { createActivityFilterStore, createAppSettingsStore } from '@core/store';
-import type { ActivityDataSource } from '@domain/datasources';
+import {
+  createActivityFilterStore,
+  createAppSettingsStore,
+  createDevSettingsStore,
+} from '@core/store';
+import type {
+  ActivityDataSource,
+  ActivityFeedDataSource,
+} from '@domain/datasources';
 import type { Activity } from '@domain/entities';
 import type {
   CameraPort,
   HapticsPort,
   LocationPort,
+  LoggerPort,
   NotificationPort,
   PhotoSource,
   ReminderRequest,
 } from '@domain/services';
+import { MockActivityFeedDataSource } from '@infrastructure/datasources';
 import { ActivityMapper } from '@infrastructure/mappers';
 import {
   ActivityRepositoryImpl,
+  AddedActivitiesStorage,
   StorageFavoritesRepository,
 } from '@infrastructure/repositories';
 import activitiesJson from '@assets/data/activities.json';
@@ -35,6 +45,50 @@ export class FailingActivityDataSource implements ActivityDataSource {
     throw this.error;
   }
 }
+
+/** A feed that fails like a remote source would. */
+export class FailingActivityFeedDataSource implements ActivityFeedDataSource {
+  constructor(private readonly error: unknown) {}
+  async fetchNew(): Promise<Activity> {
+    throw this.error;
+  }
+}
+
+export const createFakeLogger = (): jest.Mocked<LoggerPort> => ({
+  debug: jest.fn(),
+  info: jest.fn(),
+  warn: jest.fn(),
+  error: jest.fn(),
+});
+
+/** Something that resolves only when the test says so (to reproduce late results). */
+export const deferred = <T>() => {
+  let resolve!: (value: T) => void;
+  let reject!: (error: unknown) => void;
+  const promise = new Promise<T>((res, rej) => {
+    resolve = res;
+    reject = rej;
+  });
+  return { promise, resolve, reject };
+};
+
+/** Repository wired like the container, but with in-memory storage and fakes. */
+export const createActivityRepository = ({
+  dataSource = new InMemoryActivityDataSource(),
+  feed = new MockActivityFeedDataSource(),
+  storage = new MemoryStorage(),
+  logger = createFakeLogger(),
+}: {
+  dataSource?: ActivityDataSource;
+  feed?: ActivityFeedDataSource;
+  storage?: MemoryStorage;
+  logger?: LoggerPort;
+} = {}) =>
+  new ActivityRepositoryImpl(
+    dataSource,
+    feed,
+    new AddedActivitiesStorage(storage, logger),
+  );
 
 export const createFakeNotifications = (): jest.Mocked<NotificationPort> => ({
   requestPermission: jest.fn(async () => true),
@@ -72,15 +126,18 @@ export const createFakeContainer = (
   overrides: Partial<Dependencies> = {},
 ): Dependencies => {
   const storage = new MemoryStorage();
+  const logger = createFakeLogger();
   return {
-    activities: new ActivityRepositoryImpl(new InMemoryActivityDataSource()),
-    favorites: new StorageFavoritesRepository(storage),
+    activities: createActivityRepository({ storage, logger }),
+    favorites: new StorageFavoritesRepository(storage, logger),
     filterStore: createActivityFilterStore(storage),
     settingsStore: createAppSettingsStore(storage),
+    devSettingsStore: createDevSettingsStore(storage),
     notifications: createFakeNotifications(),
     camera: createFakeCamera(),
     location: createFakeLocation(),
     haptics: createFakeHaptics(),
+    logger,
     ...overrides,
   };
 };

@@ -1,0 +1,29 @@
+# Settings → Data & storage: the catalog has COUNT activities. Returns to Settings.
+# Usage: runFlow: { file: subflows/assert-catalog-count.yaml, env: { COUNT: '13' } }
+appId: com.explora.dev
+---
+- tapOn:
+    id: tab-settings
+- tapOn:
+    id: settings-data
+- extendedWaitUntil:
+    visible:
+      id: data-cached-count
+      text: ${COUNT}
+    timeout: 10000
+# A tap during the push transition is dropped (it runs long right after a resume, when the
+# JS thread is busy). Tap back, and tap again only if we're still on this screen.
+- waitForAnimationToEnd
+- tapOn:
+    id: settings-back
+- runFlow:
+    when:
+      visible:
+        id: data-cached-count
+    commands:
+      - tapOn:
+          id: settings-back
+- extendedWaitUntil:
+    visible:
+      id: tab-settings
+    timeout: 5000

@@ -1,0 +1,65 @@
+appId: com.explora.dev
+name: Goes offline mid-session → catalog, detail and favorites keep working → back online
+tags:
+  - offline
+  - android-only
+# Maestro can only toggle connectivity on Android (setAirplaneMode). The iOS
+# simulator shares the Mac's network, so on iOS this flow is a no-op.
+onFlowComplete:
+  - runFlow: subflows/network-on.yaml
+---
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - runFlow: subflows/launch-fresh.yaml
+      - assertNotVisible:
+          id: offline-banner
+
+      # Drop the connection: the banner shows on Browse. (The connectivity toasts
+      # render but sonner-native isn't in the Android accessibility tree, so
+      # Maestro can't assert them; they're covered by unit tests instead.)
+      - setAirplaneMode: enabled
+      - extendedWaitUntil:
+          visible:
+            id: offline-banner
+          timeout: 10000
+
+      # The bundled catalog still searches and opens offline.
+      - runFlow: subflows/search-botanical.yaml
+      - assertVisible:
+          id: offline-banner
+      - tapOn:
+          id: activity-card-act-001
+      - assertVisible: Botanical Garden Walk
+      - assertVisible:
+          id: detail-offline-banner
+      - scrollUntilVisible:
+          element:
+            id: detail-stale-note
+          direction: DOWN
+
+      # Saving a favorite offline is local-first: confirmed immediately.
+      - tapOn:
+          id: detail-favorite
+      - scrollUntilVisible:
+          element:
+            id: detail-saved-offline
+          direction: DOWN
+      - tapOn:
+          id: detail-back
+      - tapOn:
+          id: tab-favorites
+      - assertVisible:
+          id: offline-banner
+      - assertVisible:
+          id: activity-card-act-001
+
+      # Reconnect: the banner goes away and the favorite is still there.
+      - setAirplaneMode: disabled
+      - extendedWaitUntil:
+          notVisible:
+            id: offline-banner
+          timeout: 15000
+      - assertVisible:
+          id: activity-card-act-001

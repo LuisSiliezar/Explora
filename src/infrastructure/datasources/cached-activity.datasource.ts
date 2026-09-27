@@ -2,6 +2,7 @@ import type { KeyValueStorage } from '@config/adapters/storage';
 import type { ActivityDataSource } from '@domain/datasources';
 import type { Activity } from '@domain/entities';
 import { DomainError, isDomainError } from '@domain/errors';
+import type { LoggerPort } from '@domain/services';
 
 const STORAGE_KEY = 'activities-cache:v1';
 
@@ -15,6 +16,7 @@ export class CachedActivityDataSource implements ActivityDataSource {
   constructor(
     private readonly inner: ActivityDataSource,
     private readonly storage: KeyValueStorage,
+    private readonly logger: LoggerPort,
   ) {}
 
   async getAll(signal?: AbortSignal): Promise<Activity[]> {
@@ -39,6 +41,10 @@ export class CachedActivityDataSource implements ActivityDataSource {
           error,
         );
       }
+      this.logger.warn('Catalog request failed, serving the cached copy', {
+        count: cached.length,
+        error,
+      });
       this.memory = cached;
       return cached;
     }
@@ -49,7 +55,8 @@ export class CachedActivityDataSource implements ActivityDataSource {
       const raw = this.storage.getItem(STORAGE_KEY);
       const parsed: unknown = raw ? JSON.parse(raw) : null;
       return Array.isArray(parsed) ? (parsed as Activity[]) : null;
-    } catch {
+    } catch (error) {
+      this.logger.warn('Cached catalog is corrupt, ignoring it', { error });
       return null; // corrupted data should never crash the app
     }
   }

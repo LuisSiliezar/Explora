@@ -1,5 +1,4 @@
 import { useCallback, useState } from 'react';
-import { Linking } from 'react-native';
 import { useQueryClient } from '@tanstack/react-query';
 import { useT } from '@presentation/i18n/useT';
 import { useDependencies } from '@presentation/providers/DependenciesProvider';
@@ -12,7 +11,7 @@ import { useToast } from './useToast';
  * Denying never blocks the app: activities fall back to alphabetical order.
  */
 export const useNearMe = () => {
-  const { settingsStore, location, haptics } = useDependencies();
+  const { settingsStore, location, haptics, logger } = useDependencies();
   const queryClient = useQueryClient();
   const t = useT();
   const toast = useToast();
@@ -31,46 +30,14 @@ export const useNearMe = () => {
       await queryClient.fetchQuery(currentLocationQuery(location));
       settingsStore.getState().setNearMe(true);
       haptics.success();
-      toast.show(t('toastLocOn'));
-    } catch {
+      toast.success(t('toastLocOn'));
+    } catch (error) {
+      logger.warn('Locating the user failed', { error });
       settingsStore.getState().setNearMe(false);
       haptics.warning();
-      toast.show(t('toastLocFailed'));
+      toast.error(t('toastLocFailed'));
     }
-  }, [queryClient, location, settingsStore, haptics, toast, t]);
-
-  const onPressNearMe = useCallback(() => {
-    haptics.selection();
-    if (permission === 'granted') {
-      const next = !nearMe;
-      if (
-        next &&
-        !queryClient.getQueryData(currentLocationQuery(location).queryKey)
-      ) {
-        setRequesting(true);
-        locate().finally(() => setRequesting(false));
-        return;
-      }
-      setNearMe(next);
-      toast.show(t(next ? 'toastSortedDist' : 'toastSortedAlpha'));
-      return;
-    }
-    if (permission === 'denied') {
-      setBannerDismissed(false);
-      return;
-    }
-    setPromptVisible(true);
-  }, [
-    haptics,
-    permission,
-    nearMe,
-    queryClient,
-    location,
-    locate,
-    setNearMe,
-    toast,
-    t,
-  ]);
+  }, [queryClient, location, settingsStore, haptics, logger, toast, t]);
 
   const allow = useCallback(async () => {
     setPromptVisible(false);
@@ -89,6 +56,40 @@ export const useNearMe = () => {
     }
   }, [location, setLocationPermission, locate, haptics]);
 
+  const onPressNearMe = useCallback(() => {
+    if (permission === 'granted') {
+      const next = !nearMe;
+      if (
+        next &&
+        !queryClient.getQueryData(currentLocationQuery(location).queryKey)
+      ) {
+        setRequesting(true);
+        locate().finally(() => setRequesting(false));
+        return;
+      }
+      setNearMe(next);
+      toast.info(t(next ? 'toastSortedDist' : 'toastSortedAlpha'));
+      return;
+    }
+    if (permission === 'denied') {
+      // Ask the OS again: the user may have turned location on in device settings.
+      // Still denied -> the banner comes back.
+      allow();
+      return;
+    }
+    setPromptVisible(true);
+  }, [
+    permission,
+    nearMe,
+    queryClient,
+    location,
+    locate,
+    setNearMe,
+    toast,
+    t,
+    allow,
+  ]);
+
   const deny = useCallback(() => {
     setPromptVisible(false);
     setLocationPermission('denied');
@@ -97,23 +98,8 @@ export const useNearMe = () => {
 
   const cancel = useCallback(() => {
     setPromptVisible(false);
-    toast.show(t('toastLocCancelled'));
+    toast.info(t('toastLocCancelled'));
   }, [toast, t]);
-
-  /** Settings row: turn off locally, or ask the OS (falling back to device settings). */
-  const togglePermission = useCallback(async () => {
-    haptics.selection();
-    if (permission === 'granted') {
-      setLocationPermission('denied');
-      return;
-    }
-    const granted = await location.requestPermission();
-    setLocationPermission(granted ? 'granted' : 'denied');
-    if (!granted) {
-      toast.show(t('toastPermissionNeeded'));
-      Linking.openSettings();
-    }
-  }, [haptics, permission, location, setLocationPermission, toast, t]);
 
   return {
     active,
@@ -125,7 +111,6 @@ export const useNearMe = () => {
     deny,
     cancel,
     onPressNearMe,
-    togglePermission,
     bannerVisible: permission === 'denied' && !bannerDismissed,
     dismissBanner: useCallback(() => setBannerDismissed(true), []),
   };

@@ -1,6 +1,7 @@
 export type Language = 'en' | 'es';
 export type TextScale = 0.92 | 1 | 1.12;
-export type ListLayout = 'list' | 'grid';
+/** 'system' follows the device's light/dark setting. */
+export type ColorSchemePreference = 'system' | 'light' | 'dark';
 /** 'prompt' means the app hasn't asked yet. */
 export type PermissionStatus = 'prompt' | 'granted' | 'denied';
 
@@ -11,3 +12,6 @@ export interface NotificationPreferences {
   /** Reminders for saved activities. */
   reminders: boolean;
 }
+
+/** Dev/staging only: how the simulated network answers catalog and refresh requests. */
+export type NetworkSimulation = 'normal' | 'slow' | 'fail';

@@ -11,7 +11,8 @@ appId: com.explora.staging
     timeout: 30000
 - tapOn:
     id: onboarding-skip
+# First card of the first section (Culture) with the seed: "Museum of Inventions #1".
 - extendedWaitUntil:
     visible:
-      id: activity-card-act-001-0
+      id: activity-card-act-005-0
     timeout: 15000

@@ -1,6 +1,7 @@
 import type { KeyValueStorage } from '@config/adapters/storage';
 import type { Activity, Favorite } from '@domain/entities';
 import type { FavoritesRepository } from '@domain/repositories';
+import type { LoggerPort } from '@domain/services';
 
 const STORAGE_KEY = 'favorites:v1';
 
@@ -13,7 +14,10 @@ export class StorageFavoritesRepository implements FavoritesRepository {
   private snapshot: Favorite[];
   private readonly listeners = new Set<() => void>();
 
-  constructor(private readonly storage: KeyValueStorage) {
+  constructor(
+    private readonly storage: KeyValueStorage,
+    private readonly logger: LoggerPort,
+  ) {
     this.byId = this.load();
     this.snapshot = this.toSortedList();
   }
@@ -66,7 +70,10 @@ export class StorageFavoritesRepository implements FavoritesRepository {
     try {
       const raw = this.storage.getItem(STORAGE_KEY);
       return raw ? (JSON.parse(raw) as Record<string, Favorite>) : {};
-    } catch {
+    } catch (error) {
+      this.logger.warn('Stored favorites are corrupt, starting empty', {
+        error,
+      });
       return {}; // corrupted data should never crash the app
     }
   }

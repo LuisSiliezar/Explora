@@ -6,7 +6,7 @@ GitHub Actions runs [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) on
 | Job | Runner | What it does |
 |---|---|---|
 | `checks` | ubuntu | `yarn typecheck`, `yarn lint` (ESLint, warnings fail), `yarn format:check` (Prettier), `yarn knip`, `yarn test --ci` |
-| `android` | ubuntu | Builds `assembleDevRelease` (signed with the debug keystore) and uploads the APK |
+| `android` | ubuntu | Builds `assembleDevRelease` (signed with the debug keystore) for `x86_64` and `arm64-v8a` only, and uploads the APK. Building all 4 ABIs ran past the timeout; the local review APK in [RELEASE_NOTES.md](../RELEASE_NOTES.md) still has all 4 |
 | `android-e2e` | ubuntu | Installs that APK on an API 34 emulator and runs the Maestro flows in `.maestro/` (see [testing.md](testing.md#e2e-with-maestro)). Uploads a JUnit report plus Maestro's screenshots and logs |
 | `ios` | macOS | `yarn pods`, then builds the `Explora-Dev` scheme for the simulator without code signing and uploads `Explora.app` (zipped) |
 
@@ -16,7 +16,7 @@ Build outputs appear under **Artifacts** on the run's summary page and are kept 
 
 ## Run the same checks locally
 ```bash
-yarn validate       # typecheck + lint + knip + test
+yarn validate       # format:check + typecheck + lint + knip + test
 yarn format:check   # yarn format fixes it
 ```
 

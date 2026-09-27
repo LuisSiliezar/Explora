@@ -7,8 +7,8 @@ import { Text } from './Text';
 interface Props {
   category: ActivityCategory;
   minutes: number;
-  /** thumb: 78×78 list thumbnail · grid: full-width 116pt card header. */
-  variant: 'thumb' | 'grid';
+  /** thumb: 78×78 row thumbnail · card: the carousel card's full-width 260pt photo. */
+  variant: 'thumb' | 'card';
 }
 
 /** The no-photo card artwork: the duration set large on the category tint. */
@@ -20,23 +20,23 @@ export const DurationTile = memo(({ category, minutes, variant }: Props) => {
         className={`h-[78px] w-[78px] items-center justify-center rounded-xl ${tint.bg}`}
       >
         <Text
-          className={`font-sans-bold text-[27px] leading-[28px] tracking-[-0.8px] ${tint.fg}`}
+          className={`font-display-bold text-3xl leading-none tracking-tight ${tint.fg}`}
         >
           {minutes}
         </Text>
-        <Text className={`font-mono text-[9px] tracking-[1.2px] ${tint.fg}`}>
+        <Text className={`font-sans-medium text-xs tracking-widest ${tint.fg}`}>
           MIN
         </Text>
       </View>
     );
   }
   return (
-    <View className={`h-[116px] justify-end rounded-xl p-3 ${tint.bg}`}>
+    <View className={`h-[260px] justify-end rounded-2xl p-3.5 ${tint.bg}`}>
       <Text
-        className={`font-sans-bold text-[38px] leading-[38px] tracking-[-1.5px] ${tint.fg}`}
+        className={`font-display-bold text-5xl leading-none tracking-tighter ${tint.fg}`}
       >
         {minutes}
-        <Text className={`font-mono text-[11px] tracking-[1px] ${tint.fg}`}>
+        <Text className={`font-sans-medium text-xs tracking-widest ${tint.fg}`}>
           {' '}
           MIN
         </Text>

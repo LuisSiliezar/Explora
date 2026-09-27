@@ -29,4 +29,4 @@ StorageFavoritesRepository notifies subscribers →
 `useActivity(id)` uses `placeholderData` from the list cache or the favorite snapshot, so the detail screen renders instantly, even offline.
 
 ## Errors
-Infrastructure converts every failure into a `DomainError` with a `code` (`NOT_FOUND`, `NETWORK`, `OFFLINE`, `VALIDATION`, `PERMISSION_DENIED`, `UNKNOWN`). Queries use `networkMode: 'offlineFirst'`, so the first attempt always runs and only retries pause while offline. The query client doesn't retry `NOT_FOUND`, `VALIDATION` or `OFFLINE`. Screens show `StateView` with a Retry button.
+Infrastructure converts every failure into a `DomainError` with a `code` (`NOT_FOUND`, `NETWORK`, `OFFLINE`, `VALIDATION`, `PERMISSION_DENIED`, `UNKNOWN`). Queries use `networkMode: 'offlineFirst'`, so the first attempt always runs and only retries pause while offline. The query client doesn't retry `NOT_FOUND`, `VALIDATION` or `OFFLINE`. Screens show `ErrorState` with a Retry button.

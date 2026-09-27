@@ -12,5 +12,10 @@ tags:
 - assertVisible: Botanical Garden Walk
 - tapOn:
     id: detail-back
+# Back on the Search tab; the Browse tab is one tap away.
 - assertVisible:
-    id: activities-search
+    id: search-input
+- tapOn:
+    id: tab-browse
+- assertVisible:
+    id: browse-title

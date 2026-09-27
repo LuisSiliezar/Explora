@@ -11,10 +11,11 @@ interface Props {
   strip?: boolean;
   children?: ReactNode;
   className?: string;
+  testID?: string;
 }
 
 export const Banner = memo(
-  ({ tone, title, body, strip, children, className = '' }: Props) => {
+  ({ tone, title, body, strip, children, className = '', testID }: Props) => {
     const colors =
       tone === 'notice'
         ? 'bg-success border-success-border'
@@ -25,6 +26,7 @@ export const Banner = memo(
     return (
       <View
         accessibilityRole={tone === 'danger' ? 'alert' : 'summary'}
+        testID={testID}
         className={`${colors} ${shape} ${className}`}
       >
         <View className="flex-row items-center gap-[9px]">
@@ -32,17 +34,15 @@ export const Banner = memo(
             <View className="h-2 w-2 rounded-full bg-accent" />
           )}
           <Text
-            className={`flex-1 text-[13px] ${
-              body ? 'font-sans-bold text-[14px]' : 'font-sans-semibold'
+            className={`flex-1 text-lg ${
+              body ? 'font-sans-bold text-base' : 'font-sans-semibold'
             }`}
           >
             {title}
           </Text>
         </View>
         {body && (
-          <Text className="mt-[9px] text-[13px] leading-[19px] text-text-muted">
-            {body}
-          </Text>
+          <Text className="mt-[9px] text-base text-text-muted">{body}</Text>
         )}
         {children}
       </View>

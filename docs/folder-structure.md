@@ -8,7 +8,7 @@ src/
 ├── assets/
 │   ├── data/activities.json    seed data (schemaVersion 1, optional lat/lng)
 │   ├── bootsplash/             launch-screen logo (svg source + generated pngs)
-│   ├── fonts/                  Figtree + IBM Plex Mono (linked with react-native-asset)
+│   ├── fonts/                  Plus Jakarta Sans + DM Sans (linked with react-native-asset)
 │   ├── lottie/splash.json      the JS splash animation
 │   └── images/
 ├── config/
@@ -34,12 +34,12 @@ src/
 │   ├── repositories/           ActivityRepositoryImpl, StorageFavoritesRepository
 │   └── services/               Notifee, ImagePicker, Geolocation, HapticFeedback adapters
 └── presentation/
-    ├── providers/              AppProviders, DependenciesProvider/useDependencies
+    ├── providers/              AppProviders, DependenciesProvider/useDependencies (+ styles/ toaster, utils/ navigation theme)
     ├── routes/                 AppRoot (splash overlay), RootNavigator (onboarding | tabs), typed params
-    ├── screens/                splash/, onboarding/, activities/ (+FilterSheet), activity-detail/, favorites/, settings/ (+LanguageSheet)
-    ├── components/lists/       ActivityList (FlashList, list or 2-col grid)
-    ├── components/navigation/  TabBar
-    ├── components/shared/      Text, Button, Chip, Toggle, Pill, DurationTile, ActivityCard/GridCard, FavoriteButton, Banner, Dialog, BottomSheet, ...
+    ├── screens/                splash/, onboarding/, activities/, search/, activity-detail/, favorites/, settings/ (anatomy below)
+    ├── components/lists/       ActivityList (FlashList rows), ActivityCarousel (horizontal FlashList)
+    ├── components/navigation/  TabBar (+ constants/ tab labels and icons)
+    ├── components/shared/      Text, Button, Chip, Toggle, Pill, DurationTile, activity-card/ (ActivityCard, ActivityCarouselCard), FavoriteButton, Banner, Dialog, skeleton/, ...
     ├── hooks/                  useActivities, useActivityFilter, useFavorites, useNearMe, useSettings, useToast, useIsOnline, ...
     ├── i18n/                   strings.ts (EN/ES) + useT
     ├── utils/                  formatDistance, formatSyncTime
@@ -47,6 +47,20 @@ src/
 __tests__/                      unit + render tests, helpers/fakes.ts
 jest.setup.js                   native module mocks
 ```
+
+## Screen folder anatomy
+A screen file only composes: it calls hooks and lays out components. Everything else lives next to it, in subfolders that exist only when they have content:
+```
+screens/<feature>/
+├── <Feature>Screen.tsx   composition only
+├── components/           parts used only by this screen (CategorySections, SearchField, DetailHero, SettingsLinkRow…)
+├── hooks/                screen-local state and handlers (useRefreshActivities, useNotificationSettings…)
+├── constants/            static config (DURATIONS, STEPS, TEXT_SIZES, REMINDER_DELAY_MS…)
+├── utils/                pure functions, unit-tested in __tests__/presentation-utils.test.ts
+├── styles/               StyleSheet objects only (NativeWind classes stay inline in JSX)
+└── index.ts              exports the screen only
+```
+A shared component that outgrows one job gets the same treatment (`components/shared/activity-card/`). Small single-purpose components (Button, Chip, Dialog…) stay flat files. A hook used by more than one screen belongs in `presentation/hooks`; a hook used by one screen belongs in that screen's `hooks/`.
 
 ## Where does X go?
 | I'm adding… | Put it in |
@@ -57,6 +71,7 @@ jest.setup.js                   native module mocks
 | Screen-local UI state | `useState` in the component |
 | UI state that must survive app kill | `core/store` (zustand persist) |
 | A reusable visual element | `presentation/components/shared` |
+| A part, hook, constant or helper used by one screen only | that screen's `components/`, `hooks/`, `constants/` or `utils/` |
 | A color | `presentation/theme/palette.js` **and** `global.css` (a test checks they match) |
 | UI copy | `presentation/i18n/strings.ts`, in every language |
 

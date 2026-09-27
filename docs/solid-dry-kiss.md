@@ -9,9 +9,11 @@ Each principle below is tied to real code you can open.
 | `infrastructure/datasources/local-activity.datasource.ts` | Read the bundled JSON |
 | `infrastructure/repositories/activity.repository.impl.ts` | Answer queries about activities (`getById` → `NOT_FOUND`) |
 | `core/use-cases/favorites/toggle-favorite.use-case.ts` | The favorite/unfavorite rule, including cancelling the reminder |
-| `presentation/components/shared/ActivityCard.tsx` | Render one row |
+| `presentation/components/shared/activity-card/ActivityCard.tsx` | Render one row |
+| `presentation/hooks/useRefreshActivities.ts` | Pull to refresh on Browse and Search: adds one activity, refuses offline |
+| `presentation/screens/settings/constants/settings.constants.ts` | The text-size options |
 
-A sign SRP is broken: a component that fetches, or a mapper that calls a network.
+A sign SRP is broken: a component that fetches, a mapper that calls a network, or a screen file that also declares sub-components, constants and handlers. Split those into the screen's `components/`, `constants/` and `hooks/` folders (see [folder-structure.md](folder-structure.md#screen-folder-anatomy)).
 
 ## O: Open/Closed
 To add behavior, add code instead of editing code that already works.
@@ -34,7 +36,7 @@ Ports are small and focused: `NotificationPort` (3 methods), `CameraPort` (1), `
 ## DRY
 - One `HttpAdapter` for every HTTP call, and one `KeyValueStorage` shared by favorites and the filter store
 - `queryKeys` in one place
-- `StateView` covers loading, empty and error states. `ActionButton` and `FavoriteButton` are reused across screens.
+- The shared `Skeleton`, `EmptyState` and `ErrorState` cover loading, empty and error states. `Button`, `IconButton` and `FavoriteButton` are reused across screens.
 - Theme tokens in `theme/tokens.ts`, with no duplicated colors or spacing
 - `ActivityList` is used by both Explore and Favorites.
 

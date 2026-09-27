@@ -1,7 +1,7 @@
 import { Linking } from 'react-native';
 import { getStateFromPath } from '@react-navigation/native';
 import { createLinking } from '@presentation/routes/linking';
-import { createFakeNotifications } from './helpers/fakes';
+import { createFakeLogger, createFakeNotifications } from './helpers/fakes';
 
 const prefix = 'explora-test://';
 
@@ -11,6 +11,7 @@ const setup = (ready = true) => {
   const linking = createLinking({
     prefix,
     notifications,
+    logger: createFakeLogger(),
     onReminderOpened,
     isReady: () => ready,
   });

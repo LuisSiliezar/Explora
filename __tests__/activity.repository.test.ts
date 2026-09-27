@@ -1,11 +1,8 @@
 import { DomainError } from '@domain/errors';
-import { ActivityRepositoryImpl } from '@infrastructure/repositories';
-import { InMemoryActivityDataSource } from './helpers/fakes';
+import { createActivityRepository } from './helpers/fakes';
 
 describe('ActivityRepositoryImpl', () => {
-  const repository = new ActivityRepositoryImpl(
-    new InMemoryActivityDataSource(),
-  );
+  const repository = createActivityRepository();
 
   it('returns all activities from any ActivityDataSource', async () => {
     expect(await repository.getAll()).toHaveLength(12);

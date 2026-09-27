@@ -1,5 +1,5 @@
 import { trigger } from 'react-native-haptic-feedback';
-import type { HapticsPort } from '@domain/services';
+import type { HapticsPort, LoggerPort } from '@domain/services';
 
 const options = {
   enableVibrateFallback: false,
@@ -8,6 +8,8 @@ const options = {
 
 /** The only file that imports react-native-haptic-feedback. */
 export class HapticFeedbackService implements HapticsPort {
+  constructor(private readonly logger: LoggerPort) {}
+
   selection(): void {
     this.fire('selection');
   }
@@ -23,8 +25,9 @@ export class HapticFeedbackService implements HapticsPort {
   private fire(type: Parameters<typeof trigger>[0]): void {
     try {
       trigger(type, options);
-    } catch {
+    } catch (error) {
       // Haptics are best-effort: never break a user action over them.
+      this.logger.debug('Haptic feedback failed', { type, error });
     }
   }
 }

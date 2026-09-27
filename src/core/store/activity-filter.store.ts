@@ -13,6 +13,8 @@ export interface ActivityFilterState extends ActivityFilter {
   toggleCategory: (category: ActivityCategory) => void;
   /** Selecting the active duration again clears it. */
   toggleDuration: (duration: DurationFilter) => void;
+  /** Leaving search: drops the query and duration, keeps the categories Browse shows. */
+  clearSearch: () => void;
   reset: () => void;
 }
 
@@ -42,6 +44,11 @@ export const createActivityFilterStore = (storage: KeyValueStorage) =>
           set(state => ({
             duration: state.duration === duration ? null : duration,
           })),
+        clearSearch: () =>
+          set({
+            query: EMPTY_ACTIVITY_FILTER.query,
+            duration: EMPTY_ACTIVITY_FILTER.duration,
+          }),
         reset: () => set(EMPTY_ACTIVITY_FILTER),
       }),
       {

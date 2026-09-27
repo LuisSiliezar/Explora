@@ -4,9 +4,11 @@ import type {
   NavigatorScreenParams,
 } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { SettingsSectionKey } from '@presentation/screens/settings/constants';
 
 export type TabParamList = {
   Browse: undefined;
+  Search: undefined;
   Favorites: undefined;
   Settings: undefined;
 };
@@ -15,6 +17,7 @@ export type RootStackParamList = {
   Onboarding: undefined;
   Tabs: NavigatorScreenParams<TabParamList>;
   ActivityDetail: { id: string; title?: string };
+  SettingsDetail: { section: SettingsSectionKey };
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =

@@ -22,12 +22,12 @@ UI-only libraries don't need a port, but each is reached from **one** place:
 | `react-native-reanimated` / `-worklets` / `-gesture-handler` / `-svg` | peers of NativeWind and sonner; Reanimated also drives the heart pop, skeleton and sheets | animation |
 
 ## Where they show up in the UI
-- **Near me** (Browse chip, `useNearMe`): our pre-prompt dialog ("Allow while using app / Don't allow / Not now"), then the OS prompt, then a locating overlay while `useCurrentLocation` fetches the position. Activities are sorted with `sortByDistance` (haversine) and show a distance pill. Denied → a banner with **Open Settings**; everything else keeps working in alphabetical order. Settings → Permissions → Location re-asks (or opens device settings).
+- **Near me** (Browse chip, `useNearMe`): our pre-prompt dialog ("Allow while using app / Don't allow / Not now"), then the OS prompt, then a locating overlay while `useCurrentLocation` fetches the position. Activities are sorted with `sortByDistance` (haversine) and show a distance pill. Denied → a banner with **Open Settings**; everything else keeps working in alphabetical order. Settings → Location re-asks (or opens device settings) via `useLocationPermissionToggle` in `screens/settings/hooks`.
   > Activities carry optional `latitude`/`longitude` (still `schemaVersion: 1`; the fields are optional in the zod DTO). The bundled coordinates are fictional, placed around the iOS Simulator's default location (Apple Park) so the demo distances match the design.
 - **Notifications** (Settings): pre-prompt, then `NotificationPort.requestPermission()`. The weekly-summary switch is a stored preference only; nothing schedules it yet.
 - **Remind me in 1 hour** (Detail → More): `scheduleReminderUseCase` asks for permission, favorites the activity, cancels any previous reminder, schedules a timestamp trigger (carrying `data.activityId` and the localized `reminderBody`), and stores the `reminderId`. Unfavoriting cancels the reminder. Tapping the reminder opens the activity (see below) and `clearReminderUseCase` forgets the id, so the button reads "Remind me" again.
 - **Add a photo** (Detail → More): choose Camera or Library. The URI is stored on the favorite, shown under More, and restored by Undo.
-- **Haptics**: selection ticks on chips, toggles and tabs; success on save; warning on blocked actions.
+- **Haptics**: shared components fire a selection tick on press through `usePressHaptic` (buttons, chips, toggles, icon buttons, card taps, tabs). Outcome haptics (success on save, warning on blocked actions) stay in the hooks that know the result, so a press never ticks twice.
 
 ## Notifications & deep links
 Deep links and reminder taps share one path: both turn into a URL that React Navigation resolves with `createLinking` (`presentation/routes/linking.ts`, passed to `NavigationContainer` in `AppProviders`).
@@ -49,11 +49,19 @@ Reminder tap flow:
 - **App killed**: `getInitialURL` asks `Linking` first, then `NotificationPort.getInitialOpenedActivity()` (notifee `getInitialNotification`).
 - **App alive**: `NotificationPort.onReminderOpened` fires on a notifee foreground `PRESS`, and also on returning to `active` with a notification intent (Android background taps). Ids are deduped, so a tap never navigates twice.
 - **Foreground on iOS**: `foregroundPresentationOptions` shows the banner.
+- **Android channel**: reminders post to `activity-reminders`, created with `AndroidImportance.HIGH` so they pop up as a heads-up banner. Android fixes a channel's importance the first time it's created, so it can't be raised in place: to change it, use a new channel id. Installs from before this change keep an unused `reminders` channel (default importance, status-bar icon only). It isn't deleted, because Android drops notifications already scheduled on a deleted channel.
 - **Background handler**: `index.js` calls `registerNotificationBackgroundHandler()` (a no-op `onBackgroundEvent`). notifee requires it on Android.
 
 Native wiring: iOS `CFBundleURLTypes` (`$(APP_URL_SCHEME)`) + `RCTLinkingManager` in `AppDelegate.swift`. Android uses a VIEW/BROWSABLE intent filter on `MainActivity` with `${appUrlScheme}` from the flavor's `manifestPlaceholders`.
 
 Links are ignored until onboarding is done, because the target screens aren't mounted yet.
+
+Firing a reminder without waiting an hour (see [S8](test-scenarios.md)):
+```bash
+adb shell dumpsys jobscheduler | grep -A12 com.explora.dev   # the JOB #u0a…/<id> line has the id
+adb shell cmd jobscheduler run -f com.explora.dev <id>
+```
+Force the job while the app process is alive; for the app-killed case, run `adb shell am kill com.explora.dev` after the notification is posted. On iOS there's no equivalent: temporarily lower `REMINDER_DELAY_MS` in a Debug build and revert it afterwards.
 
 Try it (after a native rebuild):
 ```bash

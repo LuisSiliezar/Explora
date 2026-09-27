@@ -2,6 +2,7 @@ import type { Activity } from '@domain/entities';
 import { DomainError } from '@domain/errors';
 import {
   ActivitiesResponseSchema,
+  ActivityDtoSchema,
   type ActivityDto,
 } from '@infrastructure/interfaces';
 
@@ -29,5 +30,18 @@ export class ActivityMapper {
       );
     }
     return result.data.activities.map(ActivityMapper.toEntity);
+  }
+
+  /** Validates a single raw activity (e.g. the one a refresh returns) and maps it. */
+  static fromDto(raw: unknown): Activity {
+    const result = ActivityDtoSchema.safeParse(raw);
+    if (!result.success) {
+      throw new DomainError(
+        'VALIDATION',
+        `Invalid activity payload: ${result.error.message}`,
+        result.error,
+      );
+    }
+    return ActivityMapper.toEntity(result.data);
   }
 }

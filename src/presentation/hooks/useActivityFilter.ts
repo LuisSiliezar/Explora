@@ -16,6 +16,7 @@ export const useActivityFilter = (activities: readonly Activity[] = []) => {
   const setQuery = filterStore(state => state.setQuery);
   const toggleCategory = filterStore(state => state.toggleCategory);
   const toggleDuration = filterStore(state => state.toggleDuration);
+  const clearSearch = filterStore(state => state.clearSearch);
   const reset = filterStore(state => state.reset);
 
   const debouncedQuery = useDebouncedValue(query);
@@ -28,9 +29,17 @@ export const useActivityFilter = (activities: readonly Activity[] = []) => {
       }),
     [activities, debouncedQuery, categories, duration],
   );
+  /** Browse: category chips only. What's typed in the Search tab doesn't narrow it. */
+  const browseResults = useMemo(
+    () =>
+      filterActivities(activities, { query: '', categories, duration: null }),
+    [activities, categories],
+  );
   const allCategories = useMemo(() => getCategories(activities), [activities]);
   const activeCount = countActiveFilters({ query, categories, duration });
   const hasFilters = !!query.trim() || activeCount > 0;
+  /** Typed but not applied yet (inside the debounce window). */
+  const isSearching = query.trim() !== debouncedQuery.trim();
 
   return {
     query,
@@ -39,10 +48,13 @@ export const useActivityFilter = (activities: readonly Activity[] = []) => {
     setQuery,
     toggleCategory,
     toggleDuration,
+    clearSearch,
     reset,
     results,
+    browseResults,
     allCategories,
     activeCount,
     hasFilters,
+    isSearching,
   };
 };

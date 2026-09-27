@@ -1,0 +1,59 @@
+appId: com.explora.dev
+name: Cold start in airplane mode → catalog loads, favorite and its detail are there
+tags:
+  - offline
+  - android-only
+# Android only: see 05-offline-session.yaml.
+onFlowComplete:
+  - runFlow: subflows/network-on.yaml
+---
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      # Save a favorite while online, then kill the app and cut the network.
+      - runFlow: subflows/launch-fresh.yaml
+      - runFlow: subflows/search-botanical.yaml
+      - tapOn:
+          id: favorite-act-001
+      - stopApp
+      - setAirplaneMode: enabled
+
+      # Debug builds still load JS over `adb reverse`, which doesn't use the network.
+      - launchApp:
+          clearState: false
+      - extendedWaitUntil:
+          notVisible:
+            id: splash
+          timeout: 15000
+
+      # offlineFirst: the bundled catalog loads instead of the query pausing.
+      - assertVisible:
+          id: browse-title
+      # NetInfo reports the first (offline) state just after launch.
+      # Offline UI is matched by text in this flow: when the process starts offline,
+      # RN Android leaves the banners' testIDs out of the accessibility tree (the
+      # nodes and text are there; mid-session they resolve by id, see 05).
+      - extendedWaitUntil:
+          visible: 'Offline — showing saved activities'
+          timeout: 10000
+      - extendedWaitUntil:
+          visible:
+            id: 'activity-card-.*'
+          timeout: 10000
+
+      # The favorite survived the kill and opens from its offline snapshot.
+      - tapOn:
+          id: tab-favorites
+      - extendedWaitUntil:
+          visible:
+            id: activity-card-act-001
+          timeout: 10000
+      - assertVisible: 'Offline — favorites work as usual'
+      - tapOn:
+          id: activity-card-act-001
+      - assertVisible: Botanical Garden Walk
+      - assertVisible: 'Offline — showing the saved copy'
+      - scrollUntilVisible:
+          element: 'Saved to Favorites — available offline'
+          direction: DOWN

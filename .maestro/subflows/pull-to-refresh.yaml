@@ -1,0 +1,9 @@
+# On Browse: pull the list down to trigger a refresh.
+appId: com.explora.dev
+---
+- tapOn:
+    id: tab-browse
+- swipe:
+    start: 50%, 35%
+    end: 50%, 85%
+    duration: 600

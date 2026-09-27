@@ -13,10 +13,8 @@ interface Props {
   onPress: () => void;
   /** Already-translated accessibility label ("Add X to favorites"). */
   accessibilityLabel: string;
-  /** icon: bare heart (cards) · circle: 54pt button (detail). */
-  variant?: 'icon' | 'circle';
-  /** Smaller heart for grid cells. */
-  compact?: boolean;
+  /** icon: bare heart (rows) · overlay: 40pt disc on a card photo · circle: 54pt button (detail). */
+  variant?: 'icon' | 'overlay' | 'circle';
   testID?: string;
 }
 
@@ -27,7 +25,6 @@ export const FavoriteButton = memo(
     onPress,
     accessibilityLabel,
     variant = 'icon',
-    compact,
     testID,
   }: Props) => {
     const scale = useSharedValue(1);
@@ -46,10 +43,11 @@ export const FavoriteButton = memo(
     }));
 
     const circle = variant === 'circle';
+    const overlay = variant === 'overlay';
     return (
       <Pressable
         onPress={onPress}
-        hitSlop={12}
+        hitSlop={overlay ? 8 : 12}
         accessibilityRole="button"
         accessibilityState={{ selected: isFavorite }}
         accessibilityLabel={accessibilityLabel}
@@ -61,6 +59,8 @@ export const FavoriteButton = memo(
                   ? 'bg-primary'
                   : 'border border-border active:border-text'
               }`
+            : overlay
+            ? 'h-10 w-10 items-center justify-center rounded-full bg-raised shadow-sm active:opacity-80'
             : 'px-0.5 py-1'
         }
       >
@@ -68,7 +68,7 @@ export const FavoriteButton = memo(
           <Icon
             name="heart"
             filled={isFavorite}
-            size={circle ? 25 : compact ? 19 : 22}
+            size={circle ? 25 : overlay ? 20 : 22}
             color={
               isFavorite
                 ? circle
@@ -76,6 +76,8 @@ export const FavoriteButton = memo(
                   : 'accent'
                 : circle
                 ? 'textMuted'
+                : overlay
+                ? 'text'
                 : 'textFaint'
             }
           />

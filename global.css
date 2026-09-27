@@ -10,6 +10,7 @@
     --field: 250 250 250;
     --raised: 255 255 255;
     --skeleton: 239 239 239;
+    --skeleton-highlight: 248 248 248;
     --text: 26 26 26;
     --text-muted: 107 107 107;
     --text-faint: 154 154 154;
@@ -25,6 +26,10 @@
     --danger-border: 240 201 201;
     --inverse: 26 26 26;
     --on-inverse: 255 255 255;
+    --warning: 201 138 27;
+    --toast: 26 26 26;
+    --on-toast: 255 255 255;
+    --toast-border: 26 26 26;
     --tag-surface: 240 241 239;
     --outdoors-bg: 230 245 232;
     --outdoors-fg: 47 107 34;
@@ -34,6 +39,7 @@
     --workshops-fg: 138 83 36;
     --leisure-bg: 235 237 247;
     --leisure-fg: 62 74 138;
+    --on-photo: 255 255 255;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -43,6 +49,7 @@
       --field: 28 32 28;
       --raised: 28 32 28;
       --skeleton: 37 42 37;
+      --skeleton-highlight: 48 54 48;
       --text: 242 244 241;
       --text-muted: 163 168 162;
       --text-faint: 111 117 110;
@@ -58,6 +65,10 @@
       --danger-border: 90 44 44;
       --inverse: 242 244 241;
       --on-inverse: 26 26 26;
+      --warning: 227 177 85;
+      --toast: 37 42 37;
+      --on-toast: 242 244 241;
+      --toast-border: 54 60 54;
       --tag-surface: 37 42 37;
       --outdoors-bg: 27 42 28;
       --outdoors-fg: 158 216 142;
@@ -67,6 +78,7 @@
       --workshops-fg: 232 176 136;
       --leisure-bg: 29 33 51;
       --leisure-fg: 169 180 238;
+      --on-photo: 255 255 255;
     }
   }
 }

@@ -12,12 +12,21 @@ export class GeolocationLocationService implements LocationPort {
       );
       return result === PermissionsAndroid.RESULTS.GRANTED;
     }
-    return new Promise(resolve =>
+    return new Promise(resolve => {
+      // Answers only when the status *changes* (the first OS prompt). Once the user has
+      // decided (or changed it in iOS Settings), it never calls back...
       Geolocation.requestAuthorization(
         () => resolve(true),
         () => resolve(false),
-      ),
-    );
+      );
+      // ...so a position probe reads the current status: it fails with PERMISSION_DENIED
+      // right away when denied. POSITION_UNAVAILABLE still means we're authorized.
+      Geolocation.getCurrentPosition(
+        () => resolve(true),
+        error => resolve(error.code === 2), // 2 = POSITION_UNAVAILABLE
+        { enableHighAccuracy: false, timeout: 30000, maximumAge: 86400000 },
+      );
+    });
   }
 
   getCurrentPosition(): Promise<Coordinates> {

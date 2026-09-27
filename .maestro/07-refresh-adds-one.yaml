@@ -1,0 +1,46 @@
+appId: com.explora.dev
+name: Pull to refresh on Browse and Search adds exactly one activity each, and they survive an app kill
+tags:
+  - smoke
+---
+- runFlow: subflows/launch-fresh.yaml
+- runFlow:
+    file: subflows/assert-catalog-count.yaml
+    env:
+      COUNT: '12'
+
+- runFlow: subflows/pull-to-refresh.yaml
+- runFlow:
+    file: subflows/assert-catalog-count.yaml
+    env:
+      COUNT: '13'
+
+# Search has the same pull to refresh.
+- tapOn:
+    id: tab-search
+- swipe:
+    start: 50%, 45%
+    end: 50%, 85%
+    duration: 600
+- runFlow:
+    file: subflows/assert-catalog-count.yaml
+    env:
+      COUNT: '14'
+
+# The additions is written to disk before the UI hears about it.
+- stopApp
+- launchApp:
+    clearState: false
+# Cold start in a debug build loads the bundle from Metro; same waits as 04-favorite-persists.
+- extendedWaitUntil:
+    notVisible:
+      id: splash
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: browse-title
+    timeout: 30000
+- runFlow:
+    file: subflows/assert-catalog-count.yaml
+    env:
+      COUNT: '14'

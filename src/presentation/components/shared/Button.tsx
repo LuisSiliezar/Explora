@@ -1,5 +1,9 @@
 import React, { memo } from 'react';
 import { ActivityIndicator, Pressable } from 'react-native';
+import {
+  usePressHaptic,
+  type PressHaptic,
+} from '@presentation/hooks/usePressHaptic';
 import { useTheme } from '@presentation/theme';
 import { Text } from './Text';
 
@@ -21,6 +25,8 @@ interface Props {
   accessibilityLabel?: string;
   accessibilityHint?: string;
   className?: string;
+  /** Tick on press. Pass `none` when the handler gives its own feedback. */
+  haptic?: PressHaptic;
 }
 
 const container: Record<ButtonVariant, string> = {
@@ -52,14 +58,21 @@ export const Button = memo(
     accessibilityLabel,
     accessibilityHint,
     className = '',
+    haptic = 'selection',
   }: Props) => {
     const { colors } = useTheme();
+    const handlePress = usePressHaptic(haptic, onPress);
     const padding =
-      variant === 'link' ? 'py-2' : size === 'md' ? 'py-4' : 'py-[13px]';
+      variant === 'link'
+        ? 'px-4 py-2'
+        : size === 'md'
+        ? 'px-4 py-4'
+        : 'px-3.5 py-2.5';
     const rounded = size === 'md' ? 'rounded-[13px]' : 'rounded-[11px]';
+    const textSize = size === 'md' ? 'text-lg' : 'text-base';
     return (
       <Pressable
-        onPress={onPress}
+        onPress={handlePress}
         disabled={disabled || loading}
         accessibilityRole="button"
         accessibilityLabel={accessibilityLabel ?? text}
@@ -68,7 +81,7 @@ export const Button = memo(
           disabled: !!(disabled || loading),
           busy: !!loading,
         }}
-        className={`items-center justify-center px-4 ${padding} ${rounded} ${
+        className={`items-center justify-center ${padding} ${rounded} ${
           container[variant]
         } ${disabled ? 'opacity-50' : ''} ${className}`}
       >
@@ -78,9 +91,7 @@ export const Button = memo(
           />
         ) : (
           <Text
-            className={`font-sans-semibold ${
-              size === 'md' ? 'text-[16px]' : 'text-[15px]'
-            } ${label[variant]}`}
+            className={`font-display-semibold ${textSize} ${label[variant]}`}
           >
             {text}
           </Text>
