@@ -5,7 +5,10 @@ import { createFakeLogger } from './helpers/fakes';
 
 const setup = () => {
   const queryClient = new QueryClient({
-    defaultOptions: { queries: { retry: false } },
+    defaultOptions: {
+      queries: { retry: false, gcTime: Infinity },
+      mutations: { gcTime: Infinity },
+    },
   });
   const logger = createFakeLogger();
   const stop = logQueryErrors(queryClient, logger);

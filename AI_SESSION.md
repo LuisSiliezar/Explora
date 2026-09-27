@@ -63,6 +63,10 @@ Quotes are exact, trimmed with "…". Messages that were only shell input, task 
 - "commit this changes and check on git the pull request from develop to main".
 - "fix the CI timeout, push develop and update the PR", then "turn on auto-fix".
 - "what is still missing?", then "do 9, 11 and the small cleanups" (the S5 scenario, this file, and small cleanups from the AI's list).
+- "commit and push the S5 and cleanup changes"; "merge the PR and rebuild the artifacts"; "update the release note with the new builds"; "run the Maestro flows on the new APK"; "update the release note with the Maestro results".
+- "yes, commit, push and open the PR to main"; "turn on auto-fix" (for PR #3).
+- "do 8, 9 and 10, the billing is cleared," (re-run performance on the new build, point the docs at the submission build, repeat the iOS core journey); "update performance.md with the perf results"; "commit and push the changes"; "commit and push the performance changes".
+- "do 3 and 5" (the PR #3 description and this file).
 
 **Constraints the user set:** Yarn only, React Native CLI (not Expo), the layered architecture and principles in `CLAUDE.md`, Conventional Commits enforced by commitlint and husky, never commit without being asked, and test on the iPhone 17 Pro simulator plus the Android emulator.
 
@@ -136,27 +140,40 @@ Quotes are exact, trimmed with "…". Messages that were only shell input, task 
 | 09-27 | PR #2 CI (head `3f278f4`) | checks and the iOS build passed. The Android build was **cancelled** at its 45 min timeout while assembling all 4 ABIs, so Maestro was skipped. The fix was pushed as `11650d7`; the new run hadn't finished when this was written. |
 | 09-27 | New `activities-content.test.tsx` | The first run printed nothing and was stopped after 120 s. Run directly with `jest`, it passed 4/4 in under 2 s. Watchman printed a "Recrawled this watch" warning, and the cause of the first hang wasn't confirmed. |
 | 09-27 | `yarn validate` after the S5 test and cleanups | pass, 25 suites / 139 tests |
+| 09-27 | Merged PR #2 as `eb88adc` while the CI run on the final head was still pending | CI then **failed** on `0967725` and `eb88adc`: Jest out of memory after all 139 tests passed. The AI's first local "hang" had pointed to this, but it had blamed watchman without checking. Fixed with test-only changes. |
+| 09-27 | Rebuilt the review builds from `eb88adc` | iOS Release simulator build OK. Android: `./gradlew clean assembleDevRelease` in one call **failed** (reanimated prefab); a second call without `clean` built fine. Gradle used a downloaded JDK 21 because of the untracked `gradle-daemon-jvm.properties`. |
+| 09-27 | Maestro 01–09 on the new APK, Pixel_10 emulator | **9/9 passed** in 6m 13s |
+| 09-27 | New builds, by hand | Android: deep link on a cold start OK. iOS (26.0 simulator): launch without Metro OK, deep link on a cold start OK, favorite kept across the upgrade install |
+| 09-27 | iOS core journey on the new simulator build, driven with the Simulator tool | S1 `walk` + Outdoors → 2 results, back keeps both ✅; S3 one pull 21 → 22 ✅; S4 Failing: toast, count kept ✅. Several taps and typed characters were **dropped** by the tool, and its screenshots lagged behind the screen, so each step was checked against a fresh `simctl` screenshot. |
+| 09-27 | Performance on the submission build (`stagingRelease`, 1,200 items), first 6 runs | **12.7–22.0% janky**, p50 18–29 ms: about 3× the baseline. Host busy (load 5–8: iOS Simulator panel, Claude app, Chrome). Kept, but not used as the result. |
+| 09-27 | Performance A/B: baseline rebuilt from `f4f3442` vs the submission build, alternating | Busy host: 21.01% vs 20.20%. Quieter host: 7.23% / 7.83% vs 7.02% / 7.16%. **Host noise, not a regression.** Submission median 7.16%, 18 / 21 / 27 ms. |
+| 09-27 | PR #3 CI: first real Android Maestro run on GitHub (after billing was cleared) | **7/9.** Flow 07: the soft keyboard (no hardware keyboard on CI) covered the tab bar; fixed in `f173aa8` and passed locally with and without a soft keyboard. Flow 06: Favorites blank for 10 s after the offline cold start; no error in logcat; passes locally, **not reproduced**. |
 
 **Where the AI was wrong or had to redo work**
 - Performance: its first hypothesis (image decode and fade) and its second fix (rounding the image) were both wrong. The measurements caught it.
 - Its first two versions of the detail header left part of the header without the photo, which it fixed after seeing it on screen.
 - When testing on iOS by driving the Simulator app, it once tapped "Slow" instead of "Failing" and redid the step.
 - Early simulator checks gave confusing results because the simulator, Metro and the working tree were shared with other sessions running at the same time. The AI stopped and asked instead of guessing.
+- **09-27:** it merged PR #2 while the CI run on the final head was still pending. That run then failed, and it took a follow-up PR (#3) to fix it.
+- **09-27:** it blamed the first 120 s hang of its new test on watchman without checking. The same leak later made CI run out of memory.
+- **09-27:** it ran `./gradlew clean assembleDevRelease` as one command, which fails on reanimated's prefab step, and had to re-run the build without `clean`.
+- **09-27:** its first performance re-check ran while it had just been driving the iOS Simulator, and gave numbers about 3× worse. It didn't report them as a regression: it ran an A/B test first.
 
 ## 6. Unresolved issues and missing context
 
 **Open issues**
-- Jest warns that a worker process did not exit cleanly, which suggests a timer or handle leaks in some test. The cause has not been investigated.
+- ~~Jest warns that a worker process did not exit cleanly.~~ Found on 2026-09-27: `query-error-logger.test.ts` left TanStack Query garbage-collection timers running, and the new `activities-content.test.tsx` never unmounted a looping skeleton. Together they kept Jest alive until CI ran out of memory on `eb88adc`. Both are fixed, and `jest --ci --runInBand` now exits on its own.
 - The Maestro iOS driver does not run on this machine, so iOS e2e is manual only. CI runs e2e on Android only.
 - A reminder tap on iOS with the app killed has not been verified.
-- Performance was measured on an emulator only, and no list-performance fix was kept. Part 2 uses the reminder banner fix instead (`docs/improvement.md`). The Android heads-up banner itself was never captured on screen.
+- Performance was measured on an emulator only, and no list-performance fix was kept. Part 2 uses the reminder banner fix instead (`docs/improvement.md`). The Android heads-up banner itself was never captured on screen. The 09-27 re-check needed an A/B test because host load moves the numbers by about 3×; only paired comparisons are reliable on this machine.
+- Maestro flow 06 failed on CI's API 34 x86_64 emulator (Favorites blank after an offline cold start) and couldn't be reproduced locally.
 - Open design issue at the largest text size: the Search filters crowd out the results. The AI left this for the user to decide.
 - The screen-reader check covered the accessibility tree only, not a real VoiceOver or TalkBack session.
 - The 12 activity photos from Cosmos have no verified license. The AI marked them as placeholders.
 - The app has local notifications only (notifee), with no remote push (FCM or APNs).
-- The logger work is committed, but it hasn't been checked in a running build. The review builds in `build/handoff/` predate it and the reminder fix: they need to be rebuilt from the submission commit, and `RELEASE_NOTES.md` still has placeholders for the commit and hashes.
+- ~~The review builds predate the logger and the reminder fix.~~ Rebuilt from `eb88adc` on 2026-09-27, hashed and verified (release note). They aren't published as a GitHub Release yet.
 - The presentation video or deck hasn't been made.
-- Build and release were left out on purpose on 2026-09-24 (user decision). On 2026-09-27 the release note was written, but the rebuild is still pending.
+- Build and release were left out on purpose on 2026-09-24 (user decision). On 2026-09-27 the release note was written and the builds were rebuilt and verified.
 
 **Missing or unavailable context**
 - The session "check the requirements and tell what's missing" (started 2026-09-25) had no final answer in its transcript when the first version of this file was written. It wasn't re-read for this update.

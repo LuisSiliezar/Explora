@@ -8,6 +8,13 @@ import { createFakeContainer } from './helpers/fakes';
 
 const en = strings.en;
 
+/** The skeleton's shimmer loops forever: unmount every tree, or Jest never exits. */
+let mounted: ReactTestRenderer.ReactTestRenderer[] = [];
+afterEach(() => {
+  ReactTestRenderer.act(() => mounted.forEach(tree => tree.unmount()));
+  mounted = [];
+});
+
 const render = ({
   isPending = false,
   error = null as unknown,
@@ -39,6 +46,7 @@ const render = ({
       </DependenciesProvider>,
     );
   });
+  mounted.push(tree);
   /** What a screen reader gets: host nodes with a role, and their label or text. */
   const withRole = (role: string) =>
     tree.root.findAll(
