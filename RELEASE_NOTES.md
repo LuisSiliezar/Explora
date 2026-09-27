@@ -67,7 +67,7 @@ A physical-device build (ad-hoc IPA or a release-signed APK) isn't provided: it 
 - **User-facing version:** `versionName` / `MARKETING_VERSION`, semantic (`1.0` → `1.0.1` for a fix, `1.1` for features). Kept equal on both platforms.
 - **Build number:** `versionCode` / `CURRENT_PROJECT_VERSION`. An integer raised on **every** uploaded build, even when the version stays the same, because stores reject a build number they've already seen.
 - **Traceability:** each released build is tagged in git (`v1.0-build1`), and the release note names its commit and SHA-256.
-- `package.json`'s `"version": "0.0.1"` is the npm package field. It isn't the app version and isn't read by the build. It should be aligned to `1.0.0` or dropped, so it doesn't mislead.
+- `package.json`'s `"version"` is `1.0.0` to match. The build doesn't read it, so bump it together with the native versions.
 - The three environments are separate apps (`.dev`, `.staging`, none), so staging builds can go to testers without touching prod installs ([docs/environment.md](docs/environment.md)).
 
 ## Pre-release checks
