@@ -6,7 +6,6 @@ import {
   ActivityList,
   EmptyState,
   OfflineBanner,
-  Text,
 } from '@presentation/components';
 import {
   useDependencies,
@@ -52,11 +51,6 @@ export const FavoritesScreen = ({
             removable={editing}
             onPressItem={openActivity}
             onToggleFavorite={toggleFavorite}
-            ListFooterComponent={
-              <Text className="mt-4 font-sans-medium text-xs tracking-wider text-text-muted">
-                {t('savedOnDevice')}
-              </Text>
-            }
           />
         ) : (
           <EmptyState

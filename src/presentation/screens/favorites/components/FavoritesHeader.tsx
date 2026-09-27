@@ -27,7 +27,7 @@ export const FavoritesHeader = ({ count, editing, onToggleEditing }: Props) => {
         >
           {t('favorites')}
         </Text>
-        <Text className="font-sans-medium text-xs text-text-muted">
+        <Text className="font-sans-medium text-base text-text-muted">
           {count} {t('saved')}
         </Text>
       </View>

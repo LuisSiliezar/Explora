@@ -12,7 +12,7 @@ export const Pill = memo(
     tone?: 'category' | 'neutral';
   }) => (
     <View
-      className={`self-start rounded-[5px] px-[7px] py-[3px] ${
+      className={`self-start rounded-full px-3 py-1 ${
         tone === 'category' ? 'bg-success' : 'bg-tag-surface'
       }`}
     >

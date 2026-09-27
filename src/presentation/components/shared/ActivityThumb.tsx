@@ -41,7 +41,7 @@ export const ActivityThumb = memo(({ activity, variant }: Props) => {
         className="h-full w-full"
       />
       <View
-        className={`absolute rounded-[5px] ${tint.bg} ${
+        className={`absolute rounded-full ${tint.bg} ${
           thumb ? 'bottom-1 left-1 px-1 py-px' : 'bottom-2.5 left-2.5 px-2 py-1'
         }`}
       >
