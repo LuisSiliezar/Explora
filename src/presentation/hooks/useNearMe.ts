@@ -11,7 +11,7 @@ import { useToast } from './useToast';
  * Denying never blocks the app: activities fall back to alphabetical order.
  */
 export const useNearMe = () => {
-  const { settingsStore, location, haptics } = useDependencies();
+  const { settingsStore, location, haptics, logger } = useDependencies();
   const queryClient = useQueryClient();
   const t = useT();
   const toast = useToast();
@@ -31,12 +31,13 @@ export const useNearMe = () => {
       settingsStore.getState().setNearMe(true);
       haptics.success();
       toast.success(t('toastLocOn'));
-    } catch {
+    } catch (error) {
+      logger.warn('Locating the user failed', { error });
       settingsStore.getState().setNearMe(false);
       haptics.warning();
       toast.error(t('toastLocFailed'));
     }
-  }, [queryClient, location, settingsStore, haptics, toast, t]);
+  }, [queryClient, location, settingsStore, haptics, logger, toast, t]);
 
   const allow = useCallback(async () => {
     setPromptVisible(false);

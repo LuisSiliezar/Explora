@@ -1,9 +1,10 @@
 import notifee, { AndroidImportance } from '@notifee/react-native';
 import { NotifeeNotificationService } from '@infrastructure/services';
+import { createFakeLogger } from './helpers/fakes';
 
 describe('NotifeeNotificationService', () => {
   it('schedules reminders on a high-importance channel so Android shows a banner', async () => {
-    await new NotifeeNotificationService().scheduleReminder({
+    await new NotifeeNotificationService(createFakeLogger()).scheduleReminder({
       activityId: 'act-001',
       title: 'Walk',
       body: 'Starting soon',

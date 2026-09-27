@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import BootSplash from 'react-native-bootsplash';
 import LottieView from 'lottie-react-native';
 import Animated, { FadeOut } from 'react-native-reanimated';
-import { useActivities } from '@presentation/hooks';
+import { useActivities, useDependencies } from '@presentation/hooks';
 import { useT } from '@presentation/i18n';
 import splashAnimation from '@assets/lottie/splash.json';
 
@@ -18,14 +18,17 @@ const LOGO_SIZE = 192;
  */
 export const SplashScreen = ({ onFinish }: { onFinish: () => void }) => {
   const t = useT();
+  const { logger } = useDependencies();
   const { isPending } = useActivities();
   const [minElapsed, setMinElapsed] = useState(false);
 
   useEffect(() => {
-    BootSplash.hide({ fade: true }).catch(() => undefined);
+    BootSplash.hide({ fade: true }).catch(error =>
+      logger.debug('Hiding the native splash failed', { error }),
+    );
     const timer = setTimeout(() => setMinElapsed(true), MIN_VISIBLE_MS);
     return () => clearTimeout(timer);
-  }, []);
+  }, [logger]);
 
   useEffect(() => {
     if (minElapsed && !isPending) {

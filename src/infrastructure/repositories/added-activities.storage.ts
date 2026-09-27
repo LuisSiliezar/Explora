@@ -1,5 +1,6 @@
 import type { KeyValueStorage } from '@config/adapters/storage';
 import type { Activity } from '@domain/entities';
+import type { LoggerPort } from '@domain/services';
 
 const STORAGE_KEY = 'added-activities:v1';
 
@@ -7,7 +8,10 @@ const STORAGE_KEY = 'added-activities:v1';
 export class AddedActivitiesStorage {
   private items: Activity[];
 
-  constructor(private readonly storage: KeyValueStorage) {
+  constructor(
+    private readonly storage: KeyValueStorage,
+    private readonly logger: LoggerPort,
+  ) {
     this.items = this.load();
   }
 
@@ -34,7 +38,10 @@ export class AddedActivitiesStorage {
       const raw = this.storage.getItem(STORAGE_KEY);
       const parsed: unknown = raw ? JSON.parse(raw) : [];
       return Array.isArray(parsed) ? (parsed as Activity[]) : [];
-    } catch {
+    } catch (error) {
+      this.logger.warn('Stored added activities are corrupt, starting empty', {
+        error,
+      });
       return []; // corrupted data should never crash the app
     }
   }

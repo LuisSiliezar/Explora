@@ -14,6 +14,7 @@ import type {
   CameraPort,
   HapticsPort,
   LocationPort,
+  LoggerPort,
   NotificationPort,
   PhotoSource,
   ReminderRequest,
@@ -53,6 +54,13 @@ export class FailingActivityFeedDataSource implements ActivityFeedDataSource {
   }
 }
 
+export const createFakeLogger = (): jest.Mocked<LoggerPort> => ({
+  debug: jest.fn(),
+  info: jest.fn(),
+  warn: jest.fn(),
+  error: jest.fn(),
+});
+
 /** Something that resolves only when the test says so (to reproduce late results). */
 export const deferred = <T>() => {
   let resolve!: (value: T) => void;
@@ -69,15 +77,17 @@ export const createActivityRepository = ({
   dataSource = new InMemoryActivityDataSource(),
   feed = new MockActivityFeedDataSource(),
   storage = new MemoryStorage(),
+  logger = createFakeLogger(),
 }: {
   dataSource?: ActivityDataSource;
   feed?: ActivityFeedDataSource;
   storage?: MemoryStorage;
+  logger?: LoggerPort;
 } = {}) =>
   new ActivityRepositoryImpl(
     dataSource,
     feed,
-    new AddedActivitiesStorage(storage),
+    new AddedActivitiesStorage(storage, logger),
   );
 
 export const createFakeNotifications = (): jest.Mocked<NotificationPort> => ({
@@ -116,9 +126,10 @@ export const createFakeContainer = (
   overrides: Partial<Dependencies> = {},
 ): Dependencies => {
   const storage = new MemoryStorage();
+  const logger = createFakeLogger();
   return {
-    activities: createActivityRepository({ storage }),
-    favorites: new StorageFavoritesRepository(storage),
+    activities: createActivityRepository({ storage, logger }),
+    favorites: new StorageFavoritesRepository(storage, logger),
     filterStore: createActivityFilterStore(storage),
     settingsStore: createAppSettingsStore(storage),
     devSettingsStore: createDevSettingsStore(storage),
@@ -126,6 +137,7 @@ export const createFakeContainer = (
     camera: createFakeCamera(),
     location: createFakeLocation(),
     haptics: createFakeHaptics(),
+    logger,
     ...overrides,
   };
 };

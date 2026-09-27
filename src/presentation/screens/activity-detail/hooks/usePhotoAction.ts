@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { Activity } from '@domain/entities';
 import type { PhotoSource } from '@domain/services';
-import { useFavorites, useToast } from '@presentation/hooks';
+import { useDependencies, useFavorites, useToast } from '@presentation/hooks';
 import { useT } from '@presentation/i18n';
 import { errorToastKey } from '../utils';
 
@@ -9,6 +9,7 @@ import { errorToastKey } from '../utils';
 export const usePhotoAction = (activity: Activity) => {
   const t = useT();
   const toast = useToast();
+  const { logger } = useDependencies();
   const { attachPhoto } = useFavorites();
   const [pickerOpen, setPickerOpen] = useState(false);
 
@@ -22,6 +23,11 @@ export const usePhotoAction = (activity: Activity) => {
         toast.success(t('toastPhotoSaved'));
       }
     } catch (error) {
+      logger.warn('Attaching a photo failed', {
+        activityId: activity.id,
+        source,
+        error,
+      });
       toast.error(t(errorToastKey(error)));
     }
   };

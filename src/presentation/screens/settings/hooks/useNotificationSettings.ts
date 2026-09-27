@@ -10,6 +10,7 @@ export const useNotificationSettings = () => {
     settingsStore,
     notifications: notificationPort,
     haptics,
+    logger,
   } = useDependencies();
   const notifications = useSettings(state => state.notifications);
   const [promptVisible, setPromptVisible] = useState(false);
@@ -37,9 +38,10 @@ export const useNotificationSettings = () => {
 
   const allow = async () => {
     setPromptVisible(false);
-    const granted = await notificationPort
-      .requestPermission()
-      .catch(() => false);
+    const granted = await notificationPort.requestPermission().catch(error => {
+      logger.warn('Notification permission request failed', { error });
+      return false;
+    });
     setNotifications({
       status: granted ? 'granted' : 'denied',
       weekly: granted,

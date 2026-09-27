@@ -6,13 +6,19 @@ import {
   toggleFavoriteUseCase,
 } from '@core/use-cases';
 import { StorageFavoritesRepository } from '@infrastructure/repositories';
-import { createFakeNotifications, seedActivities } from './helpers/fakes';
+import {
+  createFakeLogger,
+  createFakeNotifications,
+  seedActivities,
+} from './helpers/fakes';
 
 const setup = () => {
   const storage = new MemoryStorage();
+  const logger = createFakeLogger();
   return {
-    favorites: new StorageFavoritesRepository(storage),
+    favorites: new StorageFavoritesRepository(storage, logger),
     notifications: createFakeNotifications(),
+    logger,
     filterStore: createActivityFilterStore(storage),
   };
 };

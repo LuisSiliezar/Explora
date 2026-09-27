@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { Activity } from '@domain/entities';
-import { useFavorites, useToast } from '@presentation/hooks';
+import { useDependencies, useFavorites, useToast } from '@presentation/hooks';
 import { useT } from '@presentation/i18n';
 import { REMINDER_DELAY_MS } from '../constants';
 import { errorToastKey } from '../utils';
@@ -9,6 +9,7 @@ import { errorToastKey } from '../utils';
 export const useReminderAction = (activity: Activity) => {
   const t = useT();
   const toast = useToast();
+  const { logger } = useDependencies();
   const { scheduleReminder } = useFavorites();
   const [scheduling, setScheduling] = useState(false);
 
@@ -21,6 +22,10 @@ export const useReminderAction = (activity: Activity) => {
       );
       toast.success(t('toastReminderSet'));
     } catch (error) {
+      logger.warn('Scheduling a reminder failed', {
+        activityId: activity.id,
+        error,
+      });
       toast.error(t(errorToastKey(error)));
     } finally {
       setScheduling(false);

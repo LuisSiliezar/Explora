@@ -1,10 +1,11 @@
 import type { FavoritesRepository } from '@domain/repositories';
-import type { NotificationPort } from '@domain/services';
+import type { LoggerPort, NotificationPort } from '@domain/services';
 import { toggleFavoriteUseCase } from './toggle-favorite.use-case';
 
 interface Deps {
   favorites: FavoritesRepository;
   notifications: NotificationPort;
+  logger: LoggerPort;
   resetFilters: () => void;
   /** Drops the activities added by refresh. */
   clearAddedActivities: () => void;

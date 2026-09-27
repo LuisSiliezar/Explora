@@ -6,7 +6,11 @@ import notifee, {
   TriggerType,
   type Notification,
 } from '@notifee/react-native';
-import type { NotificationPort, ReminderRequest } from '@domain/services';
+import type {
+  LoggerPort,
+  NotificationPort,
+  ReminderRequest,
+} from '@domain/services';
 
 /**
  * HIGH importance makes the reminder pop up as a heads-up banner. Android fixes a
@@ -32,6 +36,8 @@ export const registerNotificationBackgroundHandler = (): void =>
 export class NotifeeNotificationService implements NotificationPort {
   /** Notification ids already turned into navigation, so a tap never opens twice. */
   private readonly handled = new Set<string>();
+
+  constructor(private readonly logger: LoggerPort) {}
 
   async requestPermission(): Promise<boolean> {
     const settings = await notifee.requestPermission();
@@ -99,7 +105,11 @@ export class NotifeeNotificationService implements NotificationPort {
         notifee
           .getInitialNotification()
           .then(initial => emit(initial?.notification))
-          .catch(() => undefined);
+          .catch(error =>
+            this.logger.warn('Reading the opening notification failed', {
+              error,
+            }),
+          );
       }
     });
     return () => {

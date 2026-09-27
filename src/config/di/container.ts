@@ -25,6 +25,7 @@ import type {
   CameraPort,
   HapticsPort,
   LocationPort,
+  LoggerPort,
   NotificationPort,
 } from '@domain/services';
 import {
@@ -43,6 +44,7 @@ import {
   StorageFavoritesRepository,
 } from '@infrastructure/repositories';
 import {
+  ConsoleLogger,
   GeolocationLocationService,
   HapticFeedbackService,
   ImagePickerCameraService,
@@ -62,11 +64,13 @@ export interface Dependencies {
   camera: CameraPort;
   location: LocationPort;
   haptics: HapticsPort;
+  logger: LoggerPort;
 }
 
 const createActivityDataSource = (
   storage: KeyValueStorage,
   simulation: NetworkSimulationConfig | null,
+  logger: LoggerPort,
 ): ActivityDataSource => {
   // The bundled JSON is already offline; a remote catalog keeps its last good copy.
   const source: ActivityDataSource = env.API_URL
@@ -78,6 +82,7 @@ const createActivityDataSource = (
           }),
         ),
         storage,
+        logger,
       )
     : new LocalActivityDataSource(activitiesJson);
 
@@ -104,6 +109,7 @@ const createActivityFeed = (
 export const createContainer = (
   storage: KeyValueStorage = new MMKVStorageAdapter(),
 ): Dependencies => {
+  const logger = new ConsoleLogger(env.LOG_LEVEL);
   const devSettingsStore = createDevSettingsStore(storage);
   // Reviewers reproduce slow and failing requests from Settings → Developer (never in prod).
   const simulation: NetworkSimulationConfig | null = isProduction
@@ -113,19 +119,21 @@ export const createContainer = (
         slowMs: SIMULATED_SLOW_MS,
       };
 
+  logger.info('Container ready', { env: env.APP_ENV });
   return {
     activities: new ActivityRepositoryImpl(
-      createActivityDataSource(storage, simulation),
+      createActivityDataSource(storage, simulation, logger),
       createActivityFeed(simulation),
-      new AddedActivitiesStorage(storage),
+      new AddedActivitiesStorage(storage, logger),
     ),
-    favorites: new StorageFavoritesRepository(storage),
+    favorites: new StorageFavoritesRepository(storage, logger),
     filterStore: createActivityFilterStore(storage),
     settingsStore: createAppSettingsStore(storage),
     devSettingsStore,
-    notifications: new NotifeeNotificationService(),
+    notifications: new NotifeeNotificationService(logger),
     camera: new ImagePickerCameraService(),
     location: new GeolocationLocationService(),
-    haptics: new HapticFeedbackService(),
+    haptics: new HapticFeedbackService(logger),
+    logger,
   };
 };

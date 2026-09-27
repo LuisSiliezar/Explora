@@ -12,6 +12,7 @@ import { QueryClientProvider, type QueryClient } from '@tanstack/react-query';
 import { Toaster } from 'sonner-native';
 import { createContainer, type Dependencies } from '@config/di';
 import { env } from '@config/env';
+import { installGlobalErrorLogger, logQueryErrors } from '@config/logging';
 import {
   queryClient as defaultQueryClient,
   setupQueryLifecycle,
@@ -39,6 +40,7 @@ export const AppProviders = ({
     createLinking({
       prefix: `${env.APP_URL_SCHEME}://`,
       notifications: deps.notifications,
+      logger: deps.logger,
       onReminderOpened: activityId => clearReminderUseCase(deps, activityId),
       isReady: () => deps.settingsStore.getState().onboardingDone,
     }),
@@ -57,6 +59,11 @@ export const AppProviders = ({
   const textScale = deps.settingsStore(state => state.textScale);
 
   useEffect(() => setupQueryLifecycle(), []);
+  useEffect(() => installGlobalErrorLogger(deps.logger), [deps.logger]);
+  useEffect(
+    () => logQueryErrors(queryClient, deps.logger),
+    [queryClient, deps.logger],
+  );
 
   return (
     <GestureHandlerRootView style={styles.root}>
