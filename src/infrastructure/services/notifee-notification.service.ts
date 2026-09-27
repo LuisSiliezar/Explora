@@ -1,5 +1,6 @@
 import { AppState } from 'react-native';
 import notifee, {
+  AndroidImportance,
   AuthorizationStatus,
   EventType,
   TriggerType,
@@ -7,7 +8,13 @@ import notifee, {
 } from '@notifee/react-native';
 import type { NotificationPort, ReminderRequest } from '@domain/services';
 
-const CHANNEL_ID = 'reminders';
+/**
+ * HIGH importance makes the reminder pop up as a heads-up banner. Android fixes a
+ * channel's importance when it is first created, so this replaced the old `reminders`
+ * channel (default importance) instead of editing it. The old one is not deleted:
+ * Android drops notifications already scheduled on a deleted channel.
+ */
+const CHANNEL_ID = 'activity-reminders';
 
 const activityIdOf = (notification?: Notification): string | null => {
   const id = notification?.data?.activityId;
@@ -40,6 +47,7 @@ export class NotifeeNotificationService implements NotificationPort {
     const channelId = await notifee.createChannel({
       id: CHANNEL_ID,
       name: 'Activity reminders',
+      importance: AndroidImportance.HIGH,
     });
     return notifee.createTriggerNotification(
       {

@@ -49,6 +49,7 @@ Reminder tap flow:
 - **App killed**: `getInitialURL` asks `Linking` first, then `NotificationPort.getInitialOpenedActivity()` (notifee `getInitialNotification`).
 - **App alive**: `NotificationPort.onReminderOpened` fires on a notifee foreground `PRESS`, and also on returning to `active` with a notification intent (Android background taps). Ids are deduped, so a tap never navigates twice.
 - **Foreground on iOS**: `foregroundPresentationOptions` shows the banner.
+- **Android channel**: reminders post to `activity-reminders`, created with `AndroidImportance.HIGH` so they pop up as a heads-up banner. Android fixes a channel's importance the first time it's created, so it can't be raised in place: to change it, use a new channel id. Installs from before this change keep an unused `reminders` channel (default importance, status-bar icon only). It isn't deleted, because Android drops notifications already scheduled on a deleted channel.
 - **Background handler**: `index.js` calls `registerNotificationBackgroundHandler()` (a no-op `onBackgroundEvent`). notifee requires it on Android.
 
 Native wiring: iOS `CFBundleURLTypes` (`$(APP_URL_SCHEME)`) + `RCTLinkingManager` in `AppDelegate.swift`. Android uses a VIEW/BROWSABLE intent filter on `MainActivity` with `${appUrlScheme}` from the flavor's `manifestPlaceholders`.
