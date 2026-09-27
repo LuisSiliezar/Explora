@@ -136,6 +136,10 @@ Quotes are exact, trimmed with "…". Messages that were only shell input, task 
 | 09-27 | PR #2 CI (head `3f278f4`) | checks and the iOS build passed. The Android build was **cancelled** at its 45 min timeout while assembling all 4 ABIs, so Maestro was skipped. The fix was pushed as `11650d7`; the new run hadn't finished when this was written. |
 | 09-27 | New `activities-content.test.tsx` | The first run printed nothing and was stopped after 120 s. Run directly with `jest`, it passed 4/4 in under 2 s. Watchman printed a "Recrawled this watch" warning, and the cause of the first hang wasn't confirmed. |
 | 09-27 | `yarn validate` after the S5 test and cleanups | pass, 25 suites / 139 tests |
+| 09-27 | Merged PR #2 as `eb88adc` while the CI run on the final head was still pending | CI then **failed** on `0967725` and `eb88adc`: Jest out of memory after all 139 tests passed. The AI's first local "hang" had pointed to this, but it had blamed watchman without checking. Fixed with test-only changes. |
+| 09-27 | Rebuilt the review builds from `eb88adc` | iOS Release simulator build OK. Android: `./gradlew clean assembleDevRelease` in one call **failed** (reanimated prefab); a second call without `clean` built fine. Gradle used a downloaded JDK 21 because of the untracked `gradle-daemon-jvm.properties`. |
+| 09-27 | Maestro 01–09 on the new APK, Pixel_10 emulator | **9/9 passed** in 6m 13s |
+| 09-27 | New builds, by hand | Android: deep link on a cold start OK. iOS (26.0 simulator): launch without Metro OK, deep link on a cold start OK, favorite kept across the upgrade install |
 
 **Where the AI was wrong or had to redo work**
 - Performance: its first hypothesis (image decode and fade) and its second fix (rounding the image) were both wrong. The measurements caught it.
@@ -146,7 +150,7 @@ Quotes are exact, trimmed with "…". Messages that were only shell input, task 
 ## 6. Unresolved issues and missing context
 
 **Open issues**
-- Jest warns that a worker process did not exit cleanly, which suggests a timer or handle leaks in some test. The cause has not been investigated.
+- ~~Jest warns that a worker process did not exit cleanly.~~ Found on 2026-09-27: `query-error-logger.test.ts` left TanStack Query garbage-collection timers running, and the new `activities-content.test.tsx` never unmounted a looping skeleton. Together they kept Jest alive until CI ran out of memory on `eb88adc`. Both are fixed, and `jest --ci --runInBand` now exits on its own.
 - The Maestro iOS driver does not run on this machine, so iOS e2e is manual only. CI runs e2e on Android only.
 - A reminder tap on iOS with the app killed has not been verified.
 - Performance was measured on an emulator only, and no list-performance fix was kept. Part 2 uses the reminder banner fix instead (`docs/improvement.md`). The Android heads-up banner itself was never captured on screen.

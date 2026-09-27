@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites>
+  <testsuite name="Test Suite" device="Pixel_10" tests="9" failures="0" time="372.539" timestamp="2026-09-27T12:28:46">
+    <testcase id="Favorite survives an app kill (local-first)" name="Favorite survives an app kill (local-first)" classname="Favorite survives an app kill (local-first)" file=".maestro/04-favorite-persists.yaml" time="32.537" timestamp="2026-09-27T12:28:46" status="SUCCESS">
+      <properties>
+        <property name="tags" value="smoke"/>
+      </properties>
+    </testcase>
+    <testcase id="A failed refresh adds nothing and keeps favorites and search" name="A failed refresh adds nothing and keeps favorites and search" classname="A failed refresh adds nothing and keeps favorites and search" file=".maestro/08-refresh-fail-keeps-data.yaml" time="71.285" timestamp="2026-09-27T12:29:19" status="SUCCESS">
+      <properties>
+        <property name="tags" value="resilience"/>
+      </properties>
+    </testcase>
+    <testcase id="Search → open detail → back" name="Search → open detail → back" classname="Search → open detail → back" file=".maestro/02-browse-search.yaml" time="22.252" timestamp="2026-09-27T12:30:30" status="SUCCESS">
+      <properties>
+        <property name="tags" value="smoke"/>
+      </properties>
+    </testcase>
+    <testcase id="Favorite from detail → shows in Favorites → remove" name="Favorite from detail → shows in Favorites → remove" classname="Favorite from detail → shows in Favorites → remove" file=".maestro/03-favorite.yaml" time="27.37" timestamp="2026-09-27T12:30:52" status="SUCCESS">
+      <properties>
+        <property name="tags" value="smoke"/>
+      </properties>
+    </testcase>
+    <testcase id="A slow refresh that finishes while the app is in background is applied once, without undoing the user" name="A slow refresh that finishes while the app is in background is applied once, without undoing the user" classname="A slow refresh that finishes while the app is in background is applied once, without undoing the user" file=".maestro/09-slow-refresh-background.yaml" time="80.975" timestamp="2026-09-27T12:31:19" status="SUCCESS">
+      <properties>
+        <property name="tags" value="resilience"/>
+      </properties>
+    </testcase>
+    <testcase id="First launch → skip onboarding → Browse" name="First launch → skip onboarding → Browse" classname="First launch → skip onboarding → Browse" file=".maestro/01-onboarding.yaml" time="4.908" timestamp="2026-09-27T12:32:40" status="SUCCESS">
+      <properties>
+        <property name="tags" value="smoke"/>
+      </properties>
+    </testcase>
+    <testcase id="Cold start in airplane mode → catalog loads, favorite and its detail are there" name="Cold start in airplane mode → catalog loads, favorite and its detail are there" classname="Cold start in airplane mode → catalog loads, favorite and its detail are there" file=".maestro/06-offline-cold-start.yaml" time="26.084" timestamp="2026-09-27T12:32:45" status="SUCCESS">
+      <properties>
+        <property name="tags" value="offline, android-only"/>
+      </properties>
+    </testcase>
+    <testcase id="Pull to refresh on Browse and Search adds exactly one activity each, and they survive an app kill" name="Pull to refresh on Browse and Search adds exactly one activity each, and they survive an app kill" classname="Pull to refresh on Browse and Search adds exactly one activity each, and they survive an app kill" file=".maestro/07-refresh-adds-one.yaml" time="78.332" timestamp="2026-09-27T12:33:11" status="SUCCESS">
+      <properties>
+        <property name="tags" value="smoke"/>
+      </properties>
+    </testcase>
+    <testcase id="Goes offline mid-session → catalog, detail and favorites keep working → back online" name="Goes offline mid-session → catalog, detail and favorites keep working → back online" classname="Goes offline mid-session → catalog, detail and favorites keep working → back online" file=".maestro/05-offline-session.yaml" time="28.757" timestamp="2026-09-27T12:34:30" status="SUCCESS">
+      <properties>
+        <property name="tags" value="offline, android-only"/>
+      </properties>
+    </testcase>
+  </testsuite>
+</testsuites>

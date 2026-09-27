@@ -1,8 +1,6 @@
 # Explora 1.0 (build 1): review build
 
-> **Pending before submission:** the builds in `build/handoff/` are from 2026-09-24 (`3f278f4` plus uncommitted work). They predate the reminder channel fix and the logger. Rebuild both from the submission commit (commands under [Builds](#builds)), then fill in **Commit** and **SHA-256** below and re-run [Verification per platform](#verification-per-platform). Remove this note when that's done.
-
-**Commit:** `<submission commit>` · **Environment:** dev (`com.explora.dev`). The dev environment keeps Settings → Developer → Simulated network, so reviewers can reproduce slow and failing loads ([README](README.md#reproducing-success-failure-slow-loading-and-reset)).
+**Commit:** `eb88adc` (merge of PR #2 into `main`, 2026-09-27) · **Built:** 2026-09-27 on macOS 26.6, Xcode 26.6 · **Environment:** dev (`com.explora.dev`). The dev environment keeps Settings → Developer → Simulated network, so reviewers can reproduce slow and failing loads ([README](README.md#reproducing-success-failure-slow-loading-and-reset)).
 
 ## Builds
 
@@ -14,9 +12,9 @@
 | Architectures | `arm64-v8a`, `armeabi-v7a`, `x86`, `x86_64` | `arm64`, `x86_64` (simulator slices) |
 | App id | `com.explora.dev` (installs next to staging and prod) | `com.explora.dev` |
 | Version | versionName `1.0`, versionCode `1` | `CFBundleShortVersionString` `1.0`, `CFBundleVersion` `1` |
-| Signing | Android debug keystore (see [Signing](#signing)) | unsigned (`CODE_SIGNING_ALLOWED=NO`) |
+| Signing | Android debug keystore, v2 signature, `CN=Android Debug` (see [Signing](#signing)) | unsigned (`CODE_SIGNING_ALLOWED=NO`) |
 | Needs Metro | no: the JS bundle is inside the app | no |
-| SHA-256 | `<fill in>` | `<fill in>` |
+| SHA-256 | `87affc0fc086f38a35d9d7166225d41721fbc58941dd84321c89a9618e3e3ea6` | `85a32d53d6991fee4d884ed3ec7b379c46d14e82a7a298dcc798a64d342e5e45` |
 
 Build, package and hash (from the repo root):
 ```bash
@@ -90,17 +88,20 @@ Added for a store release: build from a tag on `main` only, run a prod build thr
 **Gap:** logs only go to the device console (`ConsoleLogger`). Before a store release, crash and error reporting (Crashlytics or Sentry behind `LoggerPort`) is needed to detect a faulty release at all, not just to respond to one.
 
 ## Verification per platform
-Results so far come from the release builds of 2026-09-24/27 on the hosts in [README → Verified platforms](README.md#verified-platforms). **Re-run on the rebuilt files before submitting** and update the dates.
+**On these exact files** (the hashes above), 2026-09-27, installed over the previous build (an upgrade, so existing favorites stayed in place):
 
-| Check | Android: Pixel_10 emulator, Android 17, arm64 | iOS: iPhone 17 Pro simulator, iOS 26.5 |
+| Check | Android: Pixel_10 emulator (`sdk_gphone16k_arm64`), Android 17 | iOS: iPhone 17 Pro simulator, iOS 26.0 |
 |---|---|---|
-| Launch without Metro | ✅ | ✅ |
-| Core journey: browse, search + category, detail, back keeps both, favorite (S1) | ✅ Maestro `02` | ✅ by hand |
-| Refresh adds one, failure adds nothing (S3, S4) | ✅ Maestro `07`, `08` | ✅ by hand |
-| Offline favorites (S2) | ✅ Maestro `04`, `06`: airplane mode, cold start | ⚠️ restart only: the simulator shares the Mac's network |
-| Native feature: deep link (S8a) | ✅ | ✅ |
-| Native feature: reminder (S8b) | ✅ fires, banner channel, tap opens detail from background and killed | ⚠️ banner shown; tapping it not verified (simulator input limitation) |
-| `yarn validate` on the commit | `<fill in: tests passed>` | same |
+| Launch without Metro | ✅ (no Metro running; Maestro drove the installed APK) | ✅ lands on Browse ([screenshot](docs/evidence/ios/R-artifact-launch.png)) |
+| Core journey: onboarding, search → detail → back, favorite and remove (S1) | ✅ Maestro `01`, `02`, `03` | not re-run on this file: done by hand on the 2026-09-24 Release build (S1) |
+| Refresh adds one, failure adds nothing, slow result in background applied once (S3, S4, S6) | ✅ Maestro `07`, `08`, `09` | not re-run on this file: done by hand on the 2026-09-24 build (S3, S4, S6) |
+| Offline favorites (S2) | ✅ Maestro `04` (survives app kill), `05` (offline mid-session), `06` (cold start in airplane mode) | ⚠️ the favorite survived the upgrade install and a cold start ([screenshot](docs/evidence/ios/R-artifact-deeplink-favorite.png)); true offline can't be simulated: the simulator shares the Mac's network |
+| Native feature: deep link, cold start (S8a) | ✅ `am start … act-001` opens its detail ([screenshot](docs/evidence/android/R-artifact-deeplink-cold.png)) | ✅ `simctl openurl … act-001` opens its detail ([screenshot](docs/evidence/ios/R-artifact-deeplink-favorite.png)) |
+| Native feature: reminder (S8b) | not re-run on this file: HIGH channel, fire and tap verified earlier on 2026-09-27 ([improvement.md](docs/improvement.md)) | not re-run on this file: banner verified in a Debug build; tapping not verified |
+
+**Maestro on the APK:** 9/9 flows passed in 6m 13s (Maestro 2.10.0, idle emulator). JUnit report: [R-maestro-report.xml](docs/evidence/android/R-maestro-report.xml).
+**`yarn validate` on the commit:** pass: format, typecheck, lint, knip, 25 suites / 139 tests.
+**CI on `eb88adc`:** failed in the Jest step. All 139 tests passed, but two test files left timers running (a looping skeleton animation, and TanStack Query garbage-collection timers), so Jest never exited and the runner ran out of memory. The fix changes only test files, so the app and these builds are unaffected. It's in the commit after `eb88adc`. The Android and iOS builds last passed in CI on `11650d7`. The Android Maestro job hasn't run on GitHub because of a billing block on the account, so on-device e2e was run locally (above).
 
 ## Known limitations
 - **Simulator/emulator only:** no physical iPhone or Android phone was used.
