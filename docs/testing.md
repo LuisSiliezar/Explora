@@ -12,6 +12,7 @@ Run `yarn test`, or `yarn validate` for the Prettier check, typecheck, lint, kni
 | Unit: refresh            | Adds exactly one activity with a unique id, persists across a restart, a failure/abort adds nothing, late catalog reads still include the item | `refresh-activities.test.ts`                       |
 | Unit: network simulation | Slow delays, fail throws `NETWORK`, abort stops waiting, mode read per request                                                                 | `simulated-network.datasource.test.ts`             |
 | Hook: refresh            | Offline refusal, one item + toast, failure keeps the list, double pull adds once, a result after unmount is applied once                       | `offline-feedback.test.tsx`                        |
+| Render: screen states    | Browse loading skeleton (`progressbar`, "Loading"), error header + Retry, cached catalog beats the error, empty state + Clear filters (S5)                | `activities-content.test.tsx`                      |
 | Render                   | The whole app mounts with a fake container; first launch → skip → guest lands on the tabs                                                      | `App.test.tsx`                                     |
 | E2E                      | Real app on a simulator/emulator: onboarding, search → detail, favorite/unfavorite, favorite survives an app kill, offline mode (Android)      | `.maestro/*.yaml`                                  |
 

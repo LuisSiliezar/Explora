@@ -28,7 +28,7 @@ Automated coverage for the same behavior is listed per scenario, so a reviewer c
 | Platform | Actual | Result | Evidence |
 |---|---|---|---|
 | Android | Maestro `04` (favorite survives an app kill) and `06` (cold start in airplane mode: catalog, favorite and its detail with the offline note). | ✅ | `yarn e2e` run, 9/9 passed |
-| iOS | Favorited 2 → force-quit (`simctl terminate`) → relaunch: both listed with "Saved on this device · available offline". Airplane mode can't be simulated: the simulator shares the Mac's network (Android covers it). | ⚠️ | [favorites after restart](evidence/ios/S2-favorites-after-restart.png) |
+| iOS | Favorited 2 → force-quit (`simctl terminate`) → relaunch: both listed with "Saved on this device · available offline" (that Favorites footer was removed later in `f018fff`; the detail still says "Saved to Favorites — available offline"). Airplane mode can't be simulated: the simulator shares the Mac's network (Android covers it). | ⚠️ | [favorites after restart](evidence/ios/S2-favorites-after-restart.png) |
 
 ### S3. Refresh adds exactly one activity with a unique id
 **Steps:** Settings → Data: note "Cached activities" (12) → Browse → pull to refresh → back to Settings → Data. Repeat twice.
@@ -51,17 +51,18 @@ Automated coverage for the same behavior is listed per scenario, so a reviewer c
 | iOS | Failing: badge shown, toast "Couldn't refresh. Nothing was changed." on each pull; after 5 failed pulls the count stays 17, 3 favorites, search `Board` kept. Normal → pull → +1 is the S3 path. | ✅ | [video](evidence/ios/S4-failing-refresh.mp4), [count unchanged](evidence/ios/S4-count-unchanged.png) |
 
 ### S5. Loading, empty, error and retry states
-**Steps:** (a) Developer → **Slow** → force-quit → reopen: the splash stays up until the catalog arrives (~4 s), then Browse. Type in Search: a skeleton shows while the query settles. (b) Developer → **Failing** → Settings → Data → Reset local data → Browse: error state with Retry → switch to Normal → Retry. (c) Search `zzzz`: empty state with "clear filters".
-**Expected:** Each state is clear, announced by the screen reader, and Retry recovers without restarting.
-**Automated:** `simulated-network.datasource.test.ts`, `App.test.tsx`
+**Steps:** (a) Developer → **Slow** → force-quit → reopen: the splash stays up until the catalog arrives (~4 s), then Browse. To see the Browse skeleton, stay on Slow, go to Settings → Data → **Reset local data** and tap the Browse tab within 4 s. (b) Developer → **Failing** → Settings → Data → Reset local data → Browse: error state with Retry → switch to Normal → Retry. (c) Search `zzzz`: empty state with "Clear filters".
+**Expected:** Each state is clear, and Retry recovers without restarting. For screen readers, the skeleton is a `progressbar` labelled "Loading", and the error and empty titles are headers. Whether they're *read out well* in a real TalkBack/VoiceOver session is part of S7.
+**Automated:** `activities-content.test.tsx` (skeleton with its "Loading" label, error header + Retry, a cached catalog keeps the list instead of the error, empty state + Clear filters), `simulated-network.datasource.test.ts`, `App.test.tsx`
 
 | Platform | Actual | Result | Evidence |
 |---|---|---|---|
-| Android | (a) the splash covers the 4 s slow load ([screenshot](evidence/android/S5a-splash-during-slow-load.png)). The Browse skeleton isn't reachable by these steps (see the note below). (b) error state with Retry, recovers after Normal → Retry. (c) empty state with Clear filters. (b) and (c) ran as a Maestro flow. | ⚠️ | [error](evidence/android/S5b-error-retry.png), [after retry](evidence/android/S5b-after-retry.png), [empty](evidence/android/S5c-empty-state.png) |
-| iOS | (a) same as Android; the search skeleton shows while typing (visible in the S6 run). (b) "Couldn't load activities" with Retry, Go to Favorites and `ERR_NETWORK · LAST SYNC Never`; Retry after Normal recovers without a restart. (c) "No activities match" + Clear filters. | ⚠️ | [error](evidence/ios/S5b-error-retry.png), [after retry](evidence/ios/S5b-after-retry.png), [empty](evidence/ios/S5c-empty-state.png) |
+| Android | (a) the splash covers the 4 s slow load ([screenshot](evidence/android/S5a-splash-during-slow-load.png)). The Browse skeleton was not observed by hand; it's covered by `activities-content.test.tsx`. (b) error state with Retry, recovers after Normal → Retry. (c) empty state with Clear filters. (b) and (c) ran as a Maestro flow. | ✅ | [error](evidence/android/S5b-error-retry.png), [after retry](evidence/android/S5b-after-retry.png), [empty](evidence/android/S5c-empty-state.png) |
+| iOS | (a) same splash behavior as Android; the search skeleton shows while typing (seen during the S6 run, not captured). (b) "Couldn't load activities" with Retry, Go to Favorites and `ERR_NETWORK · LAST SYNC Never`; Retry after Normal recovers without a restart. (c) "No activities match" + Clear filters. | ✅ | [error](evidence/ios/S5b-error-retry.png), [after retry](evidence/ios/S5b-after-retry.png), [empty](evidence/ios/S5c-empty-state.png) |
 
 
-> **S5(a) note.** The original step ("reset → Browse: loading state for ~4 s") can't be observed: `useResetLocalData` resets the catalog query, which refetches immediately while you're still on the Data screen, and on a cold start `SplashScreen` waits for the catalog before it hides. The Browse skeleton only appears if you reach Browse within 4 s of a reset. The steps above test what a user can actually see.
+> **S5(a) note.** The first version of this step ("reset → Browse: loading state for ~4 s") couldn't be observed as written. `useResetLocalData` resets the catalog query, which refetches at once while you're still on the Data screen, and on a cold start `SplashScreen` waits for the catalog before it hides. So the Browse skeleton only shows if you reach Browse within the 4 s of a slow refetch, as in the step above. The search skeleton lasts only the 250 ms debounce (`useDebouncedValue`), which is why it has no screenshot. Both skeletons are the same `Skeleton` component, and the automated test checks what a screen reader gets from it.
+
 ### S6. A late refresh result during background/resume doesn't undo the user
 **Steps:** Developer → **Slow** → Browse → pull to refresh → immediately search `Botanical` and favorite the first result → press Home → wait 5 s → reopen.
 **Expected:** The new activity is added exactly once (count +1), the favorite is still saved, the search is still `Botanical`, no duplicate toast.
