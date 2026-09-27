@@ -2,7 +2,17 @@
 
 Eight manual scenarios, each run on **both** platforms. Fill in **Actual** and **Evidence** after running them on the builds you hand in (not a dev server). Save screenshots or clips in `docs/evidence/android/` and `docs/evidence/ios/`, named `S<n>-<short-name>.png|mp4`.
 
-**Build under test:** Android `Explora-dev-release.apk` (`assembleDevRelease`, release JS bundle, debug keystore; commit `3f278f4` + uncommitted work) · iOS `Explora.app` (`Explora-Dev` scheme, **Release** config, simulator; same commit). Both in `build/handoff/`, run 2026-09-24.
+**Build under test:** Android `Explora-dev-release.apk` (`assembleDevRelease`, release JS bundle, debug keystore; commit `3f278f4` + uncommitted work) · iOS `Explora.app` (`Explora-Dev` scheme, **Release** config, simulator; same commit). Both in `build/handoff/`, run 2026-09-24. S8 was extended on 2026-09-27.
+
+**Re-check on the submission builds (`eb88adc`, 2026-09-27; hashes in [RELEASE_NOTES.md](../RELEASE_NOTES.md#builds)):**
+- Android: Maestro 9/9, covering S1–S4 and S6 ([JUnit](evidence/android/R-maestro-report.xml)), plus the deep link on a cold start ([S8a](evidence/android/R-artifact-deeplink-cold.png)).
+- iOS 26.0 simulator:
+  - launch without Metro ([screenshot](evidence/ios/R-artifact-launch.png));
+  - S1 `walk` + Outdoors → 2 results, back keeps both ([search](evidence/ios/R-artifact-S1-search.png), [after back](evidence/ios/R-artifact-S1-after-back.png));
+  - S3 one pull 21 → 22 ([screenshot](evidence/ios/R-artifact-S3-refresh-21-to-22.png));
+  - S4 Failing: toast, count kept at 22 ([screenshot](evidence/ios/R-artifact-S4-failing-refresh.png));
+  - S8a deep link on a cold start ([screenshot](evidence/ios/R-artifact-deeplink-favorite.png)).
+- Not repeated on these builds: S5, S6 on iOS, S7, S8b. Their rows below are from the earlier builds.
 **Devices:** Android Pixel_10 emulator (Android 17, arm64) · iOS iPhone 17 Pro simulator (iOS 26.5). iOS was driven by hand through the Simulator app (the Maestro iOS driver doesn't start on this machine, see [testing.md](testing.md)).
 **Result key:** ✅ pass · ❌ fail (link the issue) · ⚠️ pass with a note
 

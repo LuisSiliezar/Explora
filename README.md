@@ -20,10 +20,10 @@ These are the exact environments the app was built, run and tested on. Anything 
 | | iOS | Android |
 |---|---|---|
 | **Device** | iPhone 17 Pro simulator | Pixel_10 emulator (arm64) |
-| **OS** | iOS 26.5 (also opened on 26.0) | Android 17 |
-| **Builds tested** | `Explora-Dev` scheme, Debug and **Release** (simulator) | `devDebug` and **`devRelease`** APK (release JS bundle, debug keystore) |
-| **Manual scenarios** | S1–S8 by hand in the Simulator | S1–S8, most through Maestro |
-| **E2E (Maestro)** | Not run: the Maestro iOS driver doesn't start on this host (see [testing.md](docs/testing.md)) | 9/9 flows pass on the release APK |
+| **OS** | iOS 26.5; the submission build on 26.0 | Android 17 |
+| **Builds tested** | `Explora-Dev` scheme, Debug and **Release** (simulator). Submission build: `eb88adc`, SHA-256 in [RELEASE_NOTES.md](RELEASE_NOTES.md#builds) | `devDebug` and **`devRelease`** APK (release JS bundle, debug keystore). Submission build: `eb88adc`, SHA-256 in [RELEASE_NOTES.md](RELEASE_NOTES.md#builds) |
+| **Manual scenarios** | S1–S8 by hand in the Simulator; S1, S3, S4 and S8a repeated on the submission build | S1–S8, most through Maestro; S8a repeated on the submission build |
+| **E2E (Maestro)** | Not run: the Maestro iOS driver doesn't start on this host (see [testing.md](docs/testing.md)) | 9/9 flows pass on the submission APK ([JUnit report](docs/evidence/android/R-maestro-report.xml)) |
 | **CI** | `xcodebuild` Debug simulator build (macOS runner) | `assembleDevRelease` + Maestro on an API 34 x86_64 emulator |
 | **Last run** | 2026-09-27 | 2026-09-27 |
 
