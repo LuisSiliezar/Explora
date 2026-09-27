@@ -8,6 +8,7 @@ declare module 'react-native-config' {
     API_URL?: string;
     API_TIMEOUT_MS?: string;
     DEV_SEED_MULTIPLIER?: string;
+    LOG_LEVEL?: string;
   }
   const Config: NativeConfig;
   export default Config;

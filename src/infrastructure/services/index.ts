@@ -1,3 +1,4 @@
+export * from './console-logger.service';
 export * from './geolocation-location.service';
 export * from './haptic-feedback.service';
 export * from './image-picker-camera.service';

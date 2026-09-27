@@ -14,6 +14,10 @@ const EnvSchema = z.object({
   API_URL: z.string().default(''),
   API_TIMEOUT_MS: z.coerce.number().int().positive().default(10000),
   DEV_SEED_MULTIPLIER: z.coerce.number().int().min(0).default(0),
+  /** Lowest level ConsoleLogger prints (dev=debug, staging=info, prod=warn). */
+  LOG_LEVEL: z
+    .enum(['debug', 'info', 'warn', 'error', 'silent'])
+    .default('warn'),
 });
 
 export type Env = z.infer<typeof EnvSchema>;
