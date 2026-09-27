@@ -2,43 +2,27 @@
 
 **Commit:** `eb88adc` (merge of PR #2 into `main`, 2026-09-27) · **Built:** 2026-09-27 on macOS 26.6, Xcode 26.6 · **Environment:** dev (`com.explora.dev`). The dev environment keeps Settings → Developer → Simulated network, so reviewers can reproduce slow and failing loads ([README](https://github.com/LuisSiliezar/Explora/blob/main/README.md#reproducing-success-failure-slow-loading-and-reset)).
 
-## Builds
+## What's included
 
-| | Android | iOS |
-|---|---|---|
-| File | `Explora-dev-release.apk` | `Explora-dev-simulator.zip` (contains `Explora.app`) |
-| Build | `./gradlew assembleDevRelease`: `dev` flavor, `release` build type, Hermes, New Architecture, not debuggable | `xcodebuild -scheme Explora-Dev -configuration Release -sdk iphonesimulator` |
-| Runs on | Android 7.0+ (minSdk 24, targetSdk 36): emulator or phone | **iOS Simulator only**, iOS 26.0+ |
-| Architectures | `arm64-v8a`, `armeabi-v7a`, `x86`, `x86_64` | `arm64`, `x86_64` (simulator slices) |
-| App id | `com.explora.dev` (installs next to staging and prod) | `com.explora.dev` |
-| Version | versionName `1.0`, versionCode `1` | `CFBundleShortVersionString` `1.0`, `CFBundleVersion` `1` |
-| Signing | Android debug keystore, v2 signature, `CN=Android Debug` (see [Signing](#signing)) | unsigned (`CODE_SIGNING_ALLOWED=NO`) |
-| Needs Metro | no: the JS bundle is inside the app | no |
-| SHA-256 | `87affc0fc086f38a35d9d7166225d41721fbc58941dd84321c89a9618e3e3ea6` | `85a32d53d6991fee4d884ed3ec7b379c46d14e82a7a298dcc798a64d342e5e45` |
+| File | What it is |
+|---|---|
+| `Explora-dev-release.apk` | Android app |
+| `Explora.app` | iOS Simulator app. On the [GitHub release](https://github.com/LuisSiliezar/Explora/releases/tag/v1.0-build1) it's `Explora-dev-simulator.zip`: unzip it to get `Explora.app`. |
+| `RELEASE_NOTES.md` | This file: install steps, checksums, how to build, changes, verification and known limitations |
 
-Build, package and hash (from the repo root):
-```bash
-cd android && ./gradlew assembleDevRelease && cd .. && mkdir -p build/handoff && cp android/app/build/outputs/apk/dev/release/app-dev-release.apk build/handoff/Explora-dev-release.apk
-```
-```bash
-xcodebuild -workspace ios/Explora.xcworkspace -scheme Explora-Dev -configuration Release -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath ios/build CODE_SIGNING_ALLOWED=NO build && rm -f build/handoff/Explora-dev-simulator.zip && (cd ios/build/Build/Products/Release-iphonesimulator && zip -qry ../../../../../build/handoff/Explora-dev-simulator.zip Explora.app)
-```
-```bash
-shasum -a 256 build/handoff/*
-```
+Neither app needs Metro or the source code: the JavaScript bundle is inside each app.
 
-`build/` is gitignored. The files are shared as downloads on the GitHub Release for the submission commit.
-
-### Install
+## Install
 
 **What you need**
 
-| | Android APK | iOS Simulator zip |
+| | Android APK | iOS Simulator app |
 |---|---|---|
 | Computer | Windows, macOS or Linux with the Android Studio emulator, or none if you use an Android phone | **Mac only** (Apple silicon or Intel). Windows and Linux can't run the iOS Simulator. |
 | Needs | An emulator or phone on Android 7.0 or later | Xcode 26 or later with an iOS 26 Simulator installed |
 | Real device | any Android phone | can't be installed on a real iPhone (unsigned, built for the Simulator) |
-| Metro / source code | not needed | not needed |
+
+Run the commands from the folder that holds the files.
 
 **Android: emulator**
 1. Start an emulator in Android Studio (Device Manager → ▶).
@@ -59,9 +43,13 @@ shasum -a 256 build/handoff/*
    ```bash
    open -a Simulator
    ```
-3. Unzip `Explora-dev-simulator.zip`, then drag `Explora.app` onto the Simulator window, or run:
+3. If you have `Explora-dev-simulator.zip`, unzip it first:
    ```bash
-   unzip -o Explora-dev-simulator.zip && xcrun simctl install booted Explora.app && xcrun simctl launch booted com.explora.dev
+   unzip -o Explora-dev-simulator.zip
+   ```
+4. Drag `Explora.app` onto the Simulator window, or run:
+   ```bash
+   xcrun simctl install booted Explora.app && xcrun simctl launch booted com.explora.dev
    ```
 
 **If something goes wrong**
@@ -74,6 +62,50 @@ shasum -a 256 build/handoff/*
   xattr -dr com.apple.quarantine Explora.app
   ```
 - **"Near me" shows no distances.** The emulator or Simulator has no location set. iOS: Features → Location. Android: the emulator's Extended controls → Location.
+
+## Checksums (SHA-256)
+
+```
+87affc0fc086f38a35d9d7166225d41721fbc58941dd84321c89a9618e3e3ea6  Explora-dev-release.apk
+85a32d53d6991fee4d884ed3ec7b379c46d14e82a7a298dcc798a64d342e5e45  Explora-dev-simulator.zip
+```
+
+Check a file and compare the result with the list above:
+```bash
+shasum -a 256 Explora-dev-release.apk
+```
+`Explora.app` is `Explora-dev-simulator.zip` unzipped without changes. A folder has no single checksum, so check the zip if you have it.
+
+## Builds
+
+| | Android | iOS |
+|---|---|---|
+| File | `Explora-dev-release.apk` | `Explora.app` (published as `Explora-dev-simulator.zip`) |
+| Build | `./gradlew assembleDevRelease`: `dev` flavor, `release` build type, Hermes, New Architecture, not debuggable | `xcodebuild -scheme Explora-Dev -configuration Release -sdk iphonesimulator` |
+| Runs on | Android 7.0+ (minSdk 24, targetSdk 36): emulator or phone | **iOS Simulator only**, iOS 26.0+ |
+| Architectures | `arm64-v8a`, `armeabi-v7a`, `x86`, `x86_64` | `arm64`, `x86_64` (simulator slices) |
+| App id | `com.explora.dev` (installs next to staging and prod) | `com.explora.dev` |
+| Version | versionName `1.0`, versionCode `1` | `CFBundleShortVersionString` `1.0`, `CFBundleVersion` `1` |
+| Signing | Android debug keystore, v2 signature, `CN=Android Debug` (see [Signing](#signing)) | unsigned (`CODE_SIGNING_ALLOWED=NO`) |
+| Needs Metro | no: the JS bundle is inside the app | no |
+
+### Build from source
+Source: https://github.com/LuisSiliezar/Explora (tag `v1.0-build1`). The tools you need (Node, Yarn, JDK, Android SDK, Xcode, CocoaPods) are in the README's [Prerequisites](https://github.com/LuisSiliezar/Explora#prerequisites) and [Setup](https://github.com/LuisSiliezar/Explora#setup) sections. Then, from the repository root:
+```bash
+yarn install --frozen-lockfile && yarn pods
+```
+Build, package and hash:
+```bash
+cd android && ./gradlew assembleDevRelease && cd .. && mkdir -p build/handoff && cp android/app/build/outputs/apk/dev/release/app-dev-release.apk build/handoff/Explora-dev-release.apk
+```
+```bash
+xcodebuild -workspace ios/Explora.xcworkspace -scheme Explora-Dev -configuration Release -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath ios/build CODE_SIGNING_ALLOWED=NO build && rm -f build/handoff/Explora-dev-simulator.zip && (cd ios/build/Build/Products/Release-iphonesimulator && zip -qry ../../../../../build/handoff/Explora-dev-simulator.zip Explora.app)
+```
+```bash
+shasum -a 256 build/handoff/*
+```
+
+`build/` is gitignored. A rebuild gives a working app, but its checksum won't match the list above, because file timestamps end up in the build.
 
 ## Changes since the 2026-09-24 handoff
 - **Reminders show a heads-up banner on Android.** They now post to a HIGH-importance channel (`activity-reminders`). This is the Part 2 improvement: [docs/improvement.md](https://github.com/LuisSiliezar/Explora/blob/main/docs/improvement.md).
@@ -126,7 +158,7 @@ Added for a store release: build from a tag on `main` only, run a prod build thr
 **Gap:** logs only go to the device console (`ConsoleLogger`). Before a store release, crash and error reporting (Crashlytics or Sentry behind `LoggerPort`) is needed to detect a faulty release at all, not just to respond to one.
 
 ## Verification per platform
-**On these exact files** (the hashes above), 2026-09-27, installed over the previous build (an upgrade, so existing favorites stayed in place):
+**On these exact files** (the [checksums](#checksums-sha-256) above), 2026-09-27, installed over the previous build (an upgrade, so existing favorites stayed in place):
 
 | Check | Android: Pixel_10 emulator (`sdk_gphone16k_arm64`), Android 17 | iOS: iPhone 17 Pro simulator, iOS 26.0 |
 |---|---|---|
